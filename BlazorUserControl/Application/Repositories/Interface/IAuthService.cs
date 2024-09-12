@@ -2,7 +2,7 @@
 
 public interface IAuthService
 {
-    Task< IUserLogin_Login?> LoginAsync(string email, string password, CancellationToken cancellationToken = default);
-    
+    Task<IUserLogin_Login?> LoginAsync(string email, string password, CancellationToken cancellationToken = default);
+
     Task<IReadOnlyList<IGetAllUsers_AllUsers_Nodes>?> GetAllUsers();
 }

@@ -29,7 +29,7 @@
     {
         try
         {
-            var result = await AuthService.LoginAsync(username,password);
+            var result = await AuthService.LoginAsync(username, password);
 
             if (string.IsNullOrEmpty(result.Token))
             {
@@ -47,4 +47,3 @@
         }
     }
 }
-

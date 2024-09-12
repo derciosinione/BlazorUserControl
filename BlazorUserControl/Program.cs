@@ -1,9 +1,11 @@
-using Microsoft.AspNetCore.Components.Web;
-using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using BlazorUserControl;
 using BlazorUserControl.Application.Extensions;
 using BlazorUserControl.Application.Repositories.Interface;
 using BlazorUserControl.Application.Repositories.Service;
+using BlazorUserControl.Provider;
+using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Components.Web;
+using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
@@ -17,5 +19,9 @@ builder.Services.AddSingleton<ITokenService, TokenService>();
 builder.Services
     .AddR2YGqlClient()
     .ConfigureHttpClient(GraphQlClient.ConfigureClient);
+
+builder.Services.AddAuthorizationCore(); 
+builder.Services.AddScoped<CustomAuthStateProvider>(); 
+builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthStateProvider>(); 
 
 await builder.Build().RunAsync();

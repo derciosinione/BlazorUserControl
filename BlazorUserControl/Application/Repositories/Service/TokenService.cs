@@ -11,7 +11,7 @@ public class TokenService : ITokenService
     {
         _jsRuntime = jsRuntime;
     }
-    
+
     public async Task SetTokenAsync(string token)
     {
         await _jsRuntime.InvokeVoidAsync(JsFunctions.SaveToken, token);

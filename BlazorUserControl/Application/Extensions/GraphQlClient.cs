@@ -3,7 +3,7 @@ using BlazorUserControl.Application.Repositories.Interface;
 
 namespace BlazorUserControl.Application.Extensions;
 
-public class GraphQlClient
+public static class GraphQlClient
 {
     public static async void ConfigureClient(IServiceProvider sp, HttpClient client)
     {
@@ -13,8 +13,6 @@ public class GraphQlClient
         var token = await tokenService.GetTokenAsync();
 
         if (!string.IsNullOrEmpty(token))
-        {
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-        }
     }
 }
