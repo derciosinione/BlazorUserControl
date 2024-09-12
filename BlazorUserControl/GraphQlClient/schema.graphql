@@ -1,0 +1,232 @@
+schema {
+  query: Query
+  mutation: Mutation
+}
+
+type Query {
+  hello: String!
+  me: AuthUserType!
+  userCountries(email: String!): CountryType!
+  userMultiRegions(payload: MultiRegionPayloadInput!): [MultiRegionsResponse!]!
+  userRegions(payload: RegionPayloadInput!): [RegionResponse!]!
+  allUsers("Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String "Returns the last _n_ elements from the list." last: Int "Returns the elements in the list that come before the specified cursor." before: String where: UserTypeFilterInput order: [UserTypeSortInput!]): AllUsersConnection
+  user(id: UUID!): UserType!
+}
+
+type Mutation {
+  login(email: String! password: String!): LoginResponse!
+  createUser(input: CreateUserInput!): CreatedUserPayload!
+}
+
+enum ApplyPolicy {
+  BEFORE_RESOLVER
+  AFTER_RESOLVER
+  VALIDATION
+}
+
+input UserTypeFilterInput {
+  and: [UserTypeFilterInput!]
+  or: [UserTypeFilterInput!]
+  id: UuidOperationFilterInput
+  username: StringOperationFilterInput
+  email: StringOperationFilterInput
+  name: StringOperationFilterInput
+  phoneNumber: StringOperationFilterInput
+  isStaff: StringOperationFilterInput
+  createdAt: DateTimeOperationFilterInput
+  updatedAt: DateTimeOperationFilterInput
+}
+
+input UserTypeSortInput {
+  id: SortEnumType
+  username: SortEnumType
+  email: SortEnumType
+  name: SortEnumType
+  phoneNumber: SortEnumType
+  isStaff: SortEnumType
+  createdAt: SortEnumType
+  updatedAt: SortEnumType
+}
+
+"A connection to a list of items."
+type AllUsersConnection {
+  "Information to aid in pagination."
+  pageInfo: PageInfo!
+  "A list of edges."
+  edges: [AllUsersEdge!]
+  "A flattened list of the nodes."
+  nodes: [UserType!]
+  "Identifies the total count of items in the connection."
+  totalCount: Int!
+}
+
+input UuidOperationFilterInput {
+  eq: UUID
+  neq: UUID
+  in: [UUID]
+  nin: [UUID]
+  gt: UUID
+  ngt: UUID
+  gte: UUID
+  ngte: UUID
+  lt: UUID
+  nlt: UUID
+  lte: UUID
+  nlte: UUID
+}
+
+input StringOperationFilterInput {
+  and: [StringOperationFilterInput!]
+  or: [StringOperationFilterInput!]
+  eq: String
+  neq: String
+  contains: String
+  ncontains: String
+  in: [String]
+  nin: [String]
+  startsWith: String
+  nstartsWith: String
+  endsWith: String
+  nendsWith: String
+}
+
+input DateTimeOperationFilterInput {
+  eq: DateTime
+  neq: DateTime
+  in: [DateTime]
+  nin: [DateTime]
+  gt: DateTime
+  ngt: DateTime
+  gte: DateTime
+  ngte: DateTime
+  lt: DateTime
+  nlt: DateTime
+  lte: DateTime
+  nlte: DateTime
+}
+
+enum SortEnumType {
+  ASC
+  DESC
+}
+
+"Information about pagination in a connection."
+type PageInfo {
+  "Indicates whether more edges exist following the set defined by the clients arguments."
+  hasNextPage: Boolean!
+  "Indicates whether more edges exist prior the set defined by the clients arguments."
+  hasPreviousPage: Boolean!
+  "When paginating backwards, the cursor to continue."
+  startCursor: String
+  "When paginating forwards, the cursor to continue."
+  endCursor: String
+}
+
+type UserType {
+  userRoles: UserRoleType
+  id: UUID!
+  username: String
+  email: String
+  name: String
+  phoneNumber: String
+  isStaff: String
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+"An edge in a connection."
+type AllUsersEdge {
+  "A cursor for use in pagination."
+  cursor: String!
+  "The item at the end of the edge."
+  node: UserType!
+}
+
+scalar UUID
+
+"The `DateTime` scalar represents an ISO-8601 compliant date time type."
+scalar DateTime
+
+input MultiRegionPayloadInput {
+  email: String!
+  country: String!
+  profile: String!
+}
+
+type MultiRegionsResponse {
+  id: Int!
+  name: String
+  email: String
+}
+
+type CountryType {
+  email: String
+  countries: [CountryResponse!]
+}
+
+type AuthUserType {
+  id: UUID!
+  email: String
+  perfil: String
+  mPerfil: String
+  idRegiao: String
+  guidRegion: String
+  idc: String
+  mDirector: String
+  isMember: Boolean!
+  pais: String
+  moeda: String
+  role: String
+}
+
+input CreateUserInput {
+  email: String!
+  password: String!
+  confirmPasword: String!
+}
+
+type CreatedUserPayload {
+  id: String
+  username: String
+  email: String
+  name: String
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type LoginResponse {
+  id: String!
+  email: String!
+  token: String!
+}
+
+type RegionResponse {
+  id: String
+  region: String
+  country: String
+  language: String
+  profile: String
+  email: String
+}
+
+input RegionPayloadInput {
+  profile: String!
+  email: String!
+  country: String!
+  multiRegion: String
+}
+
+type UserRoleType {
+  role: RoleType
+}
+
+type RoleType {
+  name: String
+  description: String
+  rankLevel: Int!
+}
+
+type CountryResponse {
+  name: String
+  email: String
+}

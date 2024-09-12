@@ -1,0 +1,49 @@
+﻿@page "/op/"
+@using BlazorUserControl.Application.Repositories.Interface
+@layout MainLayout
+
+@inject IAuthService AuthService
+
+<PageTitle>Home</PageTitle>
+
+<h1>Welcome to Home Page</h1>
+
+<p>This component list all fetched users from from the server.</p>
+
+@if (_users == null)
+{
+<p>
+    <em>Loading...</em>
+</p>
+}
+else
+{
+<table class="table">
+    <thead>
+    <tr>
+        <th>Email</th>
+        <th>CreatedAt</th>
+        <th>UpdatedAt</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var user in _users)
+    {
+    <tr>
+        <td>@user.Email</td>
+        <td>@user.CreatedAt.ToString()</td>
+        <td>@user.UpdatedAt.ToString()</td>
+    </tr>
+    }
+    </tbody>
+</table>
+}
+
+@code {
+private IReadOnlyList<IGetAllUsers_AllUsers_Nodes>? _users;
+
+protected override async Task OnInitializedAsync()
+{
+_users = await AuthService.GetAllUsers();
+}
+}

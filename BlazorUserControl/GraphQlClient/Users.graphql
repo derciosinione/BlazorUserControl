@@ -1,0 +1,31 @@
+mutation UserLogin($email: String!, $password: String!) {
+    login(email: $email, password: $password) {
+        id
+        email
+        token
+    }
+}
+
+
+query GetAllUsers($first: Int, $last: Int) {
+    allUsers(first: $first ,last: $last) {
+        nodes {
+            ...UserFields
+        }
+    }
+}
+
+query GetUserById($id: UUID!) {
+    user(id: $id) {
+        ...UserFields
+    }
+}
+
+fragment UserFields on UserType {
+    id
+    email
+    createdAt
+    updatedAt
+}
+
+

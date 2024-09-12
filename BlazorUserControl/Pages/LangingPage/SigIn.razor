@@ -1,0 +1,50 @@
+@inject IAuthService AuthService
+@inject NavigationManager Navigation
+
+@page "/"
+@using BlazorUserControl.Application.Repositories.Interface
+
+@layout LoginLayout
+
+<PageTitle>Home</PageTitle>
+
+<h3>SigIn</h3>
+
+
+<PageTitle>Home</PageTitle>
+
+<input @bind="username" placeholder="Username"/>
+<input @bind="password" type="password" placeholder="Password"/>
+<button @onclick="Login">Login</button>
+
+<p>@message</p>
+
+@code
+{
+    private string username = "brito@tracosespacos.pt";
+    private string password = "12345678";
+    private string message;
+
+    private async Task Login()
+    {
+        try
+        {
+            var result = await AuthService.LoginAsync(username,password);
+
+            if (string.IsNullOrEmpty(result.Token))
+            {
+                message = "Login failed!";
+                return;
+            }
+
+            message = "Login successful!";
+            Navigation.NavigateTo(Routes.Dashboard);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            message = "Login failed!";
+        }
+    }
+}
+
