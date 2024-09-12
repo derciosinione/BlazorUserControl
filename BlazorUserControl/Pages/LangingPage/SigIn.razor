@@ -24,14 +24,14 @@
 @code
 {
     private string? _message;
-    private LoginRequest _loginRequest = new LoginRequest("brito@tracosespacos.pt", "12345678");
-    
+    private readonly LoginRequest _loginRequest = new("brito@tracosespacos.pt", "12345678");
+
     protected override async Task OnInitializedAsync()
     {
         if (await AuthenticationStateProvider.IsAuthenticated())
             Navigation.NavigateTo(Routes.Dashboard);
     }
-    
+
     private async Task Login()
     {
         try

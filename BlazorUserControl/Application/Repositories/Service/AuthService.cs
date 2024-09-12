@@ -1,11 +1,11 @@
 ﻿using BlazorUserControl.Application.Repositories.Interface;
 using BlazorUserControl.Provider;
-using Microsoft.AspNetCore.Components.Authorization;
 using StrawberryShake;
 
 namespace BlazorUserControl.Application.Repositories.Service;
 
-public class AuthService(IR2YGqlClient client, ITokenService tokenService, AppAuthStateProvider appAuthStateProvider) : IAuthService
+public class AuthService(IR2YGqlClient client, ITokenService tokenService, AppAuthStateProvider appAuthStateProvider)
+    : IAuthService
 {
     public async Task<IUserLogin_Login?> LoginAsync(string email, string password,
         CancellationToken cancellationToken = default)
@@ -16,9 +16,9 @@ public class AuthService(IR2YGqlClient client, ITokenService tokenService, AppAu
         var login = result.Data!.Login;
 
         await tokenService.SetTokenAsync(login.Token);
-        
+
         appAuthStateProvider.MarkUserAsAuthenticated(login.Token);
-        
+
         return login;
     }
 

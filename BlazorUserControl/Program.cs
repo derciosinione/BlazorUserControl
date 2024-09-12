@@ -20,8 +20,8 @@ builder.Services
     .AddR2YGqlClient()
     .ConfigureHttpClient(GraphQlClient.ConfigureClient);
 
-builder.Services.AddAuthorizationCore(); 
-builder.Services.AddScoped<AppAuthStateProvider>(); 
-builder.Services.AddScoped<AuthenticationStateProvider, AppAuthStateProvider>(); 
+builder.Services.AddAuthorizationCore();
+builder.Services.AddScoped<AppAuthStateProvider>();
+builder.Services.AddScoped<AuthenticationStateProvider, AppAuthStateProvider>();
 
 await builder.Build().RunAsync();

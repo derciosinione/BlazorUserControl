@@ -17,7 +17,7 @@ public abstract class JwtHelper
         var principal = ValidateToken(token, issuer!);
         return principal;
     }
-    
+
     private static IEnumerable<Claim>? ValidateToken(string token, string issuer)
     {
         var tokenHandler = new JwtSecurityTokenHandler();
@@ -28,7 +28,7 @@ public abstract class JwtHelper
             ValidIssuer = issuer,
             ValidateAudience = false,
             ValidateLifetime = true,
-            ClockSkew = TimeSpan.Zero, 
+            ClockSkew = TimeSpan.Zero,
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Constants.SecretKey))
         };

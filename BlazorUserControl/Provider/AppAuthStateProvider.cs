@@ -42,8 +42,13 @@ public class AppAuthStateProvider(ITokenService tokenService) : AuthenticationSt
         return authState.User.Identity!.IsAuthenticated;
     }
 
-    private static IEnumerable<Claim?>? ParseClaimsFromJwt(string jwt) => JwtHelper.ExtractClaims(jwt);
+    private static IEnumerable<Claim?>? ParseClaimsFromJwt(string jwt)
+    {
+        return JwtHelper.ExtractClaims(jwt);
+    }
 
-    private static ClaimsPrincipal GetUser(ClaimsIdentity identity) => new ClaimsPrincipal(identity);
-    
+    private static ClaimsPrincipal GetUser(ClaimsIdentity identity)
+    {
+        return new ClaimsPrincipal(identity);
+    }
 }
