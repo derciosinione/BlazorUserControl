@@ -21,7 +21,7 @@ builder.Services
     .ConfigureHttpClient(GraphQlClient.ConfigureClient);
 
 builder.Services.AddAuthorizationCore(); 
-builder.Services.AddScoped<CustomAuthStateProvider>(); 
-builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthStateProvider>(); 
+builder.Services.AddScoped<AppAuthStateProvider>(); 
+builder.Services.AddScoped<AuthenticationStateProvider, AppAuthStateProvider>(); 
 
 await builder.Build().RunAsync();

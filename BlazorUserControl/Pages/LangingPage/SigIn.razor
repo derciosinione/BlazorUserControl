@@ -1,8 +1,10 @@
 @inject IAuthService AuthService
 @inject NavigationManager Navigation
 
-@page "/"
-@using BlazorUserControl.Application.Repositories.Interface
+@page "/login"
+@using BlazorUserControl.Application.Contracts.Request
+@inject AppAuthStateProvider AuthenticationStateProvider
+
 
 @layout LoginLayout
 
@@ -13,37 +15,41 @@
 
 <PageTitle>Home</PageTitle>
 
-<input @bind="username" placeholder="Username"/>
-<input @bind="password" type="password" placeholder="Password"/>
+<input @bind="_loginRequest.Username" placeholder="Username"/>
+<input @bind="_loginRequest.Password" type="password" placeholder="Password"/>
 <button @onclick="Login">Login</button>
 
-<p>@message</p>
+<p>@_message</p>
 
 @code
 {
-    private string username = "brito@tracosespacos.pt";
-    private string password = "12345678";
-    private string message;
-
+    private string? _message;
+    private LoginRequest _loginRequest = new LoginRequest("brito@tracosespacos.pt", "12345678");
+    
+    protected override async Task OnInitializedAsync()
+    {
+        if (await AuthenticationStateProvider.IsAuthenticated())
+            Navigation.NavigateTo(Routes.Dashboard);
+    }
+    
     private async Task Login()
     {
         try
         {
-            var result = await AuthService.LoginAsync(username, password);
+            var result = await AuthService.LoginAsync(_loginRequest.Username!, _loginRequest.Password!);
 
-            if (string.IsNullOrEmpty(result.Token))
+            if (!string.IsNullOrEmpty(result!.Token))
             {
-                message = "Login failed!";
-                return;
+                _message = "Login successful!";
+                Navigation.NavigateTo(Routes.Dashboard);
             }
 
-            message = "Login successful!";
-            Navigation.NavigateTo(Routes.Dashboard);
+            _message = "Login failed!";
         }
         catch (Exception e)
         {
             Console.WriteLine(e);
-            message = "Login failed!";
+            _message = "Login failed!";
         }
     }
 }

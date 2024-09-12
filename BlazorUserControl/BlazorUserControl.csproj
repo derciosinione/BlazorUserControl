@@ -15,7 +15,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="Application\Contracts\Request\"/>
         <Folder Include="Application\Contracts\Response\"/>
     </ItemGroup>
 
