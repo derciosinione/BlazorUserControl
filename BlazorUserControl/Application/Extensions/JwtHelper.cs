@@ -5,22 +5,30 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace BlazorUserControl.Application.Extensions;
 
-public abstract class JwtHelper
+public static class JwtHelper
 {
     public static List<Claim> ExtractClaims(string token)
     {
-        if (string.IsNullOrEmpty(token)) return [];
+        if (string.IsNullOrWhiteSpace(token)) return [];
 
         var handler = new JwtSecurityTokenHandler();
-        var jwtToken = handler.ReadJwtToken(token);
-        var claims = jwtToken.Claims.ToList();
-        var issuer = claims.FirstOrDefault(c => c.Type == "iss")?.Value;
-        var principal = ValidateToken(token, issuer!);
 
-        return principal is null ? [] : claims;
+        try
+        {
+            var jwtToken = handler.ReadJwtToken(token);
+            var issuer = jwtToken.Issuer;
+
+            var principal = ValidateToken(token, issuer);
+            return principal?.Claims.ToList() ?? [];
+        }
+        catch (ArgumentException ex)
+        {
+            Console.WriteLine($"Invalid JWT format: {ex.Message}");
+            return [];
+        }
     }
 
-    private static IEnumerable<Claim>? ValidateToken(string token, string issuer)
+    private static ClaimsPrincipal? ValidateToken(string token, string issuer)
     {
         var tokenHandler = new JwtSecurityTokenHandler();
 
@@ -37,8 +45,8 @@ public abstract class JwtHelper
 
         try
         {
-            var principal = tokenHandler.ValidateToken(token, validationParameters, out var validatedToken);
-            return principal.Claims;
+            var principal = tokenHandler.ValidateToken(token, validationParameters, out _);
+            return principal;
         }
         catch (SecurityTokenExpiredException)
         {
@@ -52,7 +60,7 @@ public abstract class JwtHelper
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Unexpected error during token validation: {ex.Message}");
             return null;
         }
     }
