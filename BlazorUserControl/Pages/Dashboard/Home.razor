@@ -1,28 +1,36 @@
 ﻿@page "/op/"
 @layout MainLayout
-
 @inject IAuthService AuthService
 
-<PageTitle>Home</PageTitle>
+<head>
+    <title>Home</title>
+    <link href="css/home.css" rel="stylesheet"/>
+</head>
 
 <h1>Welcome to Home Page</h1>
 
-<p>This component list all fetched users from from the server.</p>
+<p>This component lists all users fetched from the server.</p>
 
-@if (_users == null)
+@if (_isLoading)
+{
+    <div class="spinner-border" role="status">
+        <span class="sr-only"></span>
+    </div>
+}
+else if (_users == null || !_users.Any())
 {
     <p>
-        <em>Loading...</em>
+        <em>No users found.</em>
     </p>
 }
 else
 {
-    <table class="table">
+    <table class="table table-striped">
         <thead>
         <tr>
             <th>Email</th>
-            <th>CreatedAt</th>
-            <th>UpdatedAt</th>
+            <th>Created At</th>
+            <th>Updated At</th>
         </tr>
         </thead>
         <tbody>
@@ -30,8 +38,8 @@ else
         {
             <tr>
                 <td>@user.Email</td>
-                <td>@user.CreatedAt.ToString()</td>
-                <td>@user.UpdatedAt.ToString()</td>
+                <td>@user.CreatedAt.ToString("dd MMM yyyy")</td>
+                <td>@user.UpdatedAt.ToString("dd MMM yyyy")</td>
             </tr>
         }
         </tbody>
@@ -40,10 +48,11 @@ else
 
 @code {
     private IReadOnlyList<IGetAllUsers_AllUsers_Nodes>? _users;
+    private bool _isLoading = true;
 
     protected override async Task OnInitializedAsync()
     {
         _users = await AuthService.GetAllUsers();
+        _isLoading = false;
     }
-
 }

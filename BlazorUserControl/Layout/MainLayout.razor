@@ -1,6 +1,6 @@
 ﻿@inherits LayoutComponentBase
 @inject NavigationManager Navigation
-@inject IAuthService AuthService
+@inject AppAuthStateProvider AuthenticationStateProvider
 
 <CascadingAuthenticationState>
     <AuthorizeView>
@@ -23,7 +23,7 @@
         </Authorized>
         <NotAuthorized>
             @{
-                Navigation.NavigateTo("/login");
+                Navigation.NavigateTo(Routes.Login);
             }
         </NotAuthorized>
     </AuthorizeView>
@@ -31,8 +31,5 @@
 
 @code
 {
-    private async Task Logout()
-    {
-        await AuthService.LogOutAsync();
-    }
+    private async Task Logout() => await AuthenticationStateProvider.MarkUserAsLoggedOut();
 }

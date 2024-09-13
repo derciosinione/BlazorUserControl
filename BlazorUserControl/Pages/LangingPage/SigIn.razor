@@ -1,10 +1,9 @@
 @inject IAuthService AuthService
 @inject NavigationManager Navigation
+@inject AppAuthStateProvider AuthenticationStateProvider
+@using BlazorUserControl.Application.Contracts.Request
 
 @page "/login"
-@using BlazorUserControl.Application.Contracts.Request
-@using BlazorUserControl.Application.Provider
-@inject AppAuthStateProvider AuthenticationStateProvider
 
 
 @layout LoginLayout
@@ -30,7 +29,9 @@
 
     protected override async Task OnInitializedAsync()
     {
-        if (await AuthenticationStateProvider.IsAuthenticated())
+        var isAuthenticated = await AuthenticationStateProvider.IsAuthenticated();
+        
+        if (isAuthenticated)
             Navigation.NavigateTo(Routes.Dashboard);
 
         _isLoading = false;

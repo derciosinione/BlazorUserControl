@@ -1,6 +1,4 @@
 ﻿@page "/"
-@using BlazorUserControl.Application.Provider
-
 @inject NavigationManager Navigation
 @inject AppAuthStateProvider AuthenticationStateProvider
 
@@ -11,5 +9,4 @@
         var authenticated = await AuthenticationStateProvider.IsAuthenticated();
         Navigation.NavigateTo(authenticated ? Routes.Dashboard : Routes.Login);
     }
-
 }

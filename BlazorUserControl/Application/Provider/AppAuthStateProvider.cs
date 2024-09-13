@@ -30,8 +30,10 @@ public class AppAuthStateProvider(ITokenService tokenService) : AuthenticationSt
         NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(GetUser(identity))));
     }
 
-    public void MarkUserAsLoggedOut()
+    public async Task MarkUserAsLoggedOut()
     {
+        await tokenService.RemoveTokenAsync();
+        
         var identity = new ClaimsIdentity();
         NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(GetUser(identity))));
     }
