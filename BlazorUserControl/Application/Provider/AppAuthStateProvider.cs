@@ -11,6 +11,7 @@ public class AppAuthStateProvider(ITokenService tokenService) : AuthenticationSt
     {
         var token = await tokenService.GetTokenAsync();
 
+        //TODO:: Invalidar a sessao do user caso token for invalido
         var identity = !string.IsNullOrEmpty(token)
             ? new ClaimsIdentity(JwtHelper.ExtractClaims(token)!, Constants.JwtAuthType)
             : new ClaimsIdentity();
