@@ -1,6 +1,6 @@
 ﻿using System.Security.Claims;
 using BlazorUserControl.Application.Extensions;
-using BlazorUserControl.Application.Repositories.Interface;
+using BlazorUserControl.Application.Repositories.Interface.Authentications;
 using Microsoft.AspNetCore.Components.Authorization;
 
 namespace BlazorUserControl.Application.Provider;
@@ -30,9 +30,9 @@ public class AppAuthStateProvider(ITokenService tokenService) : AuthenticationSt
         NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(GetUser(identity))));
     }
 
-    public async Task MarkUserAsLoggedOut()
+    public async Task MarkUserAsLoggedOutAsync(CancellationToken cancellationToken = default)
     {
-        await tokenService.RemoveTokenAsync();
+        await tokenService.RemoveTokenAsync(cancellationToken);
 
         var identity = new ClaimsIdentity();
         NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(GetUser(identity))));

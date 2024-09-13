@@ -2,9 +2,9 @@ using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 
 namespace BlazorUserControl.Application.Extensions;
 
-public static class AuthorizationExtension
+public static class AuthorizationPolicyExtension
 {
-    public static void AddAppAuthorization(this WebAssemblyHostBuilder builder)
+    public static void AddAuthorizationPolicy(this WebAssemblyHostBuilder builder)
     {
         builder.Services.AddAuthorizationCore();
     }

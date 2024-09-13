@@ -1,5 +1,5 @@
 using System.Net.Http.Headers;
-using BlazorUserControl.Application.Repositories.Interface;
+using BlazorUserControl.Application.Repositories.Interface.Authentications;
 
 namespace BlazorUserControl.Application.Extensions;
 

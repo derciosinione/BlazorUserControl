@@ -1,14 +1,15 @@
-using BlazorUserControl.Application.Repositories.Interface;
+using BlazorUserControl.Application.Repositories.Interface.Users;
 using FluentResults;
 using StrawberryShake;
 
-namespace BlazorUserControl.Application.Repositories.Service;
+namespace BlazorUserControl.Application.Repositories.Service.Users;
 
 public class UserService(IR2YGqlClient client) : IUserService
 {
-    public async Task<Result<IReadOnlyList<IGetAllUsers_AllUsers_Nodes>?>> GetAllUsers()
+    public async Task<Result<IReadOnlyList<IGetAllUsers_AllUsers_Nodes>?>> GetAllUsers(
+        CancellationToken cancellationToken = default)
     {
-        var response = await client.GetAllUsers.ExecuteAsync(null, null);
+        var response = await client.GetAllUsers.ExecuteAsync(null, null, cancellationToken);
 
         if (response.IsSuccessResult())
         {

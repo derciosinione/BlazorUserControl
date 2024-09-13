@@ -1,6 +1,8 @@
 using BlazorUserControl.Application.Provider;
-using BlazorUserControl.Application.Repositories.Interface;
-using BlazorUserControl.Application.Repositories.Service;
+using BlazorUserControl.Application.Repositories.Interface.Authentications;
+using BlazorUserControl.Application.Repositories.Interface.Users;
+using BlazorUserControl.Application.Repositories.Service.Authentications;
+using BlazorUserControl.Application.Repositories.Service.Users;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 
@@ -18,6 +20,6 @@ public static class AppInjections
         builder.Services.AddScoped<AuthenticationStateProvider, AppAuthStateProvider>();
 
         builder.AddGraphQlClient();
-        builder.AddAppAuthorization();
+        builder.AddAuthorizationPolicy();
     }
 }
