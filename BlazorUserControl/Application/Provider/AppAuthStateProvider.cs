@@ -12,8 +12,8 @@ public class AppAuthStateProvider(ITokenService tokenService) : AuthenticationSt
         var token = await tokenService.GetTokenAsync();
         var claims = JwtHelper.ExtractClaims(token);
 
-        var identity = claims.Count > 0 
-            ? new ClaimsIdentity(claims, Constants.JwtAuthType) 
+        var identity = claims.Count > 0
+            ? new ClaimsIdentity(claims, Constants.JwtAuthType)
             : new ClaimsIdentity();
 
         var authenticationState = new AuthenticationState(GetUser(identity));
@@ -33,7 +33,7 @@ public class AppAuthStateProvider(ITokenService tokenService) : AuthenticationSt
     public async Task MarkUserAsLoggedOut()
     {
         await tokenService.RemoveTokenAsync();
-        
+
         var identity = new ClaimsIdentity();
         NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(GetUser(identity))));
     }

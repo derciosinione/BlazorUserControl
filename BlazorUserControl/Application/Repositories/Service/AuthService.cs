@@ -16,19 +16,13 @@ public class AuthService(IR2YGqlClient client, ITokenService tokenService, AppAu
         var login = result.Data!.Login;
 
         await tokenService.SetTokenAsync(login.Token);
-
         appAuthStateProvider.MarkUserAsAuthenticated(login.Token);
 
         return login;
     }
 
-    public async Task LogOutAsync() => 
-        await appAuthStateProvider.MarkUserAsLoggedOut();
-
-    public async Task<IReadOnlyList<IGetAllUsers_AllUsers_Nodes>?> GetAllUsers()
+    public async Task LogOutAsync()
     {
-        var result = await client.GetAllUsers.ExecuteAsync(null, null);
-        result.EnsureNoErrors();
-        return result.Data!.AllUsers!.Nodes;
+        await appAuthStateProvider.MarkUserAsLoggedOut();
     }
 }

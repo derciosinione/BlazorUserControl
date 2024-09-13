@@ -19,8 +19,12 @@ public class TokenService : ITokenService
 
     public async Task<string> GetTokenAsync()
     {
-        var result = await _jsRuntime.InvokeAsync<string>(JsFunctions.GetToken);
-        return result;
+        return await _jsRuntime.InvokeAsync<string>(JsFunctions.GetToken);
+    }
+
+    public string GetToken()
+    {
+        return Task.Run(async () => await _jsRuntime.InvokeAsync<string>(JsFunctions.GetToken)).Result;
     }
 
     public async Task RemoveTokenAsync()

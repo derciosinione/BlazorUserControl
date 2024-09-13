@@ -1,11 +1,9 @@
 ﻿@page "/op/"
 @layout MainLayout
-@inject IAuthService AuthService
+@inject IUserService UserService
 
-<head>
-    <title>Home</title>
-    <link href="css/home.css" rel="stylesheet"/>
-</head>
+<PageTitle>Home</PageTitle>
+<link href="css/home.css" rel="stylesheet"/>
 
 <h1>Welcome to Home Page</h1>
 
@@ -17,11 +15,17 @@
         <span class="sr-only"></span>
     </div>
 }
+else if (!string.IsNullOrEmpty(_message))
+{
+    <div class="alert alert-info">
+        @_message
+    </div>
+}
 else if (_users == null || !_users.Any())
 {
-    <p>
-        <em>No users found.</em>
-    </p>
+    <div class="alert alert-warning">
+        No users found.
+    </div>
 }
 else
 {
@@ -49,10 +53,38 @@ else
 @code {
     private IReadOnlyList<IGetAllUsers_AllUsers_Nodes>? _users;
     private bool _isLoading = true;
+    private string? _message;
 
     protected override async Task OnInitializedAsync()
     {
-        _users = await AuthService.GetAllUsers();
-        _isLoading = false;
+        try
+        {
+            var response = await UserService.GetAllUsers();
+
+            if (response.IsFailed)
+            {
+                _message = "Failed to load users. Please try again later.";
+                Console.WriteLine(response.Errors);
+            }
+            else
+            {
+                _users = response.Value;
+
+                if (_users == null || !_users.Any())
+                {
+                    _message = "No users found.";
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            _message = "An unexpected error occurred. Please try again later.";
+            Console.WriteLine($"Exception: {ex.Message}");
+        }
+        finally
+        {
+            _isLoading = false;
+        }
     }
+
 }

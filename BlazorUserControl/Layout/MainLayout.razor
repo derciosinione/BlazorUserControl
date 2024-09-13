@@ -31,5 +31,8 @@
 
 @code
 {
-    private async Task Logout() => await AuthenticationStateProvider.MarkUserAsLoggedOut();
+    private async Task Logout()
+    {
+        await AuthenticationStateProvider.MarkUserAsLoggedOut();
+    }
 }
