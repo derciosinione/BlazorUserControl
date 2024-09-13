@@ -15,7 +15,8 @@ public abstract class JwtHelper
         var claims = jwtToken.Claims.ToList();
         var issuer = claims.FirstOrDefault(c => c.Type == "iss")?.Value;
         var principal = ValidateToken(token, issuer!);
-        return principal;
+
+        return principal is null ? null : claims;
     }
 
     private static IEnumerable<Claim>? ValidateToken(string token, string issuer)

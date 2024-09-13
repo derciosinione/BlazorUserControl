@@ -3,33 +3,37 @@
 
 @page "/login"
 @using BlazorUserControl.Application.Contracts.Request
+@using BlazorUserControl.Application.Provider
 @inject AppAuthStateProvider AuthenticationStateProvider
 
 
 @layout LoginLayout
 
-<PageTitle>Home</PageTitle>
+<PageTitle>Login</PageTitle>
 
-<h3>SigIn</h3>
+@if (!_isLoading)
+{
+    <h3>SigIn</h3>
 
-
-<PageTitle>Home</PageTitle>
-
-<input @bind="_loginRequest.Username" placeholder="Username"/>
-<input @bind="_loginRequest.Password" type="password" placeholder="Password"/>
-<button @onclick="Login">Login</button>
-
-<p>@_message</p>
+    <input @bind="_loginRequest.Username" placeholder="Username"/>
+    <input @bind="_loginRequest.Password" type="password" placeholder="Password"/>
+    <button @onclick="Login">Login</button>
+    <p>@_message</p>
+}
 
 @code
 {
     private string? _message;
+    private bool _isLoading = true;
+    
     private readonly LoginRequest _loginRequest = new("brito@tracosespacos.pt", "12345678");
 
     protected override async Task OnInitializedAsync()
     {
         if (await AuthenticationStateProvider.IsAuthenticated())
             Navigation.NavigateTo(Routes.Dashboard);
+
+        _isLoading = false;
     }
 
     private async Task Login()

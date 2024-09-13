@@ -1,8 +1,8 @@
 using BlazorUserControl;
 using BlazorUserControl.Application.Extensions;
+using BlazorUserControl.Application.Provider;
 using BlazorUserControl.Application.Repositories.Interface;
 using BlazorUserControl.Application.Repositories.Service;
-using BlazorUserControl.Provider;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
@@ -20,7 +20,14 @@ builder.Services
     .AddR2YGqlClient()
     .ConfigureHttpClient(GraphQlClient.ConfigureClient);
 
-builder.Services.AddAuthorizationCore();
+builder.Services.AddAuthorizationCore(options =>
+{
+    options.AddPolicy("AdminOnly", policy => policy.RequireClaim("Perfil", "ADMIN"));
+    options.AddPolicy("MemberOnly", policy => policy.RequireClaim("Perfil", "MEM"));
+    options.AddPolicy("ManagerOnly", policy => policy.RequireClaim("Perfil", "MR"));
+    options.AddPolicy("DNOnly", policy => policy.RequireClaim("Perfil", "DN"));
+});
+
 builder.Services.AddScoped<AppAuthStateProvider>();
 builder.Services.AddScoped<AuthenticationStateProvider, AppAuthStateProvider>();
 

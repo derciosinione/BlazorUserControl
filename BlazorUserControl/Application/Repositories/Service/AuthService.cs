@@ -1,5 +1,5 @@
-﻿using BlazorUserControl.Application.Repositories.Interface;
-using BlazorUserControl.Provider;
+﻿using BlazorUserControl.Application.Provider;
+using BlazorUserControl.Application.Repositories.Interface;
 using StrawberryShake;
 
 namespace BlazorUserControl.Application.Repositories.Service;
@@ -20,6 +20,12 @@ public class AuthService(IR2YGqlClient client, ITokenService tokenService, AppAu
         appAuthStateProvider.MarkUserAsAuthenticated(login.Token);
 
         return login;
+    }
+
+    public async Task LogOutAsync()
+    {
+        await tokenService.RemoveTokenAsync();
+        appAuthStateProvider.MarkUserAsLoggedOut();
     }
 
     public async Task<IReadOnlyList<IGetAllUsers_AllUsers_Nodes>?> GetAllUsers()
