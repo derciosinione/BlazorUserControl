@@ -1,12 +1,13 @@
-using BlazorUserControl.Application.Provider;
-using BlazorUserControl.Application.Repositories.Interface.Authentications;
-using BlazorUserControl.Application.Repositories.Interface.Users;
-using BlazorUserControl.Application.Repositories.Service.Authentications;
-using BlazorUserControl.Application.Repositories.Service.Users;
+using Application.Provider;
+using Application.Repositories.Interface.Authentications;
+using Application.Repositories.Interface.Users;
+using Application.Repositories.Service.Authentications;
+using Application.Repositories.Service.Users;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace BlazorUserControl.Application.Extensions;
+namespace Application.Extensions;
 
 public static class AppInjections
 {

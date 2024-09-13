@@ -1,9 +1,9 @@
 ﻿using System.Security.Claims;
-using BlazorUserControl.Application.Extensions;
-using BlazorUserControl.Application.Repositories.Interface.Authentications;
+using Application.Extensions;
+using Application.Repositories.Interface.Authentications;
 using Microsoft.AspNetCore.Components.Authorization;
 
-namespace BlazorUserControl.Application.Provider;
+namespace Application.Provider;
 
 public class AppAuthStateProvider(ITokenService tokenService) : AuthenticationStateProvider
 {

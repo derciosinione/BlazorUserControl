@@ -1,8 +1,8 @@
-﻿using BlazorUserControl.Application.Provider;
-using BlazorUserControl.Application.Repositories.Interface.Authentications;
+﻿using Application.Provider;
+using Application.Repositories.Interface.Authentications;
 using StrawberryShake;
 
-namespace BlazorUserControl.Application.Repositories.Service.Authentications;
+namespace Application.Repositories.Service.Authentications;
 
 public class AuthService(IR2YGqlClient client, ITokenService tokenService, AppAuthStateProvider appAuthStateProvider)
     : IAuthService

@@ -1,6 +1,6 @@
 using FluentResults;
 
-namespace BlazorUserControl.Application.Repositories.Interface.Users;
+namespace Application.Repositories.Interface.Users;
 
 public interface IUserService
 {

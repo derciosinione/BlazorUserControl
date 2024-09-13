@@ -1,5 +1,5 @@
+using Application.Extensions;
 using BlazorUserControl;
-using BlazorUserControl.Application.Extensions;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 

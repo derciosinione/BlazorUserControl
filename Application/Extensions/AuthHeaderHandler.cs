@@ -1,7 +1,7 @@
 using System.Net.Http.Headers;
-using BlazorUserControl.Application.Repositories.Interface.Authentications;
+using Application.Repositories.Interface.Authentications;
 
-namespace BlazorUserControl.Application.Extensions;
+namespace Application.Extensions;
 
 public class AuthHeaderHandler(ITokenService tokenService) : DelegatingHandler
 {

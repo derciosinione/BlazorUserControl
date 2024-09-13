@@ -1,7 +1,7 @@
-using BlazorUserControl.Application.Repositories.Interface.Authentications;
+using Application.Repositories.Interface.Authentications;
 using Microsoft.JSInterop;
 
-namespace BlazorUserControl.Application.Repositories.Service.Authentications;
+namespace Application.Repositories.Service.Authentications;
 
 public class TokenService(IJSRuntime jsRuntime) : ITokenService
 {

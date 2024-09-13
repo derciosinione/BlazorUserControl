@@ -1,4 +1,4 @@
-namespace BlazorUserControl.Application.Repositories.Interface.Authentications;
+namespace Application.Repositories.Interface.Authentications;
 
 public interface ITokenService
 {

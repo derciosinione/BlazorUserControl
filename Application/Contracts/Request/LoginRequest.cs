@@ -1,4 +1,4 @@
-﻿namespace BlazorUserControl.Application.Contracts.Request;
+﻿namespace Application.Contracts.Request;
 
 public record LoginRequest
 {

@@ -1,8 +1,8 @@
-using BlazorUserControl.Application.Repositories.Interface.Users;
+using Application.Repositories.Interface.Users;
 using FluentResults;
 using StrawberryShake;
 
-namespace BlazorUserControl.Application.Repositories.Service.Users;
+namespace Application.Repositories.Service.Users;
 
 public class UserService(IR2YGqlClient client) : IUserService
 {

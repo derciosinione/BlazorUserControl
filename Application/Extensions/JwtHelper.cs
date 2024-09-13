@@ -3,7 +3,7 @@ using System.Security.Claims;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 
-namespace BlazorUserControl.Application.Extensions;
+namespace Application.Extensions;
 
 public static class JwtHelper
 {

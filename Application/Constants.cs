@@ -1,4 +1,4 @@
-namespace BlazorUserControl.Application;
+namespace Application;
 
 public static class JsFunctions
 {

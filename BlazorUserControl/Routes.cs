@@ -1,4 +1,4 @@
-namespace BlazorUserControl.Application;
+namespace BlazorUserControl;
 
 public static class Routes
 {
