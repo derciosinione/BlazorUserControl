@@ -11,13 +11,19 @@ public class AppAuthStateProvider(ITokenService tokenService) : AuthenticationSt
     {
         var token = await tokenService.GetTokenAsync();
 
-        //TODO:: Invalidar a sessao do user caso token for invalido
-        var identity = !string.IsNullOrEmpty(token)
-            ? new ClaimsIdentity(JwtHelper.ExtractClaims(token)!, Constants.JwtAuthType)
-            : new ClaimsIdentity();
+        var claims = JwtHelper.ExtractClaims(token);
 
-        var user = new ClaimsPrincipal(identity);
-        return new AuthenticationState(user);
+        var identity = new ClaimsIdentity();
+
+        if (claims.Count != 0)
+        {
+            identity = new ClaimsIdentity(claims, Constants.JwtAuthType);
+            return new AuthenticationState(GetUser(identity));
+        }
+
+        var authenticationState = new AuthenticationState(GetUser(identity));
+        NotifyAuthenticationStateChanged(Task.FromResult(authenticationState));
+        return authenticationState;
     }
 
     public void MarkUserAsAuthenticated(string token)
@@ -40,11 +46,6 @@ public class AppAuthStateProvider(ITokenService tokenService) : AuthenticationSt
     {
         var authState = await GetAuthenticationStateAsync();
         return authState.User.Identity!.IsAuthenticated;
-    }
-
-    private static IEnumerable<Claim?>? ParseClaimsFromJwt(string jwt)
-    {
-        return JwtHelper.ExtractClaims(jwt);
     }
 
     private static ClaimsPrincipal GetUser(ClaimsIdentity identity)

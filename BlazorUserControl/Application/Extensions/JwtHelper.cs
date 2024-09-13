@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using System.IdentityModel.Tokens.Jwt;
+﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
@@ -8,15 +7,17 @@ namespace BlazorUserControl.Application.Extensions;
 
 public abstract class JwtHelper
 {
-    public static IEnumerable<Claim?>? ExtractClaims(string token)
+    public static List<Claim> ExtractClaims(string token)
     {
+        if (string.IsNullOrEmpty(token)) return [];
+
         var handler = new JwtSecurityTokenHandler();
         var jwtToken = handler.ReadJwtToken(token);
         var claims = jwtToken.Claims.ToList();
         var issuer = claims.FirstOrDefault(c => c.Type == "iss")?.Value;
         var principal = ValidateToken(token, issuer!);
 
-        return principal is null ? null : claims;
+        return principal is null ? [] : claims;
     }
 
     private static IEnumerable<Claim>? ValidateToken(string token, string issuer)
@@ -41,17 +42,17 @@ public abstract class JwtHelper
         }
         catch (SecurityTokenExpiredException)
         {
-            Debug.WriteLine("Token has expired.");
+            Console.WriteLine("Token has expired.");
             return null;
         }
         catch (SecurityTokenException ex)
         {
-            Debug.WriteLine($"Token validation failed: {ex.Message}");
+            Console.WriteLine($"Token validation failed: {ex.Message}");
             return null;
         }
         catch (Exception ex)
         {
-            Debug.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
             return null;
         }
     }
