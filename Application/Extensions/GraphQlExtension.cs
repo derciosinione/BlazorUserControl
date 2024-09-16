@@ -9,8 +9,10 @@ public static class GraphQlExtension
     {
         builder.Services.AddTransient<AuthHeaderHandler>();
 
+        var apiUrl = builder.Configuration["GraphQlApi:BaseUrl"]!;
+        
         builder.Services.AddHttpClient(R2YGqlClient.ClientName,
-                client => client.BaseAddress = new Uri("https://localhost:8081/graphql"))
+                client => client.BaseAddress = new Uri(apiUrl))
             .AddHttpMessageHandler<AuthHeaderHandler>();
 
         builder.Services.AddR2YGqlClient();
