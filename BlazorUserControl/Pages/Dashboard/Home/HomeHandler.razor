@@ -1,0 +1,41 @@
+@using Application
+@using Application.Repositories.Interface.Users
+@inject IUserService UserService
+
+@code {
+    protected IReadOnlyList<IGetAllUsers_AllUsers_Nodes>? Users;
+    protected bool IsLoading = true;
+    protected string? Message;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var response = await UserService.GetAllUsers();
+
+            if (response.IsFailed)
+            {
+                Message = "Failed to load users. Please try again later.";
+                Console.WriteLine(response.Errors);
+            }
+            else
+            {
+                Users = response.Value;
+
+                if (Users == null || !Users.Any())
+                {
+                    Message = "No users found.";
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Message = "An unexpected error occurred. Please try again later.";
+            Console.WriteLine($"Exception: {ex.Message}");
+        }
+        finally
+        {
+            IsLoading = false;
+        }
+    }
+}

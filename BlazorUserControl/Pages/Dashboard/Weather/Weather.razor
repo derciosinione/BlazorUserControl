@@ -1,5 +1,6 @@
-﻿@page "/op/weather"
-@inject HttpClient Http
+﻿@inherits WeatherHandler
+
+@page "/op/weather"
 
 <PageTitle>Weather</PageTitle>
 
@@ -36,25 +37,4 @@ else
         }
         </tbody>
     </table>
-}
-
-@code {
-    private WeatherForecast[]? forecasts;
-
-    protected override async Task OnInitializedAsync()
-    {
-        forecasts = await Http.GetFromJsonAsync<WeatherForecast[]>("sample-data/weather.json");
-    }
-
-    public class WeatherForecast
-    {
-        public DateOnly Date { get; set; }
-
-        public int TemperatureC { get; set; }
-
-        public string? Summary { get; set; }
-
-        public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-    }
-
 }

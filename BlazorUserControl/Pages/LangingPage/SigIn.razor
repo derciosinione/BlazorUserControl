@@ -1,62 +1,16 @@
-@inject IAuthService AuthService
-@inject NavigationManager Navigation
-@inject AppAuthStateProvider AuthenticationStateProvider
+@inherits SiginHandler
+@layout LoginLayout
 
 @page "/login"
-@using Application.Contracts.Request
-@using Application.Provider
-@using Application.Repositories.Interface.Authentications
-
-
-@layout LoginLayout
 
 <PageTitle>Login</PageTitle>
 
-@if (!_isLoading)
+@if (!IsLoading)
 {
     <h3>SigIn</h3>
 
-    <input @bind="_loginRequest.Username" placeholder="Username"/>
-    <input @bind="_loginRequest.Password" type="password" placeholder="Password"/>
+    <input @bind="LoginRequest.Username" placeholder="Username"/>
+    <input @bind="LoginRequest.Password" type="password" placeholder="Password"/>
     <button @onclick="Login">Login</button>
-    <p>@_message</p>
-}
-
-@code
-{
-    private string? _message;
-    private bool _isLoading = true;
-
-    private readonly LoginRequest _loginRequest = new("brito@tracosespacos.pt", "12345678");
-
-    protected override async Task OnInitializedAsync()
-    {
-        var isAuthenticated = await AuthenticationStateProvider.IsAuthenticated();
-
-        if (isAuthenticated)
-            Navigation.NavigateTo(Routes.Dashboard);
-
-        _isLoading = false;
-    }
-
-    private async Task Login()
-    {
-        try
-        {
-            var result = await AuthService.LoginAsync(_loginRequest.Username!, _loginRequest.Password!);
-
-            if (!string.IsNullOrEmpty(result!.Token))
-            {
-                _message = "Login successful!";
-                Navigation.NavigateTo(Routes.Dashboard);
-            }
-
-            _message = "Login failed!";
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-            _message = "Login failed!";
-        }
-    }
+    <p>@Message</p>
 }

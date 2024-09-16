@@ -1,0 +1,46 @@
+@inject NavigationManager Navigation
+@using Application.Contracts.Request
+@using Application.Provider
+@using Application.Repositories.Interface.Authentications
+@inject IAuthService AuthService
+@inject AppAuthStateProvider AuthenticationStateProvider
+
+
+@code
+{
+    protected string? Message;
+    protected bool IsLoading = true;
+
+    protected readonly LoginRequest LoginRequest = new("brito@tracosespacos.pt", "12345678");
+
+    protected override async Task OnInitializedAsync()
+    {
+        var isAuthenticated = await AuthenticationStateProvider.IsAuthenticated();
+
+        if (isAuthenticated)
+            Navigation.NavigateTo(Routes.Dashboard);
+
+        IsLoading = false;
+    }
+
+    protected async Task Login()
+    {
+        try
+        {
+            var result = await AuthService.LoginAsync(LoginRequest.Username!, LoginRequest.Password!);
+
+            if (!string.IsNullOrEmpty(result!.Token))
+            {
+                Message = "Login successful!";
+                Navigation.NavigateTo(Routes.Dashboard);
+            }
+
+            Message = "Login failed!";
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            Message = "Login failed!";
+        }
+    }
+}

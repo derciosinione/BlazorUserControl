@@ -1,0 +1,51 @@
+﻿@page "/op/"
+@layout MainLayout
+@inherits HomeHandler
+
+<PageTitle>Home</PageTitle>
+<link href="css/home.css" rel="stylesheet"/>
+
+<h1>Welcome to Home Page</h1>
+
+<p>This component lists all users fetched from the server.</p>
+
+@if (IsLoading)
+{
+    <div class="spinner-border" role="status">
+        <span class="sr-only"></span>
+    </div>
+}
+else if (!string.IsNullOrEmpty(Message))
+{
+    <div class="alert alert-info">
+        @Message
+    </div>
+}
+else if (Users == null || !Users.Any())
+{
+    <div class="alert alert-warning">
+        No users found.
+    </div>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Email</th>
+            <th>Created At</th>
+            <th>Updated At</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var user in Users)
+        {
+            <tr>
+                <td>@user.Email</td>
+                <td>@user.CreatedAt.ToString("dd MMM yyyy")</td>
+                <td>@user.UpdatedAt.ToString("dd MMM yyyy")</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
