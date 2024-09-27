@@ -10,5 +10,4 @@
         var authenticated = await AuthenticationStateProvider.IsAuthenticated();
         Navigation.NavigateTo(authenticated ? Routes.Dashboard : Routes.Login);
     }
-
 }

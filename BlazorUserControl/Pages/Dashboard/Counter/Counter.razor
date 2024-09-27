@@ -1,4 +1,7 @@
-﻿@inherits CounterHandler
+﻿@using Application.Extensions
+@using Application.Models
+@inherits CounterHandler
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
 @page "/op/counter"
 
@@ -8,7 +11,26 @@
 
 <h1>Counter</h1>
 
+
+@if (_user != null)
+{
+    <p>Welcome, @_user.Email</p>
+    <p>Perfil, @_user.Role</p>
+    <p>Pais, @_user.Pais</p>
+    <p>Moeda, @_user.Moeda</p>
+}
+
 <p role="status">Current count: @CurrentCount</p>
 
 <button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
 
+@code
+{
+    private  AuthUserClaims? _user;
+    
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        _user = authState.User.ToUserModel();
+    }
+}
