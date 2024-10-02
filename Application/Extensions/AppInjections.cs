@@ -1,4 +1,6 @@
 using Application.Provider;
+using Application.Repositories.ContentManagement.Interface;
+using Application.Repositories.ContentManagement.Service;
 using Application.Repositories.Interface.Authentications;
 using Application.Repositories.Interface.Users;
 using Application.Repositories.Service.Authentications;
@@ -16,10 +18,12 @@ public static class AppInjections
         builder.Services.AddScoped<IAuthService, AuthService>();
         builder.Services.AddSingleton<ITokenService, TokenService>();
         builder.Services.AddSingleton<IUserService, UserService>();
+        builder.Services.AddSingleton<IContentManagementService, ContentManagementService>();
 
         builder.Services.AddScoped<AppAuthStateProvider>();
         builder.Services.AddScoped<AuthenticationStateProvider, AppAuthStateProvider>();
 
+        builder.AddAHttpRetryExtensionService();
         builder.AddGraphQlClient();
         builder.AddAuthorizationPolicy();
     }

@@ -1,4 +1,10 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
+﻿@using Application.Contracts.Menus
+@using Application.Provider
+@using Application.Repositories.ContentManagement.Interface
+@inject IContentManagementService ContentManagementService
+@inject AppAuthStateProvider AuthenticationStateProvider
+
+<div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
         <a class="navbar-brand" href="">User Control</a>
         <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
@@ -29,6 +35,18 @@
                 <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> User Manager
             </NavLink>
         </div>
+        
+        @if (MenuContext != null)
+        {
+            foreach (var menu in MenuContext.Menus!)
+            {
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="@menu.Action">
+                        <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> @menu.Name
+                    </NavLink>
+                </div>
+            }
+        }
     </nav>
 </div>
 
@@ -36,9 +54,19 @@
     private bool _collapseNavMenu = true;
     private string? NavMenuCssClass => _collapseNavMenu ? "collapse" : null;
 
+    private ContextResponse? MenuContext { get; set; }
+    
+    protected override async Task OnInitializedAsync()
+    {
+        var userInfo = await AuthenticationStateProvider.GetUserInfo();
+        
+        var result = await ContentManagementService.GetContextMenuByType(userInfo!.Role!);
+    
+        if (result.IsSuccess) MenuContext = result.Value;
+    }
+
     private void ToggleNavMenu()
     {
         _collapseNavMenu = !_collapseNavMenu;
     }
-
 }

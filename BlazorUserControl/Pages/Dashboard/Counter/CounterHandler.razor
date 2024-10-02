@@ -1,9 +1,14 @@
+@using Application.State
 
 @code {
     protected int CurrentCount;
-
+    
+    [CascadingParameter]
+    public required AppState AppState { get; set; }
+    
     protected void IncrementCount()
     {
         CurrentCount++;
+        AppState.Counter++;
     }
 }

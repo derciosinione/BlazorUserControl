@@ -1,6 +1,8 @@
 ﻿using System.Security.Claims;
 using Application.Extensions;
+using Application.Models;
 using Application.Repositories.Interface.Authentications;
+using Application.State;
 using Microsoft.AspNetCore.Components.Authorization;
 
 namespace Application.Provider;
@@ -20,6 +22,12 @@ public class AppAuthStateProvider(ITokenService tokenService) : AuthenticationSt
         NotifyAuthenticationStateChanged(Task.FromResult(authenticationState));
 
         return authenticationState;
+    }
+    
+    public  async Task<AuthUserClaims?> GetUserInfo()
+    {
+        var authenticationState = await GetAuthenticationStateAsync();
+        return authenticationState.User.ToUserModel();
     }
 
     public void MarkUserAsAuthenticated(string token)

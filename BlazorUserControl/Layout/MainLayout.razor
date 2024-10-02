@@ -1,4 +1,5 @@
 ﻿@using Application.Provider
+@using Application.State
 @inherits LayoutComponentBase
 @inject NavigationManager Navigation
 @inject AppAuthStateProvider AuthenticationStateProvider
@@ -6,21 +7,23 @@
 <CascadingAuthenticationState>
     <AuthorizeView>
         <Authorized>
-            <div class="page">
-                <div class="sidebar">
-                    <NavMenu/>
-                </div>
-
-                <main>
-                    <div class="top-row px-4">
-                        <a href="#" @onclick="Logout">Logout</a>
+            <CascadingValue Value="@AppState">
+                <div class="page">
+                    <div class="sidebar">
+                        <NavMenu/>
                     </div>
 
-                    <article class="content px-4">
-                        @Body
-                    </article>
-                </main>
-            </div>
+                    <main>
+                        <div class="top-row px-4">
+                            <a href="#" @onclick="Logout">Logout</a>
+                        </div>
+
+                        <article class="content px-4">
+                            @Body
+                        </article>
+                    </main>
+                </div>
+            </CascadingValue>
         </Authorized>
         <NotAuthorized>
             @{
@@ -32,6 +35,8 @@
 
 @code
 {
+    public AppState AppState { get; set; } = new AppState();
+    
     private async Task Logout()
     {
         await AuthenticationStateProvider.MarkUserAsLoggedOutAsync();

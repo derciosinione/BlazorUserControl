@@ -1,7 +1,7 @@
-﻿@using Application.Extensions
-@using Application.Models
+﻿@using Application.Models
+@using Application.Provider
 @inherits CounterHandler
-@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject AppAuthStateProvider AuthenticationStateProvider
 
 @page "/op/counter"
 
@@ -21,6 +21,7 @@
 }
 
 <p role="status">Current count: @CurrentCount</p>
+<p role="status">AppState Current count: @AppState.Counter</p>
 
 <button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
 
@@ -30,7 +31,6 @@
     
     protected override async Task OnInitializedAsync()
     {
-        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-        _user = authState.User.ToUserModel();
+        _user = await AuthenticationStateProvider.GetUserInfo();
     }
 }
