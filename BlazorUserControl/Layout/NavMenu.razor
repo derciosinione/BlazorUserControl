@@ -35,7 +35,7 @@
                 <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> User Manager
             </NavLink>
         </div>
-        
+
         @if (MenuContext != null)
         {
             foreach (var menu in MenuContext.Menus!)
@@ -55,13 +55,13 @@
     private string? NavMenuCssClass => _collapseNavMenu ? "collapse" : null;
 
     private ContextResponse? MenuContext { get; set; }
-    
+
     protected override async Task OnInitializedAsync()
     {
         var userInfo = await AuthenticationStateProvider.GetUserInfo();
-        
+
         var result = await ContentManagementService.GetContextMenuByType(userInfo!.Role!);
-    
+
         if (result.IsSuccess) MenuContext = result.Value;
     }
 
@@ -69,4 +69,5 @@
     {
         _collapseNavMenu = !_collapseNavMenu;
     }
+
 }

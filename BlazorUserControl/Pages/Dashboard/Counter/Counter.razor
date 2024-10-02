@@ -27,8 +27,8 @@
 
 @code
 {
-    private  AuthUserClaims? _user;
-    
+    private AuthUserClaims? _user;
+
     protected override async Task OnInitializedAsync()
     {
         _user = await AuthenticationStateProvider.GetUserInfo();

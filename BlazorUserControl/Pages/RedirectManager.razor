@@ -1,11 +1,10 @@
 ﻿@page "/"
-
 @using Application.Provider
 @inject NavigationManager Navigation
 @inject AppAuthStateProvider AuthenticationStateProvider
 
 @code {
-    
+
     protected override async Task OnInitializedAsync()
     {
         var authenticated = await AuthenticationStateProvider.IsAuthenticated();
@@ -15,7 +14,8 @@
             Navigation.NavigateTo(Routes.Login);
             return;
         }
-        
+
         Navigation.NavigateTo(Routes.Dashboard);
     }
+
 }

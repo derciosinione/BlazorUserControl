@@ -1,3 +1,4 @@
+using System.Net;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Polly;
@@ -11,10 +12,8 @@ public static class HttpRetryExtension
     {
         var apiUrl = builder.Configuration["ContentManagementApi:BaseUrl"]!;
 
-        builder.Services.AddHttpClient(Constants.RetryHttpClientName, client =>
-            {
-                client.BaseAddress = new Uri(apiUrl);
-            })
+        builder.Services.AddHttpClient(Constants.RetryHttpClientName,
+                client => { client.BaseAddress = new Uri(apiUrl); })
             .AddPolicyHandler(GetRetryPolicy(retryCount));
     }
 
@@ -22,13 +21,14 @@ public static class HttpRetryExtension
     {
         return HttpPolicyExtensions
             .HandleTransientHttpError() // Handle 5xx and network-related errors
-            .OrResult(response => response.StatusCode == System.Net.HttpStatusCode.NotFound) // Handle NotFound
+            .OrResult(response => response.StatusCode == HttpStatusCode.NotFound) // Handle NotFound
             .WaitAndRetryAsync(retryCount, retryAttempt =>
                     TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)), // Exponential backoff
                 (outcome, timeSpan, attempt, context) =>
                 {
                     // Optionally log the retry attempt
-                    Console.WriteLine($"Retry {attempt} encountered an error: {outcome.Exception?.Message}. Waiting {timeSpan} before next retry.");
+                    Console.WriteLine(
+                        $"Retry {attempt} encountered an error: {outcome.Exception?.Message}. Waiting {timeSpan} before next retry.");
                 });
     }
 }

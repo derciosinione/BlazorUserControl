@@ -10,5 +10,5 @@ public enum ErrorCode
     Forbiden,
     Exception,
     Parsing,
-    Generic,
+    Generic
 }

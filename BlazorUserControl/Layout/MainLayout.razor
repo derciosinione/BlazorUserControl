@@ -35,8 +35,8 @@
 
 @code
 {
-    public AppState AppState { get; set; } = new AppState();
-    
+    public AppState AppState { get; set; } = new();
+
     private async Task Logout()
     {
         await AuthenticationStateProvider.MarkUserAsLoggedOutAsync();

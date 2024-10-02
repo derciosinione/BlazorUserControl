@@ -7,9 +7,8 @@
     protected IReadOnlyList<IGetAllUsers_AllUsers_Nodes>? Users;
     protected bool IsLoading = true;
     protected string? Message;
-    
-    [CascadingParameter]
-    public required AppState AppState { get; set; }
+
+    [CascadingParameter] public required AppState AppState { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -42,4 +41,5 @@
             IsLoading = false;
         }
     }
+
 }

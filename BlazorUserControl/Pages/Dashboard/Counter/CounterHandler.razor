@@ -2,13 +2,13 @@
 
 @code {
     protected int CurrentCount;
-    
-    [CascadingParameter]
-    public required AppState AppState { get; set; }
-    
+
+    [CascadingParameter] public required AppState AppState { get; set; }
+
     protected void IncrementCount()
     {
         CurrentCount++;
         AppState.Counter++;
     }
+
 }

@@ -1,5 +1,4 @@
 using System.Net;
-using Application.Contracts;
 using Application.Contracts.Menus;
 using Application.Repositories.ContentManagement.Interface;
 using FluentResults;
@@ -9,8 +8,8 @@ namespace Application.Repositories.ContentManagement.Service;
 
 public class ContentManagementService(IHttpClientFactory httpClientFactory) : IContentManagementService
 {
- 
-    public async Task<Result<ContextResponse>> GetContextMenuByType(string type, string language=Constants.DefaultLanguage, CancellationToken cancellationToken = default)
+    public async Task<Result<ContextResponse>> GetContextMenuByType(string type,
+        string language = Constants.DefaultLanguage, CancellationToken cancellationToken = default)
     {
         try
         {
@@ -22,10 +21,7 @@ public class ContentManagementService(IHttpClientFactory httpClientFactory) : IC
 
             var httpResponseContent = await httpResponse.Content.ReadAsStringAsync(cancellationToken);
 
-            if (httpResponse.StatusCode == HttpStatusCode.NotFound)
-            {
-                return Result.Fail("Menu not found");
-            }
+            if (httpResponse.StatusCode == HttpStatusCode.NotFound) return Result.Fail("Menu not found");
 
             var response = JsonConvert.DeserializeObject<ContextResponse>(httpResponseContent);
 
@@ -37,6 +33,4 @@ public class ContentManagementService(IHttpClientFactory httpClientFactory) : IC
             throw new Exception("Unable to connect Content Management Service");
         }
     }
-    
- 
 }

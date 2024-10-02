@@ -11,8 +11,8 @@ builder.Services.AddScoped(_ => new HttpClient { BaseAddress = new Uri(builder.H
 
 var environment = builder.HostEnvironment.Environment;
 
-builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-    .AddJsonFile($"appsettings.{environment}.json", optional: true, reloadOnChange: true);  
+builder.Configuration.AddJsonFile("appsettings.json", false, true)
+    .AddJsonFile($"appsettings.{environment}.json", true, true);
 
 builder.RegisterAppDependencyInjections();
 
