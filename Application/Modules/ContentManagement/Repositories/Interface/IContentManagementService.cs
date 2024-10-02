@@ -1,7 +1,7 @@
-using Application.Contracts.Menus;
+using Application.Modules.ContentManagement.Contracts.Menus.Response;
 using FluentResults;
 
-namespace Application.Repositories.ContentManagement.Interface;
+namespace Application.Modules.ContentManagement.Repositories.Interface;
 
 public interface IContentManagementService
 {

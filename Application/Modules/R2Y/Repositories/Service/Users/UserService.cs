@@ -1,8 +1,8 @@
-using Application.Repositories.Interface.Users;
+using Application.Modules.R2Y.Repositories.Interface.Users;
 using FluentResults;
 using StrawberryShake;
 
-namespace Application.Repositories.Service.Users;
+namespace Application.Modules.R2Y.Repositories.Service.Users;
 
 public class UserService(IR2YGqlClient client) : IUserService
 {

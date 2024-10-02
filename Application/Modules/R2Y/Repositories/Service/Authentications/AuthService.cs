@@ -1,8 +1,8 @@
-﻿using Application.Provider;
-using Application.Repositories.Interface.Authentications;
+﻿using Application.Modules.R2Y.Repositories.Interface.Authentications;
+using Application.Provider;
 using StrawberryShake;
 
-namespace Application.Repositories.Service.Authentications;
+namespace Application.Modules.R2Y.Repositories.Service.Authentications;
 
 public class AuthService(IR2YGqlClient client, ITokenService tokenService, AppAuthStateProvider appAuthStateProvider)
     : IAuthService

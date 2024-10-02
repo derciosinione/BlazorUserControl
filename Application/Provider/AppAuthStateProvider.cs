@@ -1,7 +1,7 @@
 ﻿using System.Security.Claims;
 using Application.Extensions;
-using Application.Models;
-using Application.Repositories.Interface.Authentications;
+using Application.Modules.R2Y.Models;
+using Application.Modules.R2Y.Repositories.Interface.Authentications;
 using Microsoft.AspNetCore.Components.Authorization;
 
 namespace Application.Provider;

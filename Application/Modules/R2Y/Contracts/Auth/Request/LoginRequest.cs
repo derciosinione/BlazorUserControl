@@ -1,4 +1,4 @@
-﻿namespace Application.Contracts.Request;
+﻿namespace Application.Modules.R2Y.Contracts.Auth.Request;
 
 public record LoginRequest
 {

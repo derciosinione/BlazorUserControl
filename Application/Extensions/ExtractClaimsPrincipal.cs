@@ -1,5 +1,5 @@
 using System.Security.Claims;
-using Application.Models;
+using Application.Modules.R2Y.Models;
 
 namespace Application.Extensions;
 

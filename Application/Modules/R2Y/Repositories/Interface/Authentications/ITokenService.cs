@@ -1,4 +1,4 @@
-namespace Application.Repositories.Interface.Authentications;
+namespace Application.Modules.R2Y.Repositories.Interface.Authentications;
 
 public interface ITokenService
 {

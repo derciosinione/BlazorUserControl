@@ -1,4 +1,4 @@
-namespace Application.Contracts;
+namespace Application.Contracts.ErrorHandler;
 
 public abstract class ErrorExtension
 {

@@ -1,4 +1,4 @@
-namespace Application.Models;
+namespace Application.Modules.R2Y.Models;
 
 public record AuthUserClaims
 {

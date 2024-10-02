@@ -1,10 +1,10 @@
 using System.Net;
-using Application.Contracts.Menus;
-using Application.Repositories.ContentManagement.Interface;
+using Application.Modules.ContentManagement.Contracts.Menus.Response;
+using Application.Modules.ContentManagement.Repositories.Interface;
 using FluentResults;
 using Newtonsoft.Json;
 
-namespace Application.Repositories.ContentManagement.Service;
+namespace Application.Modules.ContentManagement.Repositories.Service;
 
 public class ContentManagementService(IHttpClientFactory httpClientFactory) : IContentManagementService
 {

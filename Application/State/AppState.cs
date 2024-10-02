@@ -1,5 +1,5 @@
-using Application.Contracts.Menus;
-using Application.Models;
+using Application.Modules.ContentManagement.Contracts.Menus.Response;
+using Application.Modules.R2Y.Models;
 
 namespace Application.State;
 

@@ -1,5 +1,5 @@
 using System.Net.Http.Headers;
-using Application.Repositories.Interface.Authentications;
+using Application.Modules.R2Y.Repositories.Interface.Authentications;
 
 namespace Application.Extensions;
 

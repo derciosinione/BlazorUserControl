@@ -1,6 +1,6 @@
 using FluentResults;
 
-namespace Application.Repositories.Interface.Users;
+namespace Application.Modules.R2Y.Repositories.Interface.Users;
 
 public interface IUserService
 {

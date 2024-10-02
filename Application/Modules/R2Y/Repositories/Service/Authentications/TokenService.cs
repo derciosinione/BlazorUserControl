@@ -1,7 +1,7 @@
-using Application.Repositories.Interface.Authentications;
+using Application.Modules.R2Y.Repositories.Interface.Authentications;
 using Microsoft.JSInterop;
 
-namespace Application.Repositories.Service.Authentications;
+namespace Application.Modules.R2Y.Repositories.Service.Authentications;
 
 public class TokenService(IJSRuntime jsRuntime) : ITokenService
 {

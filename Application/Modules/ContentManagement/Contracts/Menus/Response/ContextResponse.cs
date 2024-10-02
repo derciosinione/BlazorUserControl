@@ -1,4 +1,4 @@
-namespace Application.Contracts.Menus;
+namespace Application.Modules.ContentManagement.Contracts.Menus.Response;
 
 public record ContextResponse
 {
