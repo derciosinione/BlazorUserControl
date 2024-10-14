@@ -13,7 +13,19 @@ public class ContentManagementService(IHttpClientFactory httpClientFactory) : IC
     {
         try
         {
-            var url = $"/api/contexts/{type}/menus?language={language}";
+            var pageNumber = 1;
+            var pageSize = 10;
+            string? search = null;
+            
+            var queryString = Helpers.Utils.ToQueryString(new
+            {
+                language,
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                Search = search
+            });
+            
+            var url = $"/api/contexts/{type}/menus?{queryString}";
 
             using var httpClient = httpClientFactory.CreateClient(Constants.RetryHttpClientName);
 
