@@ -1,232 +1,4326 @@
 schema {
-    query: Query
-    mutation: Mutation
+  query: Query
+  mutation: Mutation
 }
 
-type Query {
-    hello: String!
-    me: AuthUserType!
-    userCountries(email: String!): CountryType!
-    userMultiRegions(payload: MultiRegionPayloadInput!): [MultiRegionsResponse!]!
-    userRegions(payload: RegionPayloadInput!): [RegionResponse!]!
-    allUsers("Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String "Returns the last _n_ elements from the list." last: Int "Returns the elements in the list that come before the specified cursor." before: String where: UserTypeFilterInput order: [UserTypeSortInput!]): AllUsersConnection
-    user(id: UUID!): UserType!
+input ChaptersTrafficLightsSplitInput {
+  type: String!
+  typeId: String!
+  regionId: String!
+  firstAnomes: String!
+  lastAnomes: String!
 }
 
-type Mutation {
-    login(email: String! password: String!): LoginResponse!
-    createUser(input: CreateUserInput!): CreatedUserPayload!
+type MembersByProfessionType {
+  member: String!
+  email: String!
+  chapter: String!
+  company: String!
+  contactSphere: String!
+  industry_Local: String!
+  profession_Local: String!
+  industryOnly: String!
+  professionOnly: String!
+  telem: String!
+  id: Int!
+  pontos: Int!
+  pontos_Ant: Int!
 }
 
-enum ApplyPolicy {
-    BEFORE_RESOLVER
-    AFTER_RESOLVER
-    VALIDATION
+input UpdateGroupNameInput {
+  regionId: String!
+  oldName: String!
+  newName: String!
 }
 
-input UserTypeFilterInput {
-    and: [UserTypeFilterInput!]
-    or: [UserTypeFilterInput!]
-    id: UuidOperationFilterInput
-    username: StringOperationFilterInput
-    email: StringOperationFilterInput
-    name: StringOperationFilterInput
-    phoneNumber: StringOperationFilterInput
-    isStaff: StringOperationFilterInput
-    createdAt: DateTimeOperationFilterInput
-    updatedAt: DateTimeOperationFilterInput
+input CreateCountryGoalsInput {
+  startDate: Date!
+  endDate: Date!
+  country: String!
+  new: Int!
+  renewals: Int!
+  drops: Int!
+  retentionRate: Decimal!
+  absence: Decimal!
+  size: Int!
+  uau: Decimal!
+  visits: Decimal!
+  referrals: Decimal!
+  conversion: Decimal!
+  activeChapters: Int!
+  activeMembers: Int!
+  coreChapters: Int!
+  coreMembers: Int!
 }
 
-input UserTypeSortInput {
-    id: SortEnumType
-    username: SortEnumType
-    email: SortEnumType
-    name: SortEnumType
-    phoneNumber: SortEnumType
-    isStaff: SortEnumType
-    createdAt: SortEnumType
-    updatedAt: SortEnumType
+input UpdateCrmTaskInput {
+  idTask: UUID!
+  idTaskType: Int!
+  idRegion: String!
+  group: String!
+  name: String
+  notes: String
+  scheduledDate: DateTime
+  idTaskStatus: Int!
+  userName: String!
+  attachment: [String!]
+  template: String
+  site: Int
 }
 
-"A connection to a list of items."
-type AllUsersConnection {
-    "Information to aid in pagination."
-    pageInfo: PageInfo!
-    "A list of edges."
-    edges: [AllUsersEdge!]
-    "A flattened list of the nodes."
-    nodes: [UserType!]
-    "Identifies the total count of items in the connection."
-    totalCount: Int!
+"An Applied Directive is an instances of a directive as applied to a schema element. This type is NOT specified by the graphql specification presently."
+type __AppliedDirective {
+  name: String!
+  args: [__DirectiveArgument!]!
 }
 
-input UuidOperationFilterInput {
-    eq: UUID
-    neq: UUID
-    in: [UUID]
-    nin: [UUID]
-    gt: UUID
-    ngt: UUID
-    gte: UUID
-    ngte: UUID
-    lt: UUID
-    nlt: UUID
-    lte: UUID
-    nlte: UUID
+type MembersHeaderType {
+  idRegiao: String!
+  grupo: String!
+  membro: String!
+  status: String!
+  empresa: String!
+  sponsor: String!
+  morada: String!
+  cPostal: String!
+  cidade: String!
+  state: String!
+  telefone: String!
+  email: String!
+  equipe: String!
+  role_Lang: String!
+  abrev_Team: String!
+  pontos: Int!
+  pontos_Ant: Int!
+  idMTL: Long!
+  pontosCor: String!
+  m6_Ausencias: Int!
+  m12_Ausencias: Int!
+  m6_121: Int!
+  m12_121: Int!
+  m6_Ref: Int!
+  m12_Ref: Int!
+  m6_ONF: Float!
+  m12_ONF: Float!
+  m6_Vis: Int!
+  m12_Vis: Int!
+  m6_Extra: Int!
+  m12_Extra: Int!
+  extra: Boolean!
+  extra_KPI: String!
 }
 
-input StringOperationFilterInput {
-    and: [StringOperationFilterInput!]
-    or: [StringOperationFilterInput!]
-    eq: String
-    neq: String
-    contains: String
-    ncontains: String
-    in: [String]
-    nin: [String]
-    startsWith: String
-    nstartsWith: String
-    endsWith: String
-    nendsWith: String
+type CorrelationSTDEVFranjType {
+  member: String!
+  chapter: String!
+  region: String!
+  tP1: String!
+  tP2: String!
+  p1: Decimal!
+  p2: Decimal!
 }
 
-input DateTimeOperationFilterInput {
-    eq: DateTime
-    neq: DateTime
-    in: [DateTime]
-    nin: [DateTime]
-    gt: DateTime
-    ngt: DateTime
-    gte: DateTime
-    ngte: DateTime
-    lt: DateTime
-    nlt: DateTime
-    lte: DateTime
-    nlte: DateTime
+type LastClosedYearMonthType {
+  anomes: Int!
 }
 
-enum SortEnumType {
-    ASC
-    DESC
+type ThreePlusOneEvolutionAreaDirectorGraphicType {
+  anoMes: String!
+  idPaisConnect: Int!
+  idRegiao: String!
+  regiao: String!
+  director: String!
+  rdActiveMembers: Int!
+  rdNetGrowth: Int!
+  rdmpi: Float!
+  rdmpiColor: String!
+  rdop: Int!
+  rdmpiPoints: Int!
+  laNetGrowthMembers: Int!
+  laNetGrowthMembersPoints: Int!
+  laNetGrowthMembersColor: String!
+  laNetGrowthNewChapters: Int!
+  laNetGrowthNewChaptersPoints: Int!
+  laNetGrowthNewChaptersColor: String!
+  flNetGrowthJoinMembers: Int!
+  flNetGrowthJoinMembersPoints: Int!
+  flNetGrowthJoinMembersColor: String!
+  flChapterSize: Float!
+  flChapterSizePoints: Int!
+  flChapterSizeColor: String!
+  rt1A: Float!
+  rtOverall: Float!
+  rt1APoints: Int!
+  rt1AColor: String!
+  rtOverallPoints: Int!
+  rtOverallColor: String!
 }
 
-"Information about pagination in a connection."
-type PageInfo {
-    "Indicates whether more edges exist following the set defined by the clients arguments."
-    hasNextPage: Boolean!
-    "Indicates whether more edges exist prior the set defined by the clients arguments."
-    hasPreviousPage: Boolean!
-    "When paginating backwards, the cursor to continue."
-    startCursor: String
-    "When paginating forwards, the cursor to continue."
-    endCursor: String
+input MultiRGoalsInput {
+  multiRegionId: Int!
+  startDate: Date!
+  endDate: Date!
 }
 
-type UserType {
-    userRoles: UserRoleType
-    id: UUID!
-    username: String
-    email: String
-    name: String
-    phoneNumber: String
-    isStaff: String
-    createdAt: DateTime!
-    updatedAt: DateTime!
+input CreateDirectorGoalsInput {
+  regionId: String!
+  directorType: String!
+  director: String!
+  new: Int!
+  renewals: Int!
+  drops: Int!
+  retentionRate: Decimal!
+  absence: Decimal!
+  size: Int!
+  uau: Decimal!
+  visits: Decimal!
+  referrals: Decimal!
+  conversion: Decimal!
+  activeChapters: Int!
+  activeMembers: Int!
+  coreChapters: Int!
+  coreMembers: Int!
+  startDate: DateTime!
+  endDate: DateTime!
 }
 
-"An edge in a connection."
-type AllUsersEdge {
-    "A cursor for use in pagination."
-    cursor: String!
-    "The item at the end of the edge."
-    node: UserType!
+type ThreePlusOneRegionsType {
+  anomes: String!
+  idPaisConnect: Int!
+  idRegiao: String!
+  regiao: String!
+  worldRank: Int!
+  regionSize: Int!
+  rdActiveMembers: Int!
+  rdNetGrowth: Int!
+  rdmpi: Float!
+  rdmpiColor: String!
+  rdop: Int!
+  rdmpiPoints: Int!
+  laIn: Int!
+  laOut: Int!
+  laNetGrowthMembers: Int!
+  laNetGrowthMembersPoints: Int!
+  laNetGrowthMembersColor: String!
+  laNetGrowthNewChapters: Int!
+  laNetGrowthNewChaptersPoints: Int!
+  laNetGrowthNewChaptersColor: String!
+  flIn: Int!
+  flOut: Int!
+  flNetGrowthJoinMembers: Int!
+  flNetGrowthJoinMembersPoints: Int!
+  flNetGrowthJoinMembersColor: String!
+  flChapterSize: Float!
+  flChapterSizePoints: Int!
+  flChapterSizeColor: String!
+  rt1A: Float!
+  rtOverall: Float!
+  rt1APoints: Int!
+  rt1AColor: String!
+  rtOverallPoints: Int!
+  rtOverallColor: String!
+  msnps: Int!
+  mstyfcbMember: Int!
+  mstyfcbTotal: Int!
+  chfac: Int!
+  chfsc: Int!
+  chfcc: Int!
+  chfcg: Int!
+  chfcga: Int!
+  chFnGroups: Int!
+  twdc: Int!
+  twamb: Int!
+  twNewDC: Int!
+  twNewAMB: Int!
 }
 
-scalar UUID
+input CountryGoalsInput {
+  country: String!
+  startDate: Date!
+  endDate: Date!
+}
+
+type SuspendedGroupType {
+  tipo: String
+  idRegiao: String
+  regiao: String
+  grupo: String
+  dc: String
+  da: String
+  membros: Int!
+  anomes: String
+}
+
+input ThreePlusOneDirectorsAreaInput {
+  regionId: String!
+  anoMes: String!
+}
+
+input ContactSphereGroupInput {
+  group: String
+  idRegiao: Int
+  industry: String
+  profession: String
+  contactSphere: String
+  industry_Local: String
+  profession_Local: String
+  hideFromReport: Boolean
+}
+
+type ReferenceValuesType {
+  idRegiao: String!
+  dataFrom: DateTime!
+  tamV1: Decimal!
+  tamV2: Decimal!
+  tamV3: Decimal!
+  creV1: Decimal!
+  creV2: Decimal!
+  creV3: Decimal!
+  retV1: Decimal!
+  retV2: Decimal!
+  retV3: Decimal!
+  refV1: Decimal!
+  refV2: Decimal!
+  refV3: Decimal!
+  visV1: Decimal!
+  visV2: Decimal!
+  visV3: Decimal!
+  conV1: Decimal!
+  conV2: Decimal!
+  conV3: Decimal!
+  absV1: Decimal!
+  absV2: Decimal!
+  absV3: Decimal!
+  ptsV1: Decimal!
+  ptsV2: Decimal!
+  ptsV3: Decimal!
+  otov1: Decimal!
+  otov2: Decimal!
+  otov3: Decimal!
+  tyfcbv1: Decimal
+  tyfcbv2: Decimal
+  tyfcbv3: Decimal
+}
+
+input NdMrRegionsListInput {
+  profile: String!
+  profileId: String!
+  anoMes: String!
+}
+
+type NdMrRegionsListType {
+  anomes: String!
+  idRegiao: String!
+  regiao: String!
+  director: String!
+  membersActive: Int!
+  chaptersActive: Int!
+  membersCore: Int!
+  chaptersCore: Int!
+  ret: Float!
+  retCor: String!
+  conv: Float!
+  convCor: String!
+  att: Float!
+  attCor: String!
+  size: Float!
+  sizeCor: String!
+  growth: Float!
+  growthCor: String!
+  ref: Float!
+  refMwCor: String!
+  vis: Float!
+  visCwCor: String!
+  tyfcb12m: Long!
+  tyfcbm12m: Int!
+  pointsAvg: Float!
+  pointsCor: String!
+  unsAUns: Float!
+  unsAUnsCor: String!
+  ret1Ano: Float!
+  zeroRef: Float
+  zeroONF: Float
+  zeroVis: Float
+  zeroOTO: Float
+}
+
+input TrafficLightGroupEvolutionInput {
+  type: String!
+  typeId: String!
+  regionId: String!
+  group: String
+  date: String!
+}
+
+type MemberSearchResponse {
+  id: Long!
+  nome: String
+  firstname: String
+  lastname: String
+  empresa: String
+  profession: String
+  grupo: String
+  email: String
+  status: String
+  telef: String
+  telef_Alt: String
+  telem: String
+  renewalDate: DateTime!
+  joinDate: DateTime!
+  sponsor: String
+  address: String
+  city: String
+  state: String
+  zip: String
+  substitute: String
+  idConnect: String
+  idRegiao: String
+  optOut: Int!
+}
+
+input CreateGameKpiInput {
+  gameId: Int!
+  kpi: String!
+  points: Float!
+  goals: Float!
+}
+
+type RegionResponse {
+  id: String
+  region: String
+  country: String
+  language: String
+  profile: String
+  email: String
+}
+
+input UpdateDirectorGoalsInput {
+  id: Int!
+  startDate: DateTime!
+  endDate: DateTime!
+  director: String!
+  directorType: String!
+  regionId: String!
+  new: Int!
+  renewals: Int!
+  drops: Int!
+  retentionRate: Decimal!
+  absence: Decimal!
+  size: Int!
+  uau: Decimal!
+  visits: Decimal!
+  referrals: Decimal!
+  conversion: Decimal!
+  activeChapters: Int!
+  activeMembers: Int!
+  coreChapters: Int!
+  coreMembers: Int!
+}
+
+input UpdateGamesInput {
+  id: Int!
+  regionId: String
+  groupName: String
+  name: String
+  hasGoals: Boolean
+  startDate: Date
+  endDate: Date
+}
+
+input MembersNoVisitorsInput {
+  type: String!
+  typeId: String!
+  regionId: String!
+  anoMes: String!
+}
+
+type KpiGroupListType {
+  idMecGrupo: Int!
+  kpi: String
+  kpiLingua: String
+  idRegiao: String
+  mecanismo: String
+}
+
+input OperationRegionEmailSetupInput {
+  operationId: String!
+  regionId: String!
+}
+
+type NotableNetworksSiteType {
+  id: Int!
+  ord: Int!
+  member: String!
+  chapter: String!
+  ksf: String!
+  v_KSF: Float!
+}
+
+type AuthUserType {
+  id: UUID!
+  email: String
+  perfil: String
+  mPerfil: String
+  idRegiao: String
+  guidRegion: String
+  idc: String
+  mDirector: String
+  isMember: Boolean!
+  pais: String
+  moeda: String
+  role: String
+}
 
 "The `DateTime` scalar represents an ISO-8601 compliant date time type."
 scalar DateTime
 
-input MultiRegionPayloadInput {
-    email: String!
-    country: String!
-    profile: String!
+input WebStatusInput {
+  type: String!
+  typeId: String!
+  regionId: String!
 }
 
-type MultiRegionsResponse {
-    id: Int!
-    name: String
-    email: String
+input GenerateGameTeamsInput {
+  gameId: Int!
+  numberOfTeams: Int!
 }
 
-type CountryType {
-    email: String
-    countries: [CountryResponse!]
+input CrmTasksListInput {
+  type: String!
+  typeId: String!
+  regionId: String!
+  taskStatusId: Int!
+  language: String!
+  email: String!
 }
 
-type AuthUserType {
-    id: UUID!
-    email: String
-    perfil: String
-    mPerfil: String
-    idRegiao: String
-    guidRegion: String
-    idc: String
-    mDirector: String
-    isMember: Boolean!
-    pais: String
-    moeda: String
-    role: String
+input RenovationsAnoMesInput {
+  type: String!
+  typeId: String!
+  regionId: String!
+  anoMes: String!
 }
 
-input CreateUserInput {
-    email: String!
-    password: String!
-    confirmPasword: String!
+type GoalsResultOptionsType {
+  idRegiao: String!
+  regiao: String!
+  tipoDiretor: String!
+  diretor: String!
+  ini_MembrosAtivos: Int!
+  obj_MembrosAtivos: Int!
+  res_MembrosAtivos: Int!
+  var_MembrosAtivos: Int!
+  desvioObj: Int!
+  obj_StartDate: DateTime!
+  obj_EndDate: DateTime!
+  lastPALMSText: String!
+  lastPALMS: DateTime!
 }
 
-type CreatedUserPayload {
-    id: String
-    username: String
-    email: String
-    name: String
-    createdAt: DateTime!
-    updatedAt: DateTime!
+input MembersDroppingInput {
+  type: String!
+  typeId: String!
+  regionId: String!
+  anoMes: String!
 }
 
-type LoginResponse {
-    id: String!
-    email: String!
-    token: String!
+type MembersNoVisitorsType {
+  idRegiao: String!
+  regiao: String!
+  chapter: String!
+  member: String!
+  growing: Int!
+  monthInBNI: Int!
+  pm3: Int!
+  corPm3: String!
+  titPm3: String!
+  pm2: Int!
+  corPm2: String!
+  titPm2: String!
+  pm1: Int!
+  corPm1: String!
+  titPm1: String!
+  pm0: Int!
+  corPm0: String!
+  titPm0: String!
+  idTL: Long!
+  email: String!
+  telef: String!
+  grw_MonthsNoVisitors: Int!
+  percNV: Float!
 }
 
-type RegionResponse {
-    id: String
-    region: String
-    country: String
-    language: String
-    profile: String
-    email: String
+input UpdateGroupGoalsInput {
+  id: Int!
+  regionId: String!
+  group: String!
+  startDate: Date!
+  endDate: Date!
+  new: Int!
+  renewals: Int!
+  drops: Int!
+  absence: Decimal!
+  uau: Decimal!
+  size: Int!
+  visits: Decimal!
+  referrals: Decimal!
+  onf: Decimal!
+  ceu: Decimal!
 }
 
-input RegionPayloadInput {
-    profile: String!
-    email: String!
-    country: String!
-    multiRegion: String
+input UpdateMemberNameInput {
+  idRegiao: String!
+  firstNameOld: String!
+  lastNameOld: String!
+  firstNameNew: String!
+  lastNameNew: String!
+  chapter: String!
 }
 
-type UserRoleType {
-    role: RoleType
+type MembersWithoutViewsType {
+  idRegiao: String!
+  name: String!
+  dc: String!
+  grupo: String!
+  tVisitas: Int!
+}
+
+type Query {
+  csListByRegionId(regionId: String!): [CsListByRegionIdType!]!
+  csDDl(regionId: String!): [CdDlType!]!
+  groupsRegion(regionId: String!): [GroupsRegionType!]!
+  allRegions: [RegionsType!]!
+  regionById(regionId: String!): SingleRegionsType
+  allRegionsCountry(country: String!): [RegionsCountryType!]!
+  regionOperations(regionId: String! language: String!): [RegionOperationsType!]!
+  lastClosedYearMonth(input: LastClosedYearMonthInput!): LastClosedYearMonthType
+  eventValuesByRegions(regionId: String!): [EventValuesByRegionType!]!
+  kpiGroupMechanisms(input: KpiGroupMechanismInput): [KpiGroupMechanismType!]!
+  kpiMemberMechanisms(input: KpiMemberMechanismInput): [KpiMemberMechanismType!]!
+  kpiGroupCombo(regionId: String! language: String!): [KpiGroupComboType!]!
+  kpiMemberCombo(regionId: String! language: String!): [KpiMemberComboType!]!
+  contactSphereRegions(input: ContactSphereRegionInput): [ContactSphereRegionType!]!
+  contactSphereGroups(input: ContactSphereGroupInput!): [ContactSphereGroupType!]!
+  allContactSphere(regionId: String!): [ContactSphereType!]
+  membersByProfession(regionId: String! profession: String!): [MembersByProfessionType!]!
+  adminAlertsProcessing(regionId: String! anoMes: String!): [AdminAlertsProcessingType!]!
+  regionSchedules(regionId: String! language: String!): [RegionScheduleType!]!
+  directorsRegions(input: DirectorRegionRequestInput!): [DirectorRegionResponse!]!
+  exitsPeriod(input: MemberFlowInput!): [GetExitsPeriodType!]!
+  periodEntries(input: MemberFlowInput!): [GetPeriodEntriesType!]!
+  renewalsPeriod(input: MemberFlowInput!): [GetRenewalsPeriodType!]!
+  operationRegionEmailSetup(input: OperationRegionEmailSetupInput!): OperationRegionEmailSetupType!
+  defaultOperationRegionEmailSetup(input: OperationRegionEmailSetupInput!): DefaultOperationRegionEmailSetupType!
+  allGameTeams(idGame: Int!): [GameTeamType!]!
+  allGames(input: GamesInput!): [GamesType!]!
+  gameById(input: GamesByIdInput!): GamesType
+  gameResults(gameId: Int!): [GameResultType!]!
+  generalGameResultForMembers(input: GeneralGameResultForMembersInput!): [GeneralGameResultForMemberType!]!
+  generalGameResultForTeams(input: GeneralGameResultForTeamInput!): [GeneralGameResultForTeamType!]!
+  gameResultForTeams(teamId: Int!): [GameResultForTeamType!]!
+  allGameKpis(gameId: Int!): [GameKpisType!]!
+  gameKpiByGameId(gameId: Int! kpi: String!): GameKpiType
+  selectedGameKpi(gameId: Int!): [GamesKpisType!]!
+  gamesKpiCombo: [GamesKpisType!]!
+  unSelectedGameKpis(gameId: Int! kpi: String!): [GamesKpisType!]!
+  allGameTeamMembers(idTeam: Int!): [GameTeamMemberType!]!
+  unSelectedGameMembers(idGame: Int!): [GameMembersType!]!
+  regionsRgpLst(regionId: String!): [RegionsRgpLstType!]!
+  dashboard(input: DashboardInput!): [DashboardType!]! @deprecated(reason: "Use GeneralDashboard query instead.")
+  dashboardCountry(country: String!): [DashboardCountryType!]! @deprecated(reason: "Use GeneralDashboard query instead.")
+  generalDashboard(input: DashboardInput!): [GeneralDashboardType!]!
+  simulatesRenovations(input: SimulatesRenovationInput!): [SimulatesRenovationType!]!
+  bottomTopMembers(input: BottomTopMemberInput!): [BottomTopMemberType!]!
+  raciosInputsOutputsRetention(input: RaciosInputsOutputsRetentionInput!): [RaciosInputsOutputsRetentionType!]!
+  chaptersTrafficLightsSplit(input: ChaptersTrafficLightsSplitInput!): [ChaptersTrafficLightsSplitType!]!
+  membersTrafficLightsSplit(input: MembersTrafficLightsSplitInput!): [MembersTrafficLightsSplitType!]!
+  currentCountChaptersMembers(input: CurrentCountChaptersMembersInput!): CurrentCountChaptersMembersType!
+  renovationsAnoMes(input: RenovationsAnoMesInput!): [RenovationsAnoMesType!]!
+  regionIdByCountryOrMulti(input: RegionIdByCountryOrMultiInput!): RegionIdByCountryOrMultiType!
+  membersAge(input: MembersAgeInput!): [MembersAgeType!]!
+  totalMembersAge(input: TotalMembersAgeInput!): [TotalMembersAgeType!]!
+  correlationDdl(input: CorrelationDdlInput!): [CorrelationDdlType!]!
+  kpIsDataAnalysisDdl(input: KpIsDataAnalysisDDlInput!): [KpIsDataAnalysisDdlType!]!
+  correlation(input: CorrelationInput!): [CorrelationType!]!
+  correlationStdevFranj(input: CorrelationSTDEVFranjInput!): [CorrelationSTDEVFranjType!]!
+  ndMrDdlRegions(input: NdMrDdlRegionsInput!): [NdMrDDlRegionsType!]!
+  directorsGoals(input: DirectorsGoalsInput!): [DirectorsGoalsType!]!
+  monthlyGroupGoals(input: MonthlyGroupGoalsInput!): [MonthlyGroupGoalsType!]!
+  groupGoals(input: GroupGoalsInput!): [GroupGoalsType!]!
+  multiRGoals(input: MultiRGoalsInput!): [MultiRGoalsType!]!
+  countryGoals(input: CountryGoalsInput!): [CountryGoalsType!]!
+  regionGoals(input: RegionGoalsInput!): [RegionGoalsType!]!
+  monthlyRegionGoals(input: MonthlyRegionGoalsInput!): [MonthlyRegionGoalsType!]!
+  goalsResultOptions(input: GoalsResultOptionsInput!): [GoalsResultOptionsType!]!
+  activeGroupsToday(input: ActiveGroupsTodayInput!): [ActiveGroupsTodayType!]!
+  groupMembers(input: GroupMemberInput!): [GroupMemberType!]!
+  coreGroups(input: CoreGroupInput!): [CoreGroupType!]!
+  suspendedGroups(input: SuspendedGroupInput!): [SuspendedGroupType!]!
+  adminTrafficLightsGroupsEvolution(input: TrafficLightGroupEvolutionInput!): [TrafficLightGroupEvolutionType!]!
+  ddLActiveGroups(input: DdLActiveGroupInput!): [DdLActiveGroupsType!]!
+  allChapterTeam(input: GetAllChapterTeamInput!): [GetAllChapterTeamType]!
+  chapterHeader(input: GetChapterHeaderInput!): [GetChapterHeaderType]!
+  me: AuthUserType!
+  ndMrProfile(input: GetNdMrProfileInput!): GetNdMrProfileType!
+  loginVariables(email: String!): LoginVariables!
+  allUsers: [UserType!]!
+  user(id: UUID!): UserType!
+  webComLst(input: WebComLstInput!): [WebComLstType!]!
+  webDdl_Kpis_DataAnalysis(language: String!): [WebDdlKpisDataAnalysisType!]!
+  webCurrentStatus(input: WebCurrentStatusInput!): WebCurrentStatusType!
+  kpiGroupByRegion(regionId: String!): [KpiGroupByRegionType!]!
+  kpiMemberByRegion(regionId: String!): [KpiMemberByRegionType!]!
+  grfKpiGroup(regionId: String! group: String!): [GrfKpiGroupType!]!
+  kpiGroupList(kpi: String! regionId: String!): [KpiGroupListType!]!
+  kpiMemberList(kpi: String! regionId: String!): [KpiMemberListType!]!
+  mrRenewalForecastByPeriod(input: MrRenewalForecastByPeriodInput!): MrRenewalForecastByPeriodType!
+  renewalForecastByPeriod(input: GoalRenewalForecastByPeriodInput!): GoalRenewalForecastByPeriodType!
+  globalKpiDataAnalysis(input: GlobalKpiDataAnalysisInput!): [GlobalKpiDataAnalysisType!]!
+  webStatus(input: WebStatusInput!): [WebStatusType!]!
+  equipa(input: GetEquipaInput!): [GetEquipaType!]!
+  memberTrafficLights(input: MemberTrafficLightsInput!): [MemberTrafficLightsType!]!
+  crmChaptersNoNewMembers(input: ChaptersNoNewMembersInput!): [ChaptersNoNewMembersType!]!
+  allAdminTrafficLightsMembersEvolution(input: AdminTrafficLightsMembersEvolutionInput!): [AdminTrafficLightsMembersEvolutionType!]
+  allActiveGroups(input: ActiveGroupsInput!): [ActiveGroupsType!]!
+  ndMrActiveGroups(input: NdMrActiveGroupsInput!): [NdMrActiveGroupsType!]!
+  rxMemberById(memberTrafficLightId: Long!): [RxMemberByIdType!]!
+  notableNetworksSite(input: NotableNetworksSiteInput!): [NotableNetworksSiteType!]!
+  membersGrowingUp(input: MembersGrowingUpInput!): [MembersGrowingUpType!]!
+  membersArrivingGreen(input: MembersArrivingGreenInput!): [MembersArrivingGreenType!]!
+  membersNoReferralsReceived(input: MembersNoReferralsReceivedInput!): [MembersNoReferralsReceivedType!]!
+  membersNoOneToOnes(input: MembersNoOneToOnesInput!): [MembersNoOneToOnesType!]!
+  membersNoVisitors(input: MembersNoVisitorsInput!): [MembersNoVisitorsType!]!
+  membersDropping(input: MembersDroppingInput!): [MembersDroppingType!]!
+  sponsoredMembersByMember(input: SponsoredMembersByMemberInput!): [SponsoredMembersByMemberType!]!
+  tlmHowToImprove(input: TlmHowToImproveInput!): [TlmHowToImproveType!]!
+  membros100Points(input: Membros100PointsInput!): [Membros100PointsType!]!
+  memberSearch(input: MemberSearchInput!): [MemberSearchResponse]!
+  membersGroup(input: MembersGroupInput!): [MembersGroupType]!
+  membersHeader(input: MembersHeaderInput!): MembersHeaderType
+  membersWithoutViews(input: MembersFlowRequestInput!): [MembersWithoutViewsType]!
+  membersWithoutOneAOne(input: MembersFlowRequestInput!): [MembersWithoutOneAOneType]!
+  membersWithoutPsm(input: MembersFlowRequestInput!): [MembersWithoutPsmType]!
+  membersWithoutFormation(input: MembersFlowRequestInput!): [MembersWithoutFormationType]!
+  membersWithSubstitutions(input: MembersFlowRequestInput!): [MembersWithSubstitutionsType]!
+  membersWithAbsences(input: MembersFlowRequestInput!): [MembersWithAbsencesType]!
+  membersWithoutRefGiven(input: MembersFlowRequestInput!): [MembersWithoutRefGivenType]!
+  membersWithoutRefReceived(input: MembersFlowRequestInput!): [MembersWithoutRefReceivedType]!
+  userCountries(email: String!): CountryType!
+  userMultiRegions(input: MultiRegionInput!): [MultiRegionsResponse!]!
+  userRegions(input: RegionInput!): [RegionResponse!]!
+  ndMrRegionsList(input: NdMrRegionsListInput!): [NdMrRegionsListType!]!
+  grfGlobalKpi(input: GrfGlobalKpiInput!): [GrfGlobalKpiType!]!
+  referenceValues(input: ReferenceValuesInput!): [ReferenceValuesType!]!
+  crmTaskById(input: CrmTaskByIdInput!): CrmTaskType!
+  crmTasksList(input: CrmTasksListInput!): [CrmTaskType!]!
+  crmTasksStatusCount(input: CrmTasksStatusCountInput!): [CrmTasksStatusCountType!]!
+  crmTaskType(input: CrmTaskTypeInput!): [CrmTaskTypeGqlType!]!
+  crmTaskStatus(input: CrmTaskStatusInput!): [CrmTaskStatusType!]!
+  crmTasksByDateRange(input: CrmTasksByDateRangeInput!): [CrmTasksByDateRangeType!]!
+  crmTasksConsequences(input: CrmTasksConsequencesInput!): [CrmTasksConsequencesType!]!
+  crmTaskExecutionEvolution(input: CrmTaskExecutionEvolutionInput!): [CrmTaskExecutionEvolutionType!]!
+  crmTaskTemplateById(taskTypeId: Int! language: String): [CrmTaskTemplateByIdType!]!
+  crmTaskEnabled(regionId: Int!): [CrmTaskEnabledType!]!
+  threePlusOneCountry(input: ThreePlusOneCountryInput!): ThreePlusOneCountryType!
+  threePlusOneRegions(input: ThreePlusOneRegionsInput!): [ThreePlusOneRegionsType!]!
+  threePlusOneEvolution(input: ThreePlusOneEvolutionInput!): [ThreePlusOneEvolutionType!]!
+  threePlusOneDirectorsArea(input: ThreePlusOneDirectorsAreaInput!): [ThreePlusOneDirectorsAreaType!]!
+  threePlusOneEvolutionCountryGraphic(country: String!): [ThreePlusOneEvolutionCountryGraphicType!]!
+  threePlusOneEvolutionRegionGraphic(regionId: String!): [ThreePlusOneEvolutionRegionGraphicType!]!
+  threePlusOneEvolutionAreaDirectorGraphic(regionId: String! directorName: String!): [ThreePlusOneEvolutionAreaDirectorGraphicType!]!
+  allDocumentUploadTypes: [DocumentTypeInfo!]!
+}
+
+type MembersWithoutOneAOneType {
+  idRegiao: String!
+  dc: String!
+  grupo: String!
+  name: String!
+  uau: Int!
+  lingua: String!
+}
+
+input DuplicateGameInput {
+  gameId: Int!
+  groupName: String!
+  createTeams: Boolean!
+  membersPerTeam: Int!
+}
+
+type CdDlType {
+  idRegiao: String!
+  contactSphere: String!
+}
+
+type ThreePlusOneCountryType {
+  anomes: String!
+  idPaisConnect: Int!
+  pais: String!
+  cdActiveMembers: Int!
+  cdNetGrowth: Int!
+  cdmpi: Float!
+  cdfd: Float!
+  cdfp: Float!
+  laIn: Int!
+  laOut: Int!
+  laNetGrowthMembers: Int!
+  laNetGrowthNewChapters: Int!
+  flIn: Int!
+  flOut: Int!
+  flNetGrowthJoinMembers: Int!
+  flChapterSize: Float!
+  rt1A: Float!
+  rtOverall: Float!
+  msnps: Int!
+  mstyfcbMember: Long!
+  mstyfcbTotal: Long!
+  chfac: Long!
+  chfsc: Int!
+  chfcc: Int!
+  chfcg: Int!
+  chfcga: Int!
+  chFnGroups: Int!
+  twdc: Int!
+  twamb: Int!
+  twNewDC: Int!
+  twNewAMB: Int!
+}
+
+input CorrelationSTDEVFranjInput {
+  type: String!
+  typeId: String!
+  group: String!
+  startYearMonth: String!
+  endYearMonth: String!
+  minimumPls: Int!
+  kpi1: String!
+  kpi2: String!
+  percentUp: Decimal!
+  percentDown: Decimal!
+  source: String!
+  language: String!
+  method: String!
+}
+
+input MembersHeaderInput {
+  regionId: String!
+  group: String!
+  member: String!
+  lang: String!
+}
+
+input GlobalKpiDataAnalysisInput {
+  profile: String!
+  profileId: String!
+  regionId: String!
+  group: String!
+  startYearMonth: String!
+  endYearMonth: String!
+}
+
+type GrfGlobalKpiType {
+  idRegiao: String!
+  anomes: String!
+  tamanhoC: Float!
+  tamanhoG: Float!
+  crescimentoC: Float!
+  crescimentoG: Float!
+  retencaoC: Float!
+  retencaoG: Float!
+  referenciasC: Float!
+  referenciasG: Float!
+  visitasC: Float!
+  visitasG: Float!
+  conversaoC: Float!
+  conversaoG: Float!
+  assiduidadeC: Float!
+  assiduidadeG: Float!
+  pontuacaoC: Float!
+  pontuacaoG: Float!
+  otoMmAvgC: Float!
+  otoMmAvgG: Float!
+  tyfcbm12mC: Float!
+  tyfcbm12mG: Float!
+  tyfcb12m: Float!
+  membersActive: Int!
+  chaptersActive: Int!
+  membersCore: Int!
+  chaptersCore: Int!
+  ret1AnoC: Float!
+  ret1AnoG: Float!
+  compara: String
+  zeroRefC: Float!
+  zeroRefG: Float!
+  zeroONFC: Float!
+  zeroONFG: Float
+  zeroVisC: Float
+  zeroVisG: Float
+  zeroOTOC: Float
+  zeroOTOG: Float
+  tamanhoR: Float!
+  crescimentoR: Float!
+  retencaoR: Float!
+  referenciasR: Float!
+  visitasR: Float!
+  conversaoR: Float!
+  absentismoR: Float!
+  absentismoG: Float!
+  pontuacaoR: Float!
+  otoMmAvgR: Float!
+  tyfcbm12mR: Float!
+  ret1AnoR: Float!
+}
+
+type CrmTasksStatusCountType {
+  toSchedule: Int!
+  scheduled: Int!
+  completed: Int!
+  ignored: Int!
+  expired: Int!
+}
+
+"The `Date` scalar represents an ISO-8601 compliant date type."
+scalar Date
+
+type NdMrDDlRegionsType {
+  idRegiao: String!
+  regiao: String!
+  pais: String!
+  lingua: String!
+}
+
+input CsUpdInput {
+  regionId: String!
+  industry: String!
+  profession: String!
+  contactSphere: String!
+  hideFromReports: Boolean!
+}
+
+type ThreePlusOneEvolutionData {
+  context: String!
+  anomes: String!
+  pts: Float!
+  ptsCor: String!
+}
+
+type GameResultType {
+  idTeam: Int!
+  team: String!
+  member: String!
+  p: Float
+  g_P: Float!
+  a: Float!
+  g_A: Float!
+  l: Float
+  g_L: Float!
+  m: Float
+  g_M: Float!
+  s: Float
+  g_S: Float!
+  rgi: Float
+  g_RGI: Float!
+  rgo: Float
+  g_RGO: Float!
+  uau: Float!
+  g_UAU: Float!
+  v: Float!
+  g_V: Float!
+  nMembers: Int!
+  pts_Team: Float!
+  pts_Member: Float!
+  dP: String!
+  dA: String!
+  dL: String!
+  dM: String!
+  dS: String!
+  dV: String!
+  dRGI: String!
+  dRGO: String!
+  dUAU: String!
+  grupo: String!
+  lingua: String!
+  idRegiao: String!
+  descri: String!
+  di: DateTime!
+  df: DateTime!
+  nome: String!
+}
+
+type GetNdMrProfileType {
+  profile: String!
+  currency: String!
+}
+
+type MonthlyRegionGoalsType {
+  anomes: String!
+  idRegiao: String!
+  new: Int!
+  renew: Int!
+  drops: Int!
+  txRetencao: Float!
+  absence: Float
+  size: Float
+  uau: Float
+  vis: Float
+  ref: Float
+  conv: Float
+  chaptersActive: Int!
+  membersActive: Int!
+  chaptersCore: Int!
+  membersCore: Int!
+}
+
+type KpiMemberByRegionType {
+  idMecMembro: Int!
+  kpi: String
+  kpiLingua: String
+  idRegiao: String
+  mecanismo: String
+}
+
+type GameTeamMemberType {
+  idTeam: Int!
+  member: String!
+  memberTxt: String
+  corFundo: String
+  corTexto: String
+  ordem: Int!
+}
+
+type LoginVariables {
+  country: String
+  idMR: Int!
+  idRegion: String!
+  perfil: String!
+  currency: String!
+  email: String!
+  mPerfil: String!
+  isMember: Boolean!
+  idC: Int!
+  guidRegion: UUID
+  fullName: String
+  isValidUser: Boolean!
+  memberGroup: String!
+  memberDashBoardLT: Boolean!
+  memberDashBoardMC: Boolean!
+  isMemberVerified: Boolean!
+  isMemberAutoGenerated: Boolean!
+  tlmId: Long!
+  defaultLanguage: String
+}
+
+type MultiRGoalsType {
+  idOM: Int!
+  datai: DateTime!
+  dataf: DateTime!
+  idMR: Int!
+  new: Int!
+  renew: Int!
+  drops: Int!
+  txRetencao: Float!
+  absence: Float!
+  size: Float!
+  uau: Float!
+  vis: Float!
+  ref: Float!
+  conv: Float!
+  chapters_Active: Int!
+  members_Active: Int!
+  chapters_Core: Int!
+  members_Core: Int!
+}
+
+input RegionDpcInput {
+  regionSourceId: String!
+  regionTargetId: String!
+  regionTargetName: String!
+  dexNameTarget: String!
+  dexEmaiTarget: String!
+  abrevTarget: String!
+  createRegion: Int!
+}
+
+input MembersArrivingGreenInput {
+  type: String!
+  typeId: String!
+  regionId: String!
+  anoMes: String!
+}
+
+type ThreePlusOneDirectorsAreaType {
+  anomes: String!
+  idPaisConnect: Int!
+  idRegiao: String!
+  regiao: String!
+  director: String!
+  rdActiveMembers: Int!
+  rdNetGrowth: Int!
+  rdmpi: Float!
+  rdmpiColor: String!
+  rdop: Int!
+  rdmpiPoints: Int!
+  laNetGrowthMembers: Int!
+  laNetGrowthMembersPoints: Int!
+  laNetGrowthMembersColor: String!
+  laNetGrowthNewChapters: Int!
+  laNetGrowthNewChaptersPoints: Int!
+  laNetGrowthNewChaptersColor: String!
+  flNetGrowthJoinMembers: Int!
+  flNetGrowthJoinMembersPoints: Int!
+  flNetGrowthJoinMembersColor: String!
+  flChapterSize: Float!
+  flChapterSizePoints: Int!
+  flChapterSizeColor: String!
+  rt1A: Float!
+  rtOverall: Float!
+  rt1APoints: Int!
+  rt1AColor: String!
+  rtOverallPoints: Int!
+  rtOverallColor: String!
+}
+
+type EventValuesByRegionType {
+  idRegiao: String!
+  anomes: String!
+  tipo: String!
+  valFee: Decimal!
+  txDC: Decimal!
+  val_DC: Decimal!
+  txDA: Decimal!
+  valDA: Decimal!
+  txIVA: Decimal!
+}
+
+input KpiGroupInsInput {
+  kpi: String!
+  regionId: String!
+  mechanism: String!
+}
+
+input WebComValInput {
+  id: Int!
+  who: String!
+  isValid: Boolean!
+  obs: String!
+  isSent: Boolean!
+}
+
+input GrfGlobalKpiInput {
+  profile: String!
+  profileId: String!
+  regionId: String!
+  group: String
+  firstAnoMes: String!
+  lastAnoMes: String!
+}
+
+type RegionsType {
+  regiao: String!
+  idRegiao: String!
+  dex: String!
+  dex2: String!
+  pais: String!
+  lingua: String!
+  abreviatura: String!
+  megaRegiao: String!
+  activa: Boolean!
+  chapters_Active: Int!
+  members_Active: Int!
+  chapters_Core: Int!
+  members_Core: Int!
+  chapters_Suspended: Int!
+  members_Suspended: Int!
+  custom: Boolean!
+  nts_WebMaster: Boolean!
+  contrato: Boolean!
+  dataContrato: DateTime!
+  id_Tab_TL: Int!
+  id_Tab_TLC: Int!
+  id_Tab_Faltas: Int!
+  id_TC: Int!
+  destinatarios_em_BCC: Boolean!
+  envia_Emails: Boolean!
+  proc_Com: Boolean!
+  proc_Com_DA: Boolean!
+  proc_Com_DA_Decide: Boolean!
+  fatura: Boolean!
+  fuso: Int!
+  el_SuspendFee: Boolean!
+}
+
+type MembersWithoutRefReceivedType {
+  idRegiao: String!
+  dc: String!
+  grupo: String!
+  name: String!
+  refReceived: Int!
+  lingua: String!
+}
+
+input CrmTaskStatusInput {
+  language: String
+}
+
+type KpiGroupMechanismType {
+  id_Mec_Grupo: Int
+  kpi: String
+  idRegiao: String
+  mecanismo: String
+}
+
+input GetNdMrProfileInput {
+  email: String!
+  context: String!
+  idContext: String!
+  currentProfile: String
+}
+
+type GenericMutationType {
+  success: Boolean!
+  code: Int!
+  message: String
+}
+
+type MembersAgeType {
+  age: Int!
+  idRegiao: String!
+  regiao: String!
+  grupo: String!
+  membro: String!
+  empresa: String!
+  profissao: String!
+  email: String!
+  pontos: Int!
+  telef: String!
+  entrada: DateTime!
+  plus: String!
+  id: Long!
+}
+
+type MrRenewalForecastByPeriodType {
+  idTipo: String
+  nRenovacoesPossiveis: String
+}
+
+type CrmTaskExecutionEvolutionType {
+  main_Context: String!
+  context: String!
+  idRegiao: String!
+  anomes: String!
+  anomesR: String!
+  directorPercExpired: Float!
+  directorTotalExpired: Int!
+  directorPercDone: Float!
+  directorTotalDone: Int!
+  directorTotal: Int!
+  chapterPercExpired: Float!
+  chapterTotalExpired: Int!
+  chapterPercDone: Float!
+  chapterTotalDone: Int!
+  chapterTotal: Int!
+  lang: String!
+}
+
+input GroupMemberInput {
+  regionId: String!
+  group: String!
+}
+
+type TrafficLightGroupEvolutionData {
+  anomes: String!
+  idRegiao: String!
+  chapter: String!
+  pts: Int!
+  ptsCor: String!
+  size: Int!
+}
+
+type GetPeriodEntriesType {
+  id: Int!
+  idRegiao: String!
+  dHi: DateTime!
+  dataReal: DateTime!
+  membro: String!
+  grupo: String!
+  profissao: String
+  email: String
+  telef: String
+  telem: String
+}
+
+input TotalMembersAgeInput {
+  type: String!
+  typeId: String!
+  regionId: String!
+}
+
+type AppUserRole {
+  isActive: Boolean!
+  isDeleted: Boolean!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  user: Users
+  role: AppRoles
+  userId: UUID!
+  roleId: UUID!
+}
+
+type MembersWithSubstitutionsType {
+  idRegion: String!
+  dc: String!
+  grupo: String!
+  name: String!
+  substituicoes: Int!
+  lingua: String!
+}
+
+type AdminTrafficLightsMembersEvolutions {
+  id: Long!
+  anomes: String!
+  pts: Int!
+  ptsCor: String!
+  vis: Int!
+  pals: Int!
+  visPerWeek: Float!
+  sponsors: Int!
+}
+
+type MonthlyGroupGoalsType {
+  anomes: String!
+  idRegiao: String!
+  grupo: String!
+  new: Int!
+  renew: Int!
+  drops: Int!
+  absence: Float!
+  uau: Float!
+  size: Int!
+  vis: Float!
+  ref: Float!
+  onf: Float!
+  ceu: Float!
+}
+
+input UniqueMemberNameUpdInput {
+  firstNameOld: String!
+  lastNameOld: String!
+  firstNameNew: String!
+  lastNameNew: String!
+  regionId: String!
+  group: String!
+  status: String!
 }
 
 type RoleType {
-    name: String
-    description: String
-    rankLevel: Int!
+  name: String
+  description: String
+  rankLevel: Int!
+}
+
+input UpdateMRGoalsInput {
+  id: Int!
+  startDate: Date!
+  endDate: Date!
+  mrId: Int!
+  new: Int!
+  renewals: Int!
+  drops: Int!
+  retentionRate: Decimal!
+  absence: Decimal!
+  size: Int!
+  uau: Decimal!
+  visits: Decimal!
+  referrals: Decimal!
+  conversion: Decimal!
+  activeChapters: Int!
+  activeMembers: Int!
+  coreChapters: Int!
+  coreMembers: Int!
+}
+
+type GlobalKpiDataAnalysisType {
+  idRegiao: String!
+  anomes: String!
+  sizeM: Float!
+  size: Float!
+  growM: Float!
+  grow: Float!
+  retM: Float!
+  ret: Float!
+  refM: Float!
+  ref: Float!
+  visM: Float!
+  vis: Float!
+  convM: Float!
+  conv: Float!
+  abscM: Float!
+  absc: Float!
+  ptsM: Float!
+  pts: Float!
+  otom: Float!
+  oto: Float!
+  tyfcbm12mM: Long!
+  tyfcbm12m: Long!
+  tyfcb12mM: Long!
+  tyfcb12m: Long!
+  tyfcbm: Long!
+  tyfcb: Long!
+  ret1AM: Float!
+  ret1A: Float!
+  compara: String!
+  zeroRefM: Float!
+  zeroRef: Float!
+  zeroONFM: Float!
+  zeroONF: Float!
+  zeroVisM: Float!
+  zeroVis: Float!
+  zeroOTOM: Float!
+  zeroOTO: Float!
+}
+
+type UploadTaskType {
+  attachments: [String!]!
+  attachmentsUrls: [String!]!
+  attachmentString: String
+}
+
+type SimulatesRenovationType {
+  anomes: String!
+  nPossibleRenewals: Int!
+  nGoalRenewals: Int!
+  nProbableRenewals: Int!
+  vPossible: Float!
+  vGoal: Float!
+  vProbable: Float!
+  currency: String!
+  anomesZTO: String!
+}
+
+type DirectorRegionResponse {
+  nome: String!
+  email: String!
+  idRegiao: String!
+  regiao: String!
+  tipo: String!
+}
+
+type CountryType {
+  email: String
+  countries: [CountryResponse!]
+}
+
+input GoalRenewalForecastByPeriodInput {
+  type: String!
+  typeId: String!
+  regionId: String!
+  startDate: Date!
+  endDate: Date!
+}
+
+type ContactSphereRegionType {
+  idRegiao: String!
+  industry: String
+  profession: String
+  contactSphere: String
+  industry_Local: String
+  profession_Local: String
+  hideFromReport: Boolean!
+}
+
+type KpIsDataAnalysisDdlType {
+  kpi: String!
+  descri: String!
+}
+
+input DashboardInput {
+  type: String!
+  typeId: String!
+  regionId: String!
+  anomes: String!
+}
+
+input MemberSearchInput {
+  regionId: String!
+  searchBy: String!
+  search: String!
+}
+
+type GroupsRegionType {
+  grupo: String
+  idRegiao: String!
+  estado: String
+  dc: String
+  da: String
+  embaixador: String
+  localidade: String
+  area: String
+  diaSemana: Int!
+  lancamento: DateTime!
+}
+
+input CreateGameTeamInput {
+  gameId: Int!
+  team: String!
+  description: String!
+}
+
+type Mutation {
+  updateScheduleTime(input: ScheduleTimeUpdInput!): Boolean!
+  restoreScheduleTime(input: ScheduleTimeUpdInput!): Boolean!
+  updateUniqueMemberName(input: UniqueMemberNameUpdInput!): Boolean!
+  updateRegionName(input: RegionNameUpdInput!): Boolean!
+  updateRegion(input: RegionUpdInput!): Boolean!
+  duplicateRegion(input: RegionDpcInput!): Boolean!
+  copyRegionSchedules(input: RegionSchedulesCpInput!): Boolean!
+  copyRegionOperations(input: RegionOperationsCpInput!): Boolean!
+  updateCs(input: CsUpdInput!): Boolean!
+  eventValuesReplicaByRegionAndCountry(regionId: String!): Boolean!
+  optOutMembers(input: OptOutMemberInput!): Boolean!
+  updateRegionsRgp(input: UpdateRegionsRgpInput!): Boolean!
+  updateRegions(input: UpdateRegionsInput!): Boolean!
+  deleteRegionEventValues(input: DeleteRegionEventInput!): Boolean!
+  duplicateRegionEventValues(input: DuplicateRegionEventInput!): Boolean!
+  updateEventValuesByRegion(input: UpdateEventValuesByRegionInput!): Boolean!
+  createKpiGroupMechanisms(input: CreateKpiGroupMechanismsInput!): KpiGroupMechanismType
+  createKpiMemberMechanisms(input: CreateKpiMemberMechanismsInput!): KpiMemberMechanismType
+  deleteKpiGroupMechanisms(id: Int!): Boolean!
+  deleteKpiMemberMechanisms(id: Int!): Boolean!
+  updateKpiMemberMechanism(input: UpdateKpiMemberMechanismInput!): KpiMemberMechanismType
+  updateKpiGroupMechanism(input: UpdateKpiGroupMechanismInput!): KpiGroupMechanismType
+  updateRegionOperations(input: RegionOperationsUpdateInput!): GenericMutationType!
+  updateGroupName(input: UpdateGroupNameInput!): GenericMutationType!
+  updateOperationRegionEmailSetup(input: UpdateOperationRegionEmailSetupInput!): GenericMutationType!
+  updateContactSphereRegion(input: UpdateContactSphereRegionInput!): GenericMutationType!
+  createGame(input: CreateGamesInput!): GenericMutationTypeOfGamesType!
+  duplicateGame(input: DuplicateGameInput!): GenericMutationType!
+  updateGame(input: UpdateGamesInput!): GamesType
+  deleteGameById(id: Int!): GenericMutationType!
+  uploadGameImage(input: UploadGameImageInput!): GenericMutationType!
+  deleteGameImageById(id: Int!): GenericMutationType!
+  createGameTeam(input: CreateGameTeamInput!): GenericMutationType!
+  generateGameTeams(input: GenerateGameTeamsInput!): GenericMutationType!
+  updateGameTeam(input: UpdateTeamInput!): GenericMutationType!
+  deleteGameTeam(idTeam: Int!): GenericMutationType!
+  createGameTeamMember(idTeam: Int! memberName: String!): GenericMutationType!
+  deleteGameTeamMember(idTeam: Int! member: String!): GenericMutationType!
+  deleteAllGameTeamMember(idTeam: Int!): GenericMutationType!
+  createGameKpi(input: CreateGameKpiInput!): GenericMutationType!
+  updateGameKpi(input: UpdateGameKpiInput!): GenericMutationType!
+  deleteGameKpi(gameId: Int! kpi: String!): GenericMutationType!
+  updateGamePoints(gameId: Int!): GenericMutationType!
+  updateActiveGamePointsByRegion(regionId: String!): GenericMutationType!
+  updateGameAdminByFuso(input: UpdateGameAdminByFusoInput!): GenericMutationType!
+  createDirectorGoals(input: CreateDirectorGoalsInput!): Boolean!
+  updateDirectorGoals(input: UpdateDirectorGoalsInput!): Boolean!
+  deleteDirectorGoals(id: Int!): Boolean!
+  createCountryGoals(input: CreateCountryGoalsInput!): Boolean!
+  updateCountryGoals(input: UpdateCountryGoalsInput!): Boolean!
+  deleteCountryGoals(id: Int!): Boolean!
+  createRegionGoals(input: CreateRegionGoalsInput!): Boolean!
+  updateRegionGoals(input: UpdateRegionGoalsInput!): Boolean!
+  deleteRegionGoals(id: Int!): Boolean!
+  createMrGoals(input: CreateMRGoalsInput!): Boolean!
+  updateMrGoals(input: UpdateMRGoalsInput!): Boolean!
+  deleteMrGoals(id: Int!): Boolean!
+  createGroupGoals(input: CreateGroupGoalsInput!): Boolean!
+  updateGroupGoals(input: UpdateGroupGoalsInput!): Boolean!
+  deleteGroupGoals(id: Int!): Boolean!
+  login(email: String! password: String!): LoginResponse!
+  createUser(input: CreateUserInput!): CreatedUserPayload!
+  updateUserPreferences(input: UpdateUserPreferencesInput!): Boolean!
+  createUserTest(input: CreateUserInput!): Users!
+  updateWebComVal(input: WebComValInput!): Boolean!
+  updateWebComUpd(input: WebComUpdInput!): Boolean!
+  delWebKpiGroupDel(id: Int!): Boolean!
+  insertKpiGroup(input: KpiGroupInsInput!): Boolean!
+  updateKpiGroup(input: KpiGroupUpdInput!): Boolean!
+  deleteKpiMember(id: Int!): Boolean!
+  insertKpiMember(input: KpiMemberInsInput!): Boolean!
+  updateKpiMember(input: KpiMemberUpdInput!): Boolean!
+  updateMemberName(input: UpdateMemberNameInput!): GenericMutationType!
+  createCrmTask(input: CreateCrmTaskInput!): Boolean!
+  updateCrmTask(input: UpdateCrmTaskInput!): Boolean!
+  uploadDocumentFile(input: UploadDocumentInput!): UploadTaskType!
+  deleteDocumentFile(input: DeleteDocumentTypeInput!): Boolean!
+}
+
+input MembersNoReferralsReceivedInput {
+  type: String!
+  typeId: String!
+  regionId: String!
+  anoMes: String!
+}
+
+input RaciosInputsOutputsRetentionInput {
+  type: String!
+  typeId: String!
+  regionId: String!
+  firstAnomes: String!
+  lastAnomes: String!
+}
+
+type UserRoleType {
+  role: RoleType
+}
+
+type MembersArrivingGreenType {
+  idRegiao: String!
+  regiao: String!
+  chapter: String!
+  member: String!
+  growing: Int!
+  monthInBNI: Int!
+  pm3: Int!
+  corPm3: String!
+  titPm3: String!
+  pm2: Int!
+  corPm2: String!
+  titPm2: String!
+  pm1: Int!
+  corPm1: String!
+  titPm1: String!
+  pm0: Int!
+  corPm0: String!
+  titPm0: String!
+  idTL: Long!
+  email: String!
+  telef: String!
+}
+
+input MemberTrafficLightsInput {
+  type: String!
+  typeId: String!
+  regionId: String
+  group: String
+}
+
+input CrmTaskTypeInput {
+  language: String
+}
+
+input CrmTaskByIdInput {
+  taskId: String!
+  language: String
+}
+
+input ThreePlusOneEvolutionInput {
+  type: String!
+  typeId: String!
+  date: Date!
+}
+
+input ChaptersNoNewMembersInput {
+  type: String!
+  typeId: String!
+  regionId: String!
+  anomes: String!
+  chapterType: String!
+}
+
+type AppRoles {
+  description: String
+  rankLevel: Int!
+  isActive: Boolean!
+  isDeleted: Boolean!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  userRoles: [AppUserRole!]!
+  id: UUID!
+  name: String
+  normalizedName: String
+  concurrencyStamp: String
+}
+
+input MembersNoOneToOnesInput {
+  type: String!
+  typeId: String!
+  regionId: String!
+  anoMes: String!
+}
+
+type KpiGroupByRegionType {
+  idMecGrupo: Int!
+  kpi: String
+  kpiLingua: String
+  idRegiao: String
+  mecanismo: String
+}
+
+type MembersDroppingType {
+  idRegiao: String!
+  regiao: String!
+  chapter: String!
+  member: String!
+  dropping: Int!
+  monthInBNI: Int!
+  pm3: Int!
+  corPm3: String!
+  titPm3: String!
+  pm2: Int!
+  corPm2: String!
+  titPm2: String!
+  pm1: Int!
+  corPm1: String!
+  titPm1: String!
+  pm0: Int!
+  corPm0: String!
+  titPm0: String!
+  idTL: Long!
+  email: String!
+  telef: String!
+}
+
+type RegionGoalsType {
+  idOR: Int!
+  datai: DateTime!
+  dataf: DateTime!
+  idRegiao: String!
+  new: Int!
+  renew: Int!
+  drops: Int!
+  txRetencao: Float!
+  absence: Float!
+  size: Float!
+  uau: Float!
+  vis: Float!
+  ref: Float!
+  conv: Float!
+  chapters_ACTIVE: Int!
+  members_ACTIVE: Int!
+  chapters_CORE: Int!
+  members_CORE: Int!
+}
+
+type GeneralDashboardType {
+  anoMes: String!
+  id: String!
+  lingua: String
+  points: Float!
+  retAvg: Float!
+  retMin: Float!
+  retMax: Float!
+  retCor: String!
+  convAvg: Float!
+  convMin: Float!
+  convMax: Float!
+  convCor: String!
+  attAvg: Float!
+  attMin: Float!
+  attMax: Float!
+  attCor: String!
+  pointsAvg: Float!
+  pointsMin: Float!
+  pointsMax: Float!
+  pointsCor: String!
+  sizeAvg: Float!
+  sizeMin: Float!
+  sizeMax: Float!
+  sizeCor: String!
+  growthAvg: Float!
+  growthMin: Float!
+  growthMax: Float!
+  growthCor: String!
+  membersActive: Int!
+  membersCore: Int!
+  membersSuspended: Int!
+  chaptersActive: Int!
+  chaptersCore: Int!
+  chaptersSuspended: Int!
+  refMwAvg: Float!
+  refMwMin: Float!
+  refMwMax: Float!
+  refMwCor: String!
+  visCwAvg: Float!
+  visCwMin: Float!
+  visCwMax: Float!
+  visCwCor: String!
+  tyfcb12m: Long!
+  tyfcbm12m: Int!
+  otoMmAvg: Float!
+  otoMmMin: Float!
+  otoMmMax: Float!
+  otoMmCor: String!
+  retMinTag: String!
+  retMaxTag: String!
+  convMinTag: String!
+  convMaxTag: String!
+  attMinTag: String!
+  attMaxTag: String!
+  pointsMinTag: String!
+  pointsMaxTag: String!
+  sizeMinTag: String!
+  sizeMaxTag: String!
+  growthMinTag: String!
+  growthMaxTag: String!
+  refMwMinTag: String!
+  refMwMaxTag: String!
+  visCwMinTag: String!
+  visCwMaxTag: String!
+  otoMmMinTag: String!
+  otoMmMaxTag: String!
+  gRet: Float!
+  gRetCor: String!
+  gAtt: Float!
+  gAttCor: String!
+  gSize: Float!
+  gSizeCor: String!
+  gRefMw: Float!
+  gRefMwCor: String!
+  gotoMm: Float!
+  gotoMmCor: String!
+  gVisCw: Float!
+  gVisCwCor: String!
+  gConv: Float!
+  gConvCor: String!
+  gac: Int!
+  gacCor: String!
+  gam: Int!
+  gamCor: String!
+  gcc: Int!
+  gccCor: String!
+  gcm: Int!
+  gcmCor: String!
+  anoMes1m: String!
+  anoMes12m: String!
+  retAvg1m: Float!
+  retAvg1mCor: String!
+  retAvg12m: Float!
+  retAvg12mCor: String!
+  convAvg1m: Float!
+  convAvg1mCor: String!
+  convAvg12m: Float!
+  convAvg12mCor: String!
+  attAvg1m: Float!
+  attAvg1mCor: String!
+  attAvg12m: Float!
+  attAvg12mCor: String!
+  points1m: Float!
+  points1mCor: String!
+  points12m: Float!
+  points12mCor: String!
+  sizeAvg1m: Float!
+  sizeAvg1mCor: String!
+  sizeAvg12m: Float!
+  sizeAvg12mCor: String!
+  growthAvg1m: Float!
+  growthAvg1mCor: String!
+  growthAvg12m: Float!
+  growthAvg12mCor: String!
+  membersActive1m: Int!
+  membersActive1mCor: String!
+  membersActive12m: Int!
+  membersActive12mCor: String!
+  membersCore1m: Int!
+  membersCore1mCor: String!
+  membersCore12m: Int!
+  membersCore12mCor: String!
+  membersSuspended1m: Int!
+  membersSuspended1mCor: String!
+  membersSuspended12m: Int!
+  membersSuspended12mCor: String!
+  chaptersActive1m: Int!
+  chaptersActive1mCor: String!
+  chaptersActive12m: Int!
+  chaptersActive12mCor: String!
+  chaptersCore1m: Int!
+  chaptersCore1mCor: String!
+  chaptersCore12m: Int!
+  chaptersCore12mCor: String!
+  chaptersSuspended1m: Int!
+  chaptersSuspended1mCor: String!
+  chaptersSuspended12m: Int!
+  chaptersSuspended12mCor: String!
+  refMwAvg1m: Float!
+  refMwAvg1mCor: String!
+  refMwAvg12m: Float!
+  refMwAvg12mCor: String!
+  visCwAvg1m: Float!
+  visCwAvg1mCor: String!
+  visCwAvg12m: Float!
+  visCwAvg12mCor: String!
+  otoMmAvg1m: Float!
+  otoMmAvg1mCor: String!
+  otoMmAvg12m: Float!
+  otoMmAvg12mCor: String!
+  tyfcb12m1m: Long!
+  tyfcb12m1mCor: String!
+  tyfcb12m12m: Long!
+  tyfcb12m12mCor: String!
+  kpiChartJson: String
+  kpiCharts: [KPIChart!]
+}
+
+type CurrentCountChaptersMembersType {
+  tipo: String!
+  n: Int!
+  members: Int!
+  avgChapterSize: Float!
+}
+
+type DocumentTypeInfo {
+  id: Int!
+  name: String
+}
+
+type ThreePlusOneEvolutionCountryGraphicType {
+  anoMes: String
+  idPaisConnect: Int!
+  pais: String
+  cdActiveMembers: Int!
+  cdNetGrowth: Int!
+  cdmpi: Float!
+  cdfd: Float!
+  cdfp: Float!
+  laIn: Int!
+  laOut: Int!
+  laNetGrowthMembers: Int!
+  laNetGrowthNewChapters: Int!
+  flIn: Int!
+  flOut: Int!
+  flNetGrowthJoinMembers: Int!
+  flChapterSize: Float!
+  rt1A: Float!
+  rtOverall: Float!
+  msnps: Int!
+  mstyfcbMember: Int!
+  mstyfcbTotal: Long!
+  chfac: Int!
+  chfsc: Int!
+  chfcc: Int!
+  chfcg: Int!
+  chfcga: Int!
+  chFnGroups: Int!
+  twdc: Int!
+  twamb: Int!
+  twNewDC: Int!
+  twNewAMB: Int!
+}
+
+input RegionGoalsInput {
+  regionId: String!
+  startDate: Date!
+  endDate: Date!
+}
+
+input CrmTaskExecutionEvolutionInput {
+  type: String!
+  typeId: String!
+  regionId: String
+  firstAnoMes: String!
+  lastAnoMes: String!
+  language: String
+}
+
+input MonthlyRegionGoalsInput {
+  regionId: String!
+  startDate: Date!
+  endDate: Date!
+}
+
+type RegionScheduleType {
+  id: Int!
+  idOper: String!
+  operacao: String!
+  di: DateTime!
+  periodicidade: String!
+  prioridade: Int!
+}
+
+input CreateGroupGoalsInput {
+  regionId: String!
+  group: String!
+  startDate: Date!
+  endDate: Date!
+  new: Int!
+  renewals: Int!
+  drops: Int!
+  absence: Decimal!
+  uau: Decimal!
+  size: Int!
+  visits: Decimal!
+  referrals: Decimal!
+  onf: Decimal!
+  ceu: Decimal!
+}
+
+input MembersAgeInput {
+  type: String!
+  typeId: String!
+  regionId: String!
+  age: Int!
+}
+
+type RxMemberByIdType {
+  anoMes: String!
+  idRegiao: String!
+  regiao: String!
+  grupo: String!
+  membro: String!
+  diasBNI: Int!
+  p: Int!
+  a: Int!
+  l: Int!
+  m: Int!
+  s: Int!
+  rgi: Int!
+  rgo: Int!
+  rg_Reg: Float!
+  uau: Int!
+  uau_Reg: Float!
+  rri: Int!
+  rro: Int!
+  ceu: Int!
+  onf: Float!
+  onf_Reg: Float!
+  v: Int!
+  lingua: String!
+  moeda: String!
+  pontos: Int!
+  ano: String!
+  mes: String!
+  anoRenova: String!
+  mesRenova: String!
+  cor: String!
+  gdprComplianceText: String!
+}
+
+input WebComLstInput {
+  regionId: String!
+  yearMonth: String!
+  da: String!
+}
+
+type RegionIdByCountryOrMultiType {
+  idRegiao: String!
+}
+
+input MemberFlowInput {
+  type: String!
+  typeId: String!
+  regionId: String!
+  startDate: Date!
+  endDate: Date!
+}
+
+input CrmTasksStatusCountInput {
+  type: String!
+  typeId: String!
+  regionId: String!
+  language: String!
+  firstAnomes: String!
+  lastAnomes: String!
+}
+
+type MembersNoOneToOnesType {
+  idRegiao: String!
+  regiao: String!
+  chapter: String!
+  member: String!
+  growing: Int!
+  monthInBNI: Int!
+  pm3: Int!
+  corPm3: String!
+  titPm3: String!
+  pm2: Int!
+  corPm2: String!
+  titPm2: String!
+  pm1: Int!
+  corPm1: String!
+  titPm1: String!
+  pm0: Int!
+  corPm0: String!
+  titPm0: String!
+  idTL: Long!
+  email: String!
+  telef: String!
+  nWeeks: Int!
+}
+
+type GetAllChapterTeamType {
+  idRegiao: String!
+  grupo: String!
+  membro: String!
+  equipe: String!
+  role_Lang: String!
+  telefone: String!
+  email: String!
+  pontos: Int!
+  pontos_Ant: Int!
+  idMTL: Int!
+  pontosCor: String!
+  abrev_Team: String!
+}
+
+type RegionOperationsType {
+  id: Int!
+  idOper: String!
+  operacao: String!
+  idRegiao: String!
+  todosMembrosRegiao: Boolean!
+  membros: Boolean!
+  el: Boolean!
+  dc: Boolean!
+  da: Boolean!
+  dex: Boolean!
+  dn: Boolean!
+  cliente: Boolean!
+  chave: String!
+  programa: String!
+  emb: Boolean!
+  cm: Boolean!
+}
+
+input CreateMRGoalsInput {
+  startDate: Date!
+  endDate: Date!
+  mrId: Int!
+  new: Int!
+  renewals: Int!
+  drops: Int!
+  retentionRate: Decimal!
+  absence: Decimal!
+  size: Int!
+  uau: Decimal!
+  visits: Decimal!
+  referrals: Decimal!
+  conversion: Decimal!
+  activeChapters: Int!
+  activeMembers: Int!
+  coreChapters: Int!
+  coreMembers: Int!
+}
+
+input UpdateKpiGroupMechanismInput {
+  id: Int!
+  regionId: String
+  kpi: String
+  mechanism: String
+}
+
+input GeneralGameResultForMembersInput {
+  type: String!
+  regionId: String!
+  date: Date!
+}
+
+type GameKpiType {
+  idGame: Int!
+  kpi: String!
+  points: Float!
+  goal: Float!
+}
+
+type ThreePlusOneEvolutionRegionGraphicType {
+  anoMes: String!
+  idPaisConnect: Int!
+  idRegiao: String!
+  regiao: String!
+  worldRank: Int!
+  regionSize: Int!
+  rdActiveMembers: Int!
+  rdNetGrowth: Int!
+  rdmpi: Float!
+  rdmpiColor: String!
+  rdop: Int!
+  rdmpiPoints: Int!
+  laIn: Int!
+  laOut: Int!
+  laNetGrowthMembers: Int!
+  laNetGrowthMembersPoints: Int!
+  laNetGrowthMembersColor: String!
+  laNetGrowthNewChapters: Int!
+  laNetGrowthNewChaptersPoints: Int!
+  laNetGrowthNewChaptersColor: String!
+  flIn: Int!
+  flOut: Int!
+  flNetGrowthJoinMembers: Int!
+  flNetGrowthJoinMembersPoints: Int!
+  flNetGrowthJoinMembersColor: String!
+  flChapterSize: Float!
+  flChapterSizePoints: Int!
+  flChapterSizeColor: String!
+  rt1A: Float!
+  rtOverall: Float!
+  rt1APoints: Int!
+  rt1AColor: String!
+  rtOverallPoints: Int!
+  rtOverallColor: String!
+  msnps: Int!
+  mstyfcbMember: Int!
+  mstyfcbTotal: Int!
+  chfac: Int!
+  chfsc: Int!
+  chfcc: Int!
+  chfcg: Int!
+  chfcga: Int!
+  chFnGroups: Int!
+  twdc: Int!
+  twamb: Int!
+  twNewDC: Int!
+  twNewAMB: Int!
+}
+
+type ContactSphereType {
+  contactSphere: String!
+}
+
+input UpdateUserPreferencesInput {
+  email: String!
+  defaultLanguage: String!
+}
+
+type UserType {
+  userRoles: UserRoleType
+  id: UUID!
+  username: String
+  email: String
+  name: String
+  phoneNumber: String
+  isStaff: Boolean
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+input UpdateRegionsInput {
+  regionId: String!
+  recipientsInBcc: Boolean!
+  sendEmails: Boolean!
+  processWithDa: Boolean!
+  processWithDaDecide: Boolean!
+  trainingAlertWeeks: Int!
+  zeroReferralsAlertWeeks: Int!
+  visitsAlertWeeks: Int!
+  psmName: String!
+  directorNoFee: Boolean!
+  psmOnly: Boolean!
+  psmRepeat: Int!
+  psmMonitorWeekly: Boolean!
+  psmMonitorMonthly: Boolean!
+  psmMonitorStartDate: DateTime!
+  mrRenewingIn: Int!
+  mrMembersOn1: Int!
+  mrMembersOn2: Int!
+  mrMembersOn3: Int!
+  wrMonitorSubstitutions: Boolean!
+  elSuspendFee: Boolean!
+  dashboardLt: Boolean!
+  dashboardMc: Boolean!
+}
+
+type DefaultOperationRegionEmailSetupType {
+  idOper: String!
+  idRegiao: String!
+  email: String
+  assunto: String
+}
+
+type GetRenewalsPeriodType {
+  id: Int!
+  idRegiao: String!
+  dHi: DateTime!
+  dataReal: DateTime!
+  membro: String!
+  grupo: String!
+  rd: Int!
+  rr: Int!
+  v: Int!
+  uau: Int!
+  ceu: Int!
+  onf: Float!
+  pontos: Int!
+  diasBNI: Int!
+  email: String!
+  telef: String!
+  telem: String!
+  cor: String!
+}
+
+type CrmTaskTypeGqlType {
+  idTaskType: Int!
+  taskType: String!
+  idTaskTargetType: String!
+  taskTypeColor: String!
+  attachDoc: Boolean!
+}
+
+type GoalRenewalForecastByPeriodType {
+  idRegiao: String
+  nRenovacoesPossiveis: String
+}
+
+type MembersWithoutFormationType {
+  idRegiao: String!
+  dc: String!
+  grupo: String!
+  name: String!
+  tceu: Int!
+  lingua: String!
+}
+
+input UpdateRegionGoalsInput {
+  id: Int!
+  regionId: String!
+  startDate: Date!
+  endDate: Date!
+  new: Int!
+  renewals: Int!
+  drops: Int!
+  retentionRate: Decimal!
+  absence: Decimal!
+  size: Int!
+  uau: Decimal!
+  visits: Decimal!
+  referrals: Decimal!
+  conversion: Decimal!
+  activeChapters: Int!
+  activeMembers: Int!
+  coreChapters: Int!
+  coreMembers: Int!
+}
+
+input DdLActiveGroupInput {
+  type: String!
+  typeId: String!
+  regionId: String!
+  anoMes: String!
+  withTrafficLights: Boolean!
+}
+
+type MembersTrafficLightsSplitType {
+  anomes: String!
+  idRegiao: String!
+  grey: Int!
+  percGrey: Float!
+  red: Int!
+  percRed: Float!
+  yellow: Int!
+  percYellow: Float!
+  green: Int!
+  percGreen: Float!
+}
+
+type CrmTasksByDateRangeType {
+  idRegiao: String!
+  grupo: String
+  name: String
+  idTask: String
+  idTaskStatus: Int!
+  idTaskType: Int!
+  notes: String
+  tl_Cor: String
+  tl_Id: Int!
+  tl_Points: Int!
+  dc: String
+  da: String
+  amb: String
+  tl_Points_Prev: Int!
+  idTaskTargetType: String
+  taskTypeColor: String
+  dh_Scheduled: DateTime!
+  dh_LastStatus: DateTime!
+  descriTask: String!
+  taskType: String
+  taskTypeAbrev: String
+}
+
+type BottomTopMemberType {
+  id: Int!
+  region: String!
+  idRegion: String!
+  member: String!
+  points: Int!
+  pointsPrev: Int!
+  email: String!
+  telef: String!
+  daysBNI: Int!
+  tlCor: String!
+  nTop: Int!
+  memberName: String!
+  memberChapter: String!
+}
+
+input ContactSphereRegionInput {
+  idRegiao: Int
+  industry: String
+  profession: String
+  contactSphere: String
+  industry_Local: String
+  profession_Local: String
+  hideFromReport: Boolean
+}
+
+scalar UUID
+
+input KpiGroupMechanismInput {
+  idMecGroup: Int
+  kpi: String
+  regionId: String
+  mecanismo: String
+}
+
+"The `Decimal` scalar type represents a decimal floating-point number."
+scalar Decimal
+
+type GameMembersType {
+  member: String!
+  memberTxt: String
+  corFundo: String
+  corTexto: String
+  ordem: Int!
+}
+
+type DdLActiveGroupsType {
+  tipo: String!
+  idRegiao: String!
+  anomes: String!
+  grupo: String!
+}
+
+type GenericMutationTypeOfGamesType {
+  success: Boolean!
+  code: Int!
+  message: String
+  data: GamesType
+}
+
+input DirectorRegionRequestInput {
+  type: String!
+  typeId: String!
+  regionId: String!
+}
+
+input GeneralGameResultForTeamInput {
+  type: String!
+  regionId: String!
+  date: Date!
+}
+
+type KpiMemberListType {
+  idMecMembro: Int!
+  kpi: String
+  kpiLingua: String
+  idRegiao: String
+  mecanismo: String
+}
+
+type CrmTaskTemplateByIdType {
+  template: String!
+}
+
+type MembersGrowingUpType {
+  idRegiao: String!
+  regiao: String!
+  chapter: String!
+  member: String!
+  growing: Int!
+  monthInBNI: Int!
+  pm3: Int!
+  corPm3: String!
+  titPm3: String!
+  pm2: Int!
+  corPm2: String!
+  titPm2: String!
+  pm1: Int!
+  corPm1: String!
+  titPm1: String!
+  pm0: Int!
+  corPm0: String!
+  titPm0: String!
+  idTL: Long!
+  email: String!
+  telef: String!
+}
+
+input GetChapterHeaderInput {
+  regionId: String!
+  group: String
+  lang: String!
+}
+
+type GamesKpisType {
+  kpi: String!
+  descri: String!
+}
+
+input RegionNameUpdInput {
+  regionId: String!
+  nameOld: String!
+  nameNew: String!
+}
+
+type ActiveGroupsType {
+  anomes: String!
+  idRegiao: String!
+  regiao: String
+  grupo: String
+  tipo: String
+  dc: String
+  da: String
+  tamanho: Int!
+  crescimento: Float!
+  retencao: Float!
+  referencias: Float!
+  visitas: Float!
+  conversao: Float!
+  absentismo: Float!
+  pontuacao: Float!
+  perc_Verde: Float!
+  perc_Amarelo: Float!
+  perc_Vermelho: Float!
+  perc_Cinza: Float!
+  pontuacao_Ant: Float!
+  unsAUns: Float!
+  onfmEmbro12m: Float!
+  ret1Ano: Float!
+  nGreen: Int!
+  nNotGreen: Int!
+  timeToGreen: Float!
+  timeNotGreen: Float!
+  zeroRef: Float!
+  zeroONF: Float!
+  zeroVis: Float!
+  zeroOTO: Float!
+}
+
+type RaciosInputsOutputsRetentionType {
+  idRegiao: String!
+  anomes: String!
+  nActiveMembers: Int!
+  activeChaptersNewMembers: Float!
+  activeChaptersDropps: Float!
+  coreChaptersNewMembers: Int!
+  nCoreMembers: Int!
+  retention: Float!
+}
+
+type ChaptersNoNewMembersType {
+  idRegiao: String!
+  regiao: String!
+  chapter: String!
+  lastNewMember: DateTime!
+  pm2: Int!
+  cor_pm2: String!
+  tit_pm2: String!
+  pm1: Int!
+  cor_pm1: String!
+  tit_pm1: String!
+  pm0: Int!
+  cor_pm0: String!
+  tit_pm0: String!
+  idTLC: Int!
+  grw_ActiveChapters_NoNewMembers: Int!
+  grw_CoreChapters_NoNewMembers: Int!
+}
+
+input ThreePlusOneRegionsInput {
+  type: String!
+  typeId: String!
+  anoMes: String!
+}
+
+type KpiMemberMechanismType {
+  id_Mec_Membro: Int!
+  kpi: String!
+  idRegiao: String!
+  mecanismo: String!
+}
+
+type SingleRegionsType {
+  regiao: String
+  idRegiao: String!
+  dex: String
+  dex2: String
+  pais: String
+  lingua: String
+  abreviatura: String
+  megaRegiao: String
+  activa: Boolean!
+  custom: Boolean!
+  nts_WebMaster: Boolean!
+  contrato: Boolean!
+  dataContrato: DateTime!
+  id_Tab_TL: Int!
+  id_Tab_TLC: Int!
+  id_Tab_Faltas: Int!
+  id_TC: Int!
+  destinatarios_em_BCC: Boolean!
+  envia_Emails: Boolean!
+  proc_Com: Boolean!
+  proc_Com_DA: Boolean!
+  proc_Com_DA_Decide: Boolean!
+  nSemanasAlertaFormacao: Int!
+  nSemanasAlertaZeroReferencias: Int!
+  nSemanasAlertaVisitas: Int!
+  dir_NoFee: Boolean!
+  psm_Name: String
+  psm_Only: Boolean!
+  psm_Repeat: Int!
+  psm_Monitor_weekly: Boolean!
+  psm_Monitor_monthly: Boolean!
+  psm_Monitor_Start_Date: DateTime!
+  mr_Renewing_in: Int!
+  mr_Members_On1: Int!
+  mr_Members_On2: Int!
+  mr_Members_On3: Int!
+  wr_Monitor_Substitutions: Boolean!
+  el_SuspendFee: Boolean!
+  dashBoard_LT: Boolean!
+  dashboard_MC: Boolean!
+}
+
+type RegionsCountryType {
+  regiao: String!
+  idRegiao: String!
+  dex: String!
+  dex2: String!
+  pais: String!
+  lingua: String!
+  abreviatura: String!
+  megaRegiao: String!
+  activa: Boolean!
+  chapters_Active: Int!
+  members_Active: Int!
+  chapters_Core: Int!
+  members_Core: Int!
+  chapters_Suspended: Int!
+  members_Suspended: Int!
+  custom: Boolean!
+  nts_WebMaster: Boolean!
+  contrato: Boolean!
+  dataContrato: DateTime!
+  id_Tab_TL: Int!
+  id_Tab_TLC: Int!
+  id_Tab_Faltas: Int!
+  id_TC: Int!
+  destinatarios_em_BCC: Boolean!
+  envia_Emails: Boolean!
+  proc_Com: Boolean!
+  proc_Com_DA: Boolean!
+  proc_Com_DA_Decide: Boolean!
+}
+
+input RegionOperationsCpInput {
+  operationSourceId: String!
+  operationTargetId: String!
+}
+
+input CreateRegionGoalsInput {
+  regionId: String!
+  startDate: Date!
+  endDate: Date!
+  new: Int!
+  renewals: Int!
+  drops: Int!
+  retentionRate: Decimal!
+  absence: Decimal!
+  size: Int!
+  uau: Decimal!
+  visits: Decimal!
+  referrals: Decimal!
+  conversion: Decimal!
+  activeChapters: Int!
+  activeMembers: Int!
+  coreChapters: Int!
+  coreMembers: Int!
+}
+
+type GameResultForTeamType {
+  idTeam: Int!
+  member: String!
+  p: Float!
+  g_P: Float!
+  a: Float!
+  g_A: Float!
+  l: Float!
+  g_L: Float!
+  m: Float
+  g_M: Float!
+  s: Float!
+  g_S: Float!
+  rgi: Float
+  g_RGI: Float!
+  rgo: Float
+  g_RGO: Float!
+  uau: Float!
+  g_UAU: Float!
+  v: Float!
+  g_V: Float!
+}
+
+input ActiveGroupsInput {
+  type: String!
+  typeId: String!
+  regionId: String!
+  anoMes: String!
+}
+
+type MembersGroupType {
+  id: Int!
+  idRegiao: String!
+  membro: String!
+  grupo: String!
+  rd: Int!
+  rr: Int!
+  v: Int!
+  _1_2_1: Int!
+  ceu: Int!
+  onf: Float!
+  pontos: Int!
+  pontos_Ant: Int!
+  diasBNI: Int!
+  email: String!
+  joinDate: DateTime!
+  renewalDate: DateTime!
+  empresa: String!
+  industry: String!
+  profession: String!
+  pontosCor: String!
+}
+
+type WebDdlKpisDataAnalysisType {
+  kpi: String!
+  descri: String!
+}
+
+input ScheduleTimeUpdInput {
+  country: String!
+  regionId: String!
+  operationId: String!
+}
+
+input GetAllChapterTeamInput {
+  regionId: String!
+  group: String
+  lang: String!
+}
+
+type MembersWithoutRefGivenType {
+  idRegiao: String!
+  dc: String!
+  grupo: String!
+  name: String!
+  refGiven: Int!
+  lingua: String!
+}
+
+input KpIsDataAnalysisDDlInput {
+  language: String!
+}
+
+"Defines when a policy shall be executed."
+enum ApplyPolicy {
+  "Before the resolver was executed."
+  BEFORE_RESOLVER
+  "After the resolver was executed."
+  AFTER_RESOLVER
+  "The policy is applied in the validation step before the execution."
+  VALIDATION
+}
+
+type CreatedUserPayload {
+  id: String
+  username: String
+  email: String
+  name: String
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type ActiveGroupsTodayType {
+  anomes: String
+  idRegiao: String
+  regiao: String
+  grupo: String
+  membros: Int!
+  ref: Int!
+  vis: Int!
+  ass: Float!
+  uau: Int!
+  ufg: Int!
+  onf: Float!
+  ent: Int!
+  ren: Int!
+  sai: Int!
+  dc: String
+  da: String
+}
+
+type GetChapterHeaderType {
+  idRegiao: String!
+  regiao: String!
+  grupo: String!
+  estado: String!
+  da: String!
+  dc: String!
+  embaixador: String!
+  localReuniao: String!
+  diaSemana: Int!
+  lancamento: DateTime!
+  hora: String!
+  lastSubmittedPALMS: DateTime!
+  nMembros: Int!
+  pontos: Int
+  pontosCor: String
+  pontos_Ant: Int
+}
+
+input KpiGroupUpdInput {
+  id: Int!
+  kpi: String!
+  regionId: String!
+  mechanism: String!
+}
+
+input MonthlyGroupGoalsInput {
+  regionId: String!
+  groupName: String!
+  startDate: Date!
+  endDate: Date!
+}
+
+type TotalMembersAgeType {
+  age: Int!
+  nMembers: Int!
+}
+
+input LastClosedYearMonthInput {
+  type: String!
+  typeId: String!
+}
+
+input WebComUpdInput {
+  id: Int!
+  da: String!
+  dc: String!
+}
+
+type KpiGroupComboType {
+  kpi: String
+  kpi_Lingua: String
+}
+
+input AdminTrafficLightsMembersEvolutionInput {
+  type: String!
+  typeId: String!
+  regionId: String!
+  group: String
+  date: Date!
+}
+
+type RenovationsAnoMesType {
+  anomes: String!
+  idRegiao: String!
+  grupo: String!
+  descri: String!
+  membro: String!
+  empresa: String!
+  profissao: String!
+  email: String!
+  pontos: Int!
+  diasBNI: Int!
+  telef: String!
+  telem: String!
+  id: Int!
+  cor: String!
+  regiao: String!
+}
+
+input SponsoredMembersByMemberInput {
+  regionId: String!
+  chapter: String!
+  sponsor: String!
+}
+
+type GrfKpiGroupType {
+  idRegiao: String
+  anomes: String
+  tamanhoR: Float!
+  tamanhoG: Float!
+  crescimentoR: Float!
+  crescimentoG: Float!
+  retencaoR: Float!
+  retencaoG: Float!
+  referenciasR: Float!
+  referenciasG: Float!
+  visitasR: Float!
+  visitasG: Float!
+  conversaoR: Float!
+  conversaoG: Float!
+  absentismoR: Float!
+  absentismoG: Float!
+  pontuacaoR: Float!
+  pontuacaoG: Float!
+  otoMm_AvgR: Float!
+  otoMm_AvgG: Float!
+  tyfcbm12mR: Float!
+  tyfcbm12mG: Float!
+  ret1AnoR: Float!
+  ret1AnoG: Float!
+  zeroRefR: Float!
+  zeroRefG: Float!
+  zeroONFR: Float!
+  zeroONFG: Float!
+  zeroVisR: Float!
+  zeroVisG: Float!
+  zeroOTOR: Float!
+  zeroOTOG: Float!
+}
+
+type NdMrActiveGroupsType {
+  anomes: String!
+  idRegiao: String!
+  regiao: String!
+  grupo: String!
+  tipo: String!
+  dc: String!
+  da: String!
+  tamanho: Int!
+  crescimento: Int!
+  retencao: Int!
+  referencias: Float!
+  visitas: Float!
+  conversao: Float!
+  absentismo: Float!
+  pontuacao: Int!
+  pontuacaoAnt: Int!
+  unsAUns: Float!
+  onfmEmbro12m: Long!
+  ret1Ano: Float!
+  percVerde: Float!
+  percAmarelo: Float!
+  percVermelho: Float!
+  percCinza: Float!
+  nGreen: Int!
+  nNotGreen: Int!
+  timeToGreen: Float!
+  timeNotGreen: Float!
+}
+
+input DeleteDocumentTypeInput {
+  documentTypeId: Int!
+  fileNames: [String!]!
+}
+
+type CsListByRegionIdType {
+  idRegiao: String
+  industry: String
+  profession: String
+  contactSphere: String
+  hideFromReport: Boolean!
+}
+
+type CrmTaskEnabledType {
+  idRegiao: String!
+  regiao: String!
+  pais: String!
+  tasksEnabled: Boolean!
+  dcTasks: Boolean!
+  chapterTasks: Int!
+}
+
+"Directive arguments can have names and values. The values are in graphql SDL syntax printed as a string. This type is NOT specified by the graphql specification presently."
+type __DirectiveArgument {
+  name: String!
+  value: String!
+}
+
+input DirectorsGoalsInput {
+  type: String!
+  typeId: String!
+  regionId: String!
+  startDate: Date!
+  endDate: Date!
+}
+
+type GroupMemberType {
+  id: Long!
+  idRegiao: String!
+  membro: String!
+  grupo: String!
+  rd: Int!
+  rr: Int!
+  v: Int!
+  _1_2_1: Int!
+  ceu: Int!
+  onf: Float!
+  pontos: Int!
+  diasBNI: Int!
+  email: String!
+  pontos_Ant: Int!
+  joinDate: DateTime!
+  renewalDate: DateTime!
+  empresa: String!
+  industry: String!
+  profession: String!
+  pontosCor: String!
+}
+
+input Membros100PointsInput {
+  type: String!
+  typeId: String!
+  regionId: String!
+  anomes: String!
+}
+
+input CreateGamesInput {
+  regionId: String!
+  groupName: String!
+  name: String!
+  hasGoals: Boolean!
+  startDate: Date!
+  endDate: Date!
+}
+
+input CoreGroupInput {
+  type: String!
+  typeId: String!
+  regionId: String!
+  anoMes: String!
+}
+
+input BottomTopMemberInput {
+  type: String!
+  typeId: String!
+  regionId: String!
+  anomes: String!
+  topBottom: String!
+}
+
+input KpiMemberInsInput {
+  kpi: String!
+  regionId: String!
+  mechanism: String!
+}
+
+input DeleteRegionEventInput {
+  regionId: String!
+  eventType: String!
+  anoMes: String!
+}
+
+input CorrelationInput {
+  type: String!
+  typeId: String!
+  group: String!
+  startYearMonth: String!
+  endYearMonth: String!
+  minimumPls: Int!
+  percentUp: Int!
+  percentDown: Int!
+  kpi1: String!
+  kpi2: String!
+  source: String!
+  language: String!
+}
+
+input UploadGameImageInput {
+  gameId: Int!
+  image: Upload!
+}
+
+input MultiRegionInput {
+  email: String!
+  country: String!
+  profile: String!
+}
+
+input UpdateGameAdminByFusoInput {
+  firstFuso: Int!
+  lastFinal: Int!
+}
+
+type AdminTrafficLightsMembersEvolutionType {
+  idRegiao: String!
+  region: String
+  chapter: String
+  member: String
+  telem: String
+  evolutions: [AdminTrafficLightsMembersEvolutions!]!
+  ptsAvg: Float!
+  totalVis: Float!
+  totalVisByPals: Float!
+  totalPals: Int!
+  totalSponsors: Float!
+}
+
+type MembersWithAbsencesType {
+  idRegion: String!
+  dc: String!
+  grupo: String!
+  name: String!
+  ausencias: Int!
+  lingua: String!
+}
+
+type GameTeamType {
+  idTeam: Int!
+  idGame: Int!
+  team: String!
+  descri: String
+  edt: Int!
+  del: Int!
+  nMembers: Int!
+  pts: Float!
+}
+
+input GroupGoalsInput {
+  type: String!
+  typeId: String!
+  regionId: String
+  startDate: Date!
+  endDate: Date!
+}
+
+input RegionOperationsUpdateInput {
+  id: Int!
+  members: Boolean!
+  el: Boolean!
+  dc: Boolean!
+  da: Boolean!
+  dex: Boolean!
+  emb: Boolean!
+  cm: Boolean!
+  language: String!
+}
+
+input MembersFlowRequestInput {
+  type: String!
+  typeId: String!
+  regionId: String!
+}
+
+input ActiveGroupsTodayInput {
+  type: String!
+  typeId: String!
+  regionId: String!
+}
+
+input RegionSchedulesCpInput {
+  regionSourceId: String!
+  regionTargetId: String!
+  key: String!
+}
+
+type GetEquipaType {
+  idRegiao: String
+  diretor: String
+  email: String
+  nGruposAtivos: Int!
+  gGruposAtivos: Int!
+  dGruposAtivos: Int!
+  dGruposAtivos_Cor: String
+  aGruposAtivos: Int!
+  aGruposAtivos_Cor: String
+  nMembrosAtivos: Int!
+  gMembrosAtivos: Int!
+  dMembrosAtivos: Int!
+  dMembrosAtivos_Cor: String
+  aMembrosAtivos: Int!
+  aMembrosAtivos_Cor: String
+  nGruposCore: Int!
+  gGruposCore: Int!
+  dGruposCore: Int!
+  dGruposCore_Cor: String
+  aGruposCore: Int!
+  aGruposCore_Cor: String
+  nMembrosCore: Int!
+  gMembrosCore: Int!
+  dMembrosCore: Int!
+  dMembrosCore_Cor: String
+  aMembrosCore: Int!
+  aMembrosCore_Cor: String
+  nGruposSuspensos: Int!
+  aGruposSuspensos: Int!
+  aGruposSuspensos_Cor: String
+  nMembrosSuspensos: Int!
+  aMembrosSuspensos: Int!
+  aMembrosSuspensos_Cor: String
+}
+
+input GamesByIdInput {
+  type: String!
+  typeId: String!
+  regionId: String!
+  idGame: Int!
+}
+
+type CoreGroupType {
+  tipo: String
+  idRegiao: String
+  regiao: String
+  grupo: String
+  dc: String
+  da: String
+  membros: Int!
+  anomes: String!
+}
+
+"The `Long` scalar type represents non-fractional signed whole 64-bit numeric values. Long can represent values between -(2^63) and 2^63 - 1."
+scalar Long
+
+type RegionsRgpLstType {
+  region: String!
+  idRegion: String!
+  rgpZeroToOneEnabled: Boolean!
+  rgpZeroToOneLessThanPoints: Int!
+  rgpZeroToOnenMonth: Int!
+  rgpZeroToOnenMonthLT: Int!
+  rgpTasksEnabled: Boolean!
+  rgpFirstTLMembers: Int!
+  rgpLastTLMembers: Int!
+  rgpDroppingBelow: Int!
+  rgpDroppingMonths: Int!
+  rgpDroppingTask: Boolean!
+  rgpRenewalTask: Boolean!
+  rgp7MonthAnalysisTask: Boolean!
+  grwMonthsNoVisitors: Int!
+  grwActiveChaptersNoNewMembers: Int!
+  grwCoreChaptersNoNewMembers: Int!
+  ltTrafficLights: Boolean!
+  idTabTLLT: Int!
+  tlMarkNewMembers: Boolean!
+  tlNemMembersLessThan: Int!
+  rgpWeeksNoReferralsReceived: Int!
+  rgpWeeksNoOneToOnes: Int!
+  sponsoredLastXmonths: Int!
+}
+
+type TrafficLightGroupEvolutionType {
+  idRegiao: String!
+  chapter: String!
+  ptsAvg: Float!
+  evolutions: [TrafficLightGroupEvolutionData!]!
+}
+
+type TlmHowToImproveType {
+  idRegiao: Int!
+  anomes: Int!
+  regiao: String!
+  grupo: String!
+  titulo: String!
+  membro: String!
+  total_Pts: Int!
+  total_Cor: String!
+  kpi: String!
+  kpi_Qnt: Int!
+  kpi_Pts: Int!
+  kpi_Cor: String!
+  kpi_Now_Qnt: Int!
+  kpi_Now_Pts: Int!
+  kpi_Now_Cor: String!
+  kpi_ToNext_Qnt: Int!
+  kpi_ToNext_Pts: Int!
+  kpi_ToNext_Cor: String!
+  kpi_ToMax_Qnt: Int!
+  kpi_ToMax_Pts: Int!
+  kpi_ToMax_Cor: String!
+  kpi_Chave: String!
+  tem_Mecanismos: Int!
+  howToImprove: String!
+  absenceDates: String!
+  attendanceFormula: Boolean!
+  now_Pts: Int!
+  now_Cor: String!
+  lastPalms: String!
+  displayOrder: Int!
+  lastPalmsText: String!
+}
+
+type GameKpisType {
+  idGame: Int!
+  idRegiao: String!
+  regiao: String!
+  grupo: String!
+  kpi: String!
+  descri: String
+  points: Float!
+}
+
+input UpdateOperationRegionEmailSetupInput {
+  operationId: String!
+  regionId: String!
+  email: String!
+  subject: String!
+}
+
+input WebCurrentStatusInput {
+  type: String!
+  typeId: String!
+  regionId: String!
+  anoMes: String!
+}
+
+input UpdateRegionsRgpInput {
+  regionId: String!
+  rgpZeroToOneEnabled: Boolean!
+  rgpZeroToOneLessThanPoints: Int!
+  rgpZeroToOneMonth: Int!
+  rgpZeroToOneMonthLt: Int!
+  rgpTasksEnabled: Boolean!
+  rgpFirstTlMembers: Int!
+  rgpLastTlMembers: Int!
+  rgpDroppingMonths: Int!
+  rgpDroppingBelow: Int!
+  rgpDroppingTask: Boolean!
+  rgpRenewalTask: Boolean!
+  rgp7MonthAnalysisTask: Boolean!
+  grwMonthsNoVisitors: Int!
+  grwActiveChaptersNoNewMembers: Int!
+  grwCoreChaptersNoNewMembers: Int!
+  ltTrafficLights: Boolean!
+  idTabTllt: Int!
+  tlMarkNewMembers: Boolean!
+  tlNewMembersLessThan: Int!
+  rgpWeeksNoReferralsReceived: Int!
+  rgpWeeksNoOneToOnes: Int!
+  sponsoredLastXMonths: Int!
+}
+
+type MembersWithoutPsmType {
+  idRegiao: String!
+  grupo: String!
+  name: String!
+  joinDate: DateTime!
+  ageMonths: Int!
+  cor: String!
+}
+
+type AdminAlertsProcessingType {
+  ordem: Int!
+  alertType: String!
+  chapter: String!
+  notes: String!
+}
+
+input UpdateContactSphereRegionInput {
+  regionId: String!
+  industry: String!
+  profession: String!
+  contactSphere: String!
+  hideFromReport: Boolean!
+}
+
+input KpiMemberUpdInput {
+  id: Int!
+  kpi: String!
+  regionId: String!
+  mechanism: String!
+}
+
+input UpdateTeamInput {
+  idTeam: Int!
+  teamName: String!
+  description: String!
+}
+
+input SimulatesRenovationInput {
+  type: String!
+  typeId: String!
+  regionId: String!
+}
+
+type KPIChart {
+  anomes: String
+  retAvg: Float
+  convAvg: Float
+  attAvg: Float
+  pointsAvg: Float
+  refMwAvg: Float
+  visCwAvg: Float
+  otoMmAvg: Float
+  sizeAvg: Float
+  growthAvg: Float
+  membersActive: Int
+  membersCore: Int
+  membersSuspended: Int
+  chaptersActive: Int
+  chaptersCore: Int
+  chaptersSuspended: Int
+}
+
+type CrmTasksConsequencesType {
+  anoMes: String!
+  idTask: String!
+  idRegiao: String!
+  chapter: String!
+  name: String!
+  taskType: String!
+  taskTypeAbrev: String!
+  idTaskStatus: Int!
+  taskStatus: String!
+  notes: String!
+  pm3: Int!
+  pm2: Int!
+  pm1: Int!
+  pm0: Int!
+  pm3Cor: String!
+  pm2Cor: String!
+  pm1Cor: String!
+  pm0Cor: String!
+  taskMonth: String!
+  statusColor: String!
+  titPm3: String!
+  titPm2: String!
+  titPm1: String!
+  titPm0: String!
+  diretor: String!
+  id: Int!
+}
+
+type CrmTaskStatusType {
+  idTaskStatus: Int!
+  taskStatus: String!
+  finish: Boolean!
+  success: Boolean!
+}
+
+type CountryGoalsType {
+  idOP: Int!
+  datai: DateTime!
+  dataf: DateTime!
+  pais: String!
+  new: Int!
+  renew: Int!
+  drops: Int!
+  txRetencao: Float!
+  absence: Float!
+  size: Float!
+  uau: Float!
+  vis: Float!
+  ref: Float!
+  conv: Float!
+  chapters_Active: Int!
+  members_Active: Int!
+  chapters_Core: Int!
+  members_Core: Int!
+}
+
+input DuplicateRegionEventInput {
+  regionId: String!
+  eventType: String!
+  firstAnoMes: String!
+  lastAnoMes: String!
+}
+
+type OperationRegionEmailSetupType {
+  idOper: String!
+  idRegiao: String!
+  email: String
+  assunto: String
+  operacao: String
+}
+
+input RegionInput {
+  profile: String!
+  email: String!
+  country: String!
+  multiRegion: Int
+}
+
+type GroupGoalsType {
+  idOG: Int!
+  idRegiao: String!
+  grupo: String!
+  datai: DateTime!
+  dataf: DateTime!
+  new: Int!
+  renew: Int!
+  drops: Int!
+  absence: Float!
+  uau: Float!
+  size: Int!
+  vis: Float!
+  ref: Float!
+  onf: Float!
+  ceu: Float!
+  dHi: DateTime!
+}
+
+type WebCurrentStatusType {
+  idRegiao: String
+  nomeTipo: String
+  anomes: String
+  retencao: Decimal!
+  conversao: Decimal!
+  assiduidade: Decimal!
+  pontuacao: Int!
+  tamanho: Int!
+  crescimento: Int!
+  referencias: Decimal!
+  visitas: Decimal!
+  nGruposActivos: Int!
+  nMembrosActivos: Int!
+  nGruposCore: Int!
+  nMembrosCore: Int!
+  nGruposSuspensos: Int!
+  nMembrosSuspensos: Int!
+  onf: Int!
+  membros: Int!
+}
+
+input MrRenewalForecastByPeriodInput {
+  type: String!
+  typeId: String!
+  startDate: Date!
+  endDate: Date!
+}
+
+type GetExitsPeriodType {
+  id: Int!
+  idRegiao: String!
+  dHi: DateTime!
+  dataReal: DateTime!
+  membro: String!
+  grupo: String!
+  tipoSaida: String!
+  motivo: String!
+  obs: String!
+  rd: Int!
+  rr: Int!
+  v: Int!
+  uau: Int!
+  ceu: Int!
+  onf: Float!
+  pontos: Int!
+  diasBNI: Int!
+  email: String!
+  telef: String!
+  telem: String!
+  cor: String!
+}
+
+type GamesType {
+  idGame: Int!
+  regiao: String!
+  idRegiao: String!
+  grupo: String!
+  nome: String!
+  goals: Boolean!
+  totalTeams: Int!
+  isActive: Boolean!
+  imagem: String
+  imageUrl: String
+  di: DateTime!
+  df: DateTime!
+  totalDurationDays: Int!
+  remainingDays: Int!
+  percentageProgress: Int!
+}
+
+input MembersTrafficLightsSplitInput {
+  type: String!
+  typeId: String!
+  regionId: String!
+  firstAnomes: String!
+  lastAnomes: String!
+}
+
+type CrmTaskType {
+  idRegiao: Int!
+  name: String
+  idTask: String!
+  idTaskStatus: Int!
+  idTaskType: Int!
+  notes: String
+  tlCor: String
+  tlId: Int!
+  tlPoints: Int!
+  dc: String
+  da: String
+  amb: String
+  tlPointsPrev: Int!
+  idTaskTargetType: String!
+  taskTypeColor: String!
+  dhScheduled: DateTime!
+  dhLastStatus: DateTime!
+  descriTask: String!
+  taskType: String!
+  taskTypeAbrev: String!
+  attachment: String
+  attachmentList: [String!]!
+  attachmentUrls: [String!]!
+  grupo: String
+  chapter: String
+}
+
+type GeneralGameResultForTeamType {
+  idGame: Int!
+  idRegiao: String!
+  grupo: String!
+  team: String!
+  members: Int!
+  teamRate: Float!
+  tPoints: Float!
+}
+
+type ThreePlusOneEvolutionType {
+  evolutions: [ThreePlusOneEvolutionData]!
+  context: String
+  green: Int!
+  yellow: Int!
+  red: Int!
+  gray: Int!
+  ptsAvg: Float!
+  ptsAvgColor: String
+}
+
+input SuspendedGroupInput {
+  type: String!
+  typeId: String!
+  regionId: String!
+  anoMes: String!
+}
+
+input UpdateCountryGoalsInput {
+  id: Int!
+  startDate: Date!
+  endDate: Date!
+  country: String!
+  new: Int!
+  renewals: Int!
+  drops: Int!
+  retentionRate: Decimal!
+  absence: Decimal!
+  size: Int!
+  uau: Decimal!
+  visits: Decimal!
+  referrals: Decimal!
+  conversion: Decimal!
+  activeChapters: Int!
+  activeMembers: Int!
+  coreChapters: Int!
+  coreMembers: Int!
+}
+
+input ThreePlusOneCountryInput {
+  country: String!
+  anoMes: String!
+}
+
+type DashboardType {
+  anomes: String!
+  idRegiao: String!
+  rank: Int!
+  country: String!
+  director: String!
+  region: String!
+  lingua: String!
+  points: Float!
+  retAvg: Float!
+  retMin: Float!
+  retMax: Float!
+  retCor: String!
+  convAvg: Float!
+  convMin: Float!
+  convMax: Float!
+  convCor: String!
+  attAvg: Float!
+  attMin: Float!
+  attMax: Float!
+  attCor: String!
+  pointsAvg: Float!
+  pointsMin: Float!
+  pointsMax: Float!
+  pointsCor: String!
+  sizeAvg: Float!
+  sizeMin: Float!
+  sizeMax: Float!
+  sizeCor: String!
+  growthAvg: Float!
+  growthMin: Float!
+  growthMax: Float!
+  growthCor: String!
+  membersActive: Int!
+  membersCore: Int!
+  membersSuspended: Int!
+  chaptersActive: Int!
+  chaptersCore: Int!
+  chaptersSuspended: Int!
+  refMwAvg: Float!
+  refMwMin: Float!
+  refMwMax: Float!
+  refMwCor: String!
+  visCwAvg: Float!
+  visCwMin: Float!
+  visCwMax: Float!
+  visCwCor: String!
+  tyfcb12m: Long!
+  tyfcbm12m: Int!
+  otoMmAvg: Float!
+  otoMmMin: Float!
+  otoMmMax: Float!
+  otoMmCor: String!
+  retMinChapter: String!
+  retMaxChapter: String!
+  convMinChapter: String!
+  convMaxChapter: String!
+  attMinChapter: String!
+  attMaxChapter: String!
+  pointsMinChapter: String!
+  pointsMaxChapter: String!
+  sizeMinChapter: String!
+  sizeMaxChapter: String!
+  growthMinChapter: String!
+  growthMaxChapter: String!
+  refMwMinChapter: String!
+  refMwMaxChapter: String!
+  visCwMinChapter: String!
+  visCwMaxChapter: String!
+  otoMmMinChapter: String!
+  otoMmMaxChapter: String!
+  gRet: Float!
+  gRetCor: String!
+  gAtt: Float!
+  gAttCor: String!
+  gSize: Float!
+  gSizeCor: String!
+  gRefMw: Float!
+  gRefMwCor: String!
+  gotoMm: Float!
+  gotoMmCor: String!
+  gVisCw: Float!
+  gVisCwCor: String!
+  gConv: Float!
+  gConvCor: String!
+  gac: Int!
+  gacCor: String!
+  gam: Int!
+  gamCor: String!
+  gcc: Int!
+  gccCor: String!
+  gcm: Int!
+  gcmCor: String!
+  anomes1m: String!
+  anomes12m: String!
+  retAvg1m: Float!
+  retAvg1mCor: String!
+  retAvg12m: Float!
+  retAvg12mCor: String!
+  convAvg1m: Float!
+  convAvg1mCor: String!
+  convAvg12m: Float!
+  convAvg12mCor: String!
+  attAvg1m: Float!
+  attAvg1mCor: String!
+  attAvg12m: Float!
+  attAvg12mCor: String!
+  points1m: Float!
+  points1mCor: String!
+  points12m: Float!
+  points12mCor: String!
+  sizeAvg1m: Float!
+  sizeAvg1mCor: String!
+  sizeAvg12m: Float!
+  sizeAvg12mCor: String!
+  growthAvg1m: Float!
+  growthAvg1mCor: String!
+  growthAvg12m: Float!
+  growthAvg12mCor: String!
+  membersActive1m: Int!
+  membersActive1mCor: String!
+  membersActive12m: Int!
+  membersActive12mCor: String!
+  membersCore1m: Int!
+  membersCore1mCor: String!
+  membersCore12m: Int!
+  membersCore12mCor: String!
+  membersSuspended1m: Int!
+  membersSuspended1mCor: String!
+  membersSuspended12m: Int!
+  membersSuspended12mCor: String!
+  chaptersActive1m: Int!
+  chaptersActive1mCor: String!
+  chaptersActive12m: Int!
+  chaptersActive12mCor: String!
+  chaptersCore1m: Int!
+  chaptersCore1mCor: String!
+  chaptersCore12m: Int!
+  chaptersCore12mCor: String!
+  chaptersSuspended1m: Int!
+  chaptersSuspended1mCor: String!
+  chaptersSuspended12m: Int!
+  chaptersSuspended12mCor: String!
+  refMwAvg1m: Float!
+  refMwAvg1mCor: String!
+  refMwAvg12m: Float!
+  refMwAvg12mCor: String!
+  visCwAvg1m: Float!
+  visCwAvg1mCor: String!
+  visCwAvg12m: Float!
+  visCwAvg12mCor: String!
+  otoMmAvg1m: Float!
+  otoMmAvg1mCor: String!
+  otoMmAvg12m: Float!
+  otoMmAvg12mCor: String!
+  tyfcb12m1m: Long!
+  tyfcb12m1mCor: String!
+  tyfcb12m12m: Long!
+  tyfcb12m12mCor: String!
+  tyfcbm12m1m: Int!
+  tyfcbm12m1mCor: String!
+  tyfcbm12m12m: Int!
+  tyfcbm12m12mCor: String!
+  moeda: String!
+}
+
+input UpdateEventValuesByRegionInput {
+  regionId: String!
+  eventType: String!
+  anoMes: String!
+  feeValue: Decimal!
+  dcTax: Decimal!
+  daTax: Decimal!
+  dnTax: Decimal!
+  dex2Tax: Decimal!
+  ivaTax: Decimal!
+  dcValue: Decimal!
+  daValue: Decimal!
+}
+
+type MemberTrafficLightsType {
+  id: Int!
+  idRegiao: String!
+  descri: String!
+  membro: String!
+  grupo: String!
+  rd: Int!
+  ptRef: Int!
+  ptRefCor: String!
+  rr: Int!
+  v: Int!
+  ptVis: Int!
+  ptVisCor: String!
+  _1_2_1: Int!
+  pt121: Int!
+  pt121Cor: String!
+  ceu: Int!
+  ptCeu: Int!
+  ptCeuCor: String!
+  onf: Float!
+  ptOnf: Int!
+  ptOnfCor: String!
+  pontos: Int!
+  diasBNI: Int!
+  email: String!
+  p: Int!
+  a: Int!
+  ptA: Int!
+  ptaCor: String!
+  l: Int!
+  ptL: Int!
+  ptlCor: String!
+  m: Int!
+  s: Int!
+  cor: String!
+  variacao: Int!
+  r7A: Int!
+  regiao: String!
+  telem: String!
+  pontos_Ant: Int!
+  valExtra: Int!
+  ptExtra: Int!
+  ptExtraCor: String!
+  extra: Boolean!
+  extra_KPI: String!
+}
+
+input OptOutMemberInput {
+  regionId: String!
+  email: String!
+  output: Boolean!
+}
+
+input ReferenceValuesInput {
+  regionId: String!
+  date: DateTime!
+}
+
+input CrmTasksConsequencesInput {
+  type: String!
+  typeId: String!
+  regionId: String
+  taskTypeId: Int!
+  anoMes: String!
+}
+
+input MembersGroupInput {
+  regionId: String!
+  group: String
 }
 
 type CountryResponse {
-    name: String
-    email: String
+  name: String
+  email: String
 }
+
+type KpiMemberComboType {
+  kpi: String
+  kpiLingua: String
+}
+
+type CorrelationDdlType {
+  kpi: String
+  descri: String
+}
+
+type Membros100PointsType {
+  id: Long!
+  idRegiao: String
+  regiao: String
+  chapter: String
+  member: String
+  months100Points: Int!
+  since: String
+  till: String
+  joinDate: DateTime!
+  status: String
+}
+
+input KpiMemberMechanismInput {
+  idMecMembro: Int
+  kpi: String
+  regionId: String
+  mechanism: String
+}
+
+input CreateUserInput {
+  email: String!
+  password: String!
+}
+
+input UpdateGameKpiInput {
+  gameId: Int!
+  kpi: String!
+  points: Float!
+  goals: Float!
+}
+
+type SponsoredMembersByMemberType {
+  idRegiao: String!
+  sponsor: String!
+  sponsor_Chapter: String!
+  sponsored: String!
+  sponsored_Chapter: String!
+  sponsored_Region: String!
+  application_Date: DateTime!
+  joinDate: DateTime!
+}
+
+type DashboardCountryType {
+  anomes: String!
+  country: String!
+  lingua: String!
+  points: Float!
+  retAvg: Float!
+  retMin: Float!
+  retMax: Float!
+  retCor: String!
+  convAvg: Float!
+  convMin: Float!
+  convMax: Float!
+  convCor: String!
+  attAvg: Float!
+  attMin: Float!
+  attMax: Float!
+  attCor: String!
+  pointsAvg: Float!
+  pointsMin: Float!
+  pointsMax: Float!
+  pointsCor: String!
+  sizeAvg: Float!
+  sizeMin: Float!
+  sizeMax: Float!
+  sizeCor: String!
+  growthAvg: Float!
+  growthMin: Float!
+  growthMax: Float!
+  growthCor: String!
+  membersActive: Int!
+  membersCore: Int!
+  membersSuspended: Int!
+  chaptersActive: Int!
+  chaptersCore: Int!
+  chaptersSuspended: Int!
+  refMwAvg: Float!
+  refMwMin: Float!
+  refMwMax: Float!
+  refMwCor: String!
+  visCwAvg: Float!
+  visCwMin: Float!
+  visCwMax: Float!
+  visCwCor: String!
+  tyfcb12m: Long!
+  tyfcbm12m: Int!
+  otoMmAvg: Float!
+  otoMmMin: Float!
+  otoMmMax: Float!
+  otoMmCor: String!
+  retMinRegion: String!
+  retMaxRegion: String!
+  convMinRegion: String!
+  convMaxRegion: String!
+  attMinRegion: String!
+  attMaxRegion: String!
+  pointsMinRegion: String!
+  pointsMaxRegion: String!
+  sizeMinRegion: String!
+  sizeMaxRegion: String!
+  growthMinRegion: String!
+  growthMaxRegion: String!
+  refMwMinRegion: String!
+  refMwMaxRegion: String!
+  visCwMinRegion: String!
+  visCwMaxRegion: String!
+  otoMmMinRegion: String!
+  otoMmMaxRegion: String!
+  gReT: Float!
+  gReTCor: String!
+  gAtt: Float!
+  gAttCor: String!
+  gSize: Float!
+  gSizeCor: String!
+  grefMw: Float!
+  gRefMwCor: String!
+  gotoMm: Float!
+  gotoMmCor: String!
+  gVisCw: Float!
+  gVisCwCor: String!
+  gConv: Float!
+  gConvCor: String!
+}
+
+input CorrelationDdlInput {
+  type: String!
+  language: String!
+}
+
+type ContactSphereGroupType {
+  regiao: String!
+  grupo: String!
+  idRegiao: String!
+  industry: String
+  profession: String
+  contactSphere: String
+  industry_Local: String
+  profession_Local: String
+  hideFromReport: Boolean!
+}
+
+input CreateKpiMemberMechanismsInput {
+  regionId: String!
+  kpi: String!
+  mechanisms: String!
+}
+
+input NdMrActiveGroupsInput {
+  profile: String!
+  profileId: String!
+  anoMes: String!
+}
+
+input CreateKpiGroupMechanismsInput {
+  regionId: String!
+  kpi: String!
+  mechanisms: String!
+}
+
+input UploadDocumentInput {
+  documentTypeId: Int!
+  attachments: [Upload!]!
+}
+
+type ChaptersTrafficLightsSplitType {
+  anomes: String!
+  idRegiao: String!
+  grey: Int!
+  percGrey: Decimal!
+  red: Int!
+  percRed: Decimal!
+  yellow: Int!
+  percYellow: Decimal!
+  green: Int!
+  percGreen: Decimal!
+}
+
+input NdMrDdlRegionsInput {
+  profile: String!
+  email: String!
+  country: String!
+  multiRegion: String!
+}
+
+input GamesInput {
+  type: String!
+  typeId: String!
+  regionId: String!
+  idGame: Int
+  group: String
+  isActive: Boolean
+  startDate: Date
+  endDate: Date
+}
+
+input NotableNetworksSiteInput {
+  type: String!
+  typeId: String!
+  regionId: String!
+  anomes: String!
+  group: String!
+  ksf: String!
+  byGroup: Boolean!
+}
+
+input RegionUpdInput {
+  idRegiao: String!
+  destinatariosemBCC: Boolean!
+  enviaEmails: Boolean!
+  procComDA: Boolean!
+  procComDADecide: Boolean!
+  nSemanasAlertaFormacao: Int!
+  nSemanasAlertaZeroReferencias: Int!
+  nSemanasAlertaVisitas: Int!
+  psmName: String!
+  dirNoFee: Boolean!
+  psmOnly: Boolean!
+  psmRepeat: Int!
+  psmMonitorweekly: Boolean!
+  psmMonitormonthly: Boolean!
+  psmMonitorStartDate: DateTime!
+  mrRenewingin: Int!
+  mrMembersOn1: Int!
+  mrMembersOn2: Int!
+  mrMembersOn3: Int!
+  wrMonitorSubstitutions: Boolean!
+  elSuspendFee: Boolean!
+  dashBoardLT: Boolean!
+  dashBoardMC: Boolean!
+}
+
+type LoginResponse {
+  id: String!
+  email: String!
+  defaultLanguage: String
+  token: String!
+}
+
+input UpdateKpiMemberMechanismInput {
+  id: Int!
+  regionId: String
+  kpi: String
+  mechanism: String
+}
+
+input CrmTasksByDateRangeInput {
+  type: String!
+  typeId: String!
+  regionId: String
+  taskStatusId: Int!
+  language: String
+  email: String
+  firstAnoMes: String!
+  lastAnoMes: String!
+}
+
+type GeneralGameResultForMemberType {
+  idRegiao: String!
+  grupo: String!
+  team: String!
+  member: String!
+  pts_Member: Float!
+}
+
+input RegionIdByCountryOrMultiInput {
+  type: String!
+  typeId: String!
+  regionName: String!
+}
+
+input CreateCrmTaskInput {
+  idTaskType: Int!
+  idRegion: String!
+  group: String!
+  name: String
+  attachments: [Upload!]
+  template: String
+  language: String
+}
+
+input CurrentCountChaptersMembersInput {
+  type: String!
+  typeId: String!
+  regionId: String!
+}
+
+input MembersGrowingUpInput {
+  type: String!
+  typeId: String!
+  regionId: String!
+  anoMes: String!
+}
+
+input GetEquipaInput {
+  type: String!
+  typeId: String!
+  regionId: String!
+  typeReturns: String!
+  context: String!
+}
+
+type DirectorsGoalsType {
+  idOD: Int!
+  datai: DateTime!
+  dataf: DateTime!
+  diretor: String
+  tipoDiretor: String
+  idRegiao: String
+  dhi: DateTime!
+  new: Int!
+  renew: Int!
+  drops: Int!
+  txRetencao: Decimal!
+  absence: Decimal!
+  size: Decimal!
+  uau: Decimal!
+  vis: Decimal!
+  ref: Decimal!
+  conv: Decimal!
+  chaptersActive: Int!
+  membersActive: Int!
+  chaptersCore: Int!
+  membersCore: Int!
+}
+
+type CorrelationType {
+  member: String!
+  chapter: String!
+  region: String!
+  tp1: String!
+  tp2: String!
+  p1: Float!
+  p2: Float!
+}
+
+input TlmHowToImproveInput {
+  id: String!
+  language: String
+}
+
+type WebStatusType {
+  ordem: Int!
+  anomes: String!
+  regiao: String!
+  _121: Int!
+  vis: Int!
+  form: Int!
+  ref: Int!
+  onf: Float!
+  absent: Float!
+  pZero: Float!
+  grupos_Ativos: Int!
+  membros_Ativos: Int!
+  grupos_Core: Int!
+  membros_Core: Int!
+  grupos_Suspensos: Int!
+  membros_Suspensos: Int!
+  entradas: Int!
+  renovacoes: Int!
+  saidas: Int!
+  entradasTranf: Int!
+  saidasTransf: Int!
+}
+
+type WebComLstType {
+  id_Com: Int!
+  anoMes: String!
+  idRegiao: String!
+  valid_DA: Boolean!
+  dhValid_DA: DateTime!
+  valid_DEX: Boolean!
+  dhValid_DEX: DateTime!
+  chapter: String!
+  dc: String!
+  da: String!
+  nMembers: Int!
+  uDA: Decimal!
+  uDC: Decimal!
+  vDA: Decimal!
+  vDC: Decimal!
+  id_TC: Int!
+  base: String!
+  calculo: String!
+  enviado: Boolean!
+  obs: String!
+}
+
+type MultiRegionsResponse {
+  id: Int!
+  name: String
+  email: String
+}
+
+input GoalsResultOptionsInput {
+  type: String!
+  typeId: String!
+  regionId: String!
+  anoMes: String!
+  language: String!
+  includeAD: Boolean!
+}
+
+type MembersNoReferralsReceivedType {
+  idRegiao: String!
+  regiao: String!
+  chapter: String!
+  member: String!
+  growing: Int!
+  monthInBNI: Int!
+  pm3: Int!
+  corPm3: String!
+  titPm3: String!
+  pm2: Int!
+  corPm2: String!
+  titPm2: String!
+  pm1: Int!
+  corPm1: String!
+  titPm1: String!
+  pm0: Int!
+  corPm0: String!
+  titPm0: String!
+  idTL: Long!
+  email: String!
+  telef: String!
+  nWeeks: Int!
+}
+
+type Users {
+  name: String!
+  avatarUrl: String
+  isActive: Boolean!
+  isDeleted: Boolean!
+  isStaff: Boolean!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  userRoles: [AppUserRole!]!
+  id: UUID!
+  userName: String
+  normalizedUserName: String
+  email: String
+  normalizedEmail: String
+  emailConfirmed: Boolean!
+  passwordHash: String
+  securityStamp: String
+  concurrencyStamp: String
+  phoneNumber: String
+  phoneNumberConfirmed: Boolean!
+  twoFactorEnabled: Boolean!
+  lockoutEnd: DateTime
+  lockoutEnabled: Boolean!
+  accessFailedCount: Int!
+}
+
+"The `Upload` scalar type represents a file upload."
+scalar Upload
+
+"The purpose of the `cost` directive is to define a `weight` for GraphQL types, fields, and arguments. Static analysis can use these weights when calculating the overall cost of a query or response."
+directive @cost("The `weight` argument defines what value to add to the overall cost for every appearance, or possible appearance, of a type, field, argument, etc." weight: String!) on SCALAR | OBJECT | FIELD_DEFINITION | ARGUMENT_DEFINITION | ENUM | INPUT_FIELD_DEFINITION

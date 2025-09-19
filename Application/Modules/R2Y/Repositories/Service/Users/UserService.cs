@@ -6,14 +6,14 @@ namespace Application.Modules.R2Y.Repositories.Service.Users;
 
 public class UserService(IR2YGqlClient client) : IUserService
 {
-    public async Task<Result<IReadOnlyList<IGetAllUsers_AllUsers_Nodes>?>> GetAllUsers(
+    public async Task<Result<IReadOnlyList<IGetAllUsers_AllUsers>?>> GetAllUsers(
         CancellationToken cancellationToken = default)
     {
-        var response = await client.GetAllUsers.ExecuteAsync(null, null, cancellationToken);
+        var response = await client.GetAllUsers.ExecuteAsync( cancellationToken);
 
         if (response.IsSuccessResult())
         {
-            var users = response.Data?.AllUsers?.Nodes;
+            var users = response.Data?.AllUsers;
             return Result.Ok(users);
         }
 
