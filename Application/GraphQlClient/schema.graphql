@@ -1,6 +1,7 @@
 schema {
   query: Query
   mutation: Mutation
+  subscription: Subscription
 }
 
 input ChaptersTrafficLightsSplitInput {
@@ -9,6 +10,15 @@ input ChaptersTrafficLightsSplitInput {
   regionId: String!
   firstAnomes: String!
   lastAnomes: String!
+}
+
+type ChatRoomType {
+  id: UUID!
+  type: RoomType!
+  name: String
+  createdAt: DateTime!
+  participants: [ChatRoomParticipant!]!
+  messages: [Message!]!
 }
 
 type MembersByProfessionType {
@@ -75,6 +85,7 @@ type __AppliedDirective {
 }
 
 type MembersHeaderType {
+  memberId: String!
   idRegiao: String!
   grupo: String!
   membro: String!
@@ -108,6 +119,16 @@ type MembersHeaderType {
   m12_Extra: Int!
   extra: Boolean!
   extra_KPI: String!
+  joinDate: DateTime!
+  renewalDate: DateTime!
+  daysBNI: Int!
+  imageUrl: String
+}
+
+type ChatUser {
+  email: String!
+  name: String!
+  avatarUrl: String
 }
 
 type CorrelationSTDEVFranjType {
@@ -118,6 +139,11 @@ type CorrelationSTDEVFranjType {
   tP2: String!
   p1: Decimal!
   p2: Decimal!
+}
+
+input UploadMemberImageInput {
+  memberId: Int!
+  image: Upload!
 }
 
 type LastClosedYearMonthType {
@@ -265,6 +291,16 @@ input ContactSphereGroupInput {
   industry_Local: String
   profession_Local: String
   hideFromReport: Boolean
+}
+
+enum TokenType {
+  INVITATION
+  PASSWORD_RESET
+  EMAIL_VERIFICATION
+}
+
+type Subscription {
+  onMessageReceived(currentUserEmail: String!): Message
 }
 
 type ReferenceValuesType {
@@ -474,6 +510,16 @@ type AuthUserType {
 "The `DateTime` scalar represents an ISO-8601 compliant date time type."
 scalar DateTime
 
+type FirstYearRetentionMonthByMonthAnd12MonthAvgType {
+  anomes: String!
+  descri_Tipo: String!
+  ret: Float!
+  ret12: Float!
+  timeToLeave: Int!
+  cor: String!
+  cor12: String!
+}
+
 input WebStatusInput {
   type: String!
   typeId: String!
@@ -517,11 +563,23 @@ type GoalsResultOptionsType {
   lastPALMS: DateTime!
 }
 
+type FileMetadata {
+  name: String!
+  size: Long!
+  type: String!
+}
+
 input MembersDroppingInput {
   type: String!
   typeId: String!
   regionId: String!
   anoMes: String!
+}
+
+input MembershipCsListInput {
+  regionId: String!
+  chapter: String
+  lang: String
 }
 
 type MembersNoVisitorsType {
@@ -586,6 +644,10 @@ type MembersWithoutViewsType {
 }
 
 type Query {
+  chatRooms: [ChatRoomType!]!
+  chatRoom(id: UUID!): ChatRoomType!
+  allChatRoomByUserEmail(userEmail: String!): [ChatRoomType!]!
+  allMessagesByChatRoomId(roomId: UUID!): [Message]!
   csListByRegionId(regionId: String!): [CsListByRegionIdType!]!
   csDDl(regionId: String!): [CdDlType!]!
   groupsRegion(regionId: String!): [GroupsRegionType!]!
@@ -611,6 +673,10 @@ type Query {
   renewalsPeriod(input: MemberFlowInput!): [GetRenewalsPeriodType!]!
   operationRegionEmailSetup(input: OperationRegionEmailSetupInput!): OperationRegionEmailSetupType!
   defaultOperationRegionEmailSetup(input: OperationRegionEmailSetupInput!): DefaultOperationRegionEmailSetupType!
+  reports(input: ReportInput!): [ReportType!]!
+  "Returns the directors header information based on the provided filters. The 'type' field inside DirectorHeaderInput only accepts the values 'Region' or 'Multi'."
+  directorsHeader(input: DirectorHeaderInput!): DirectorHeaderType
+  directorsExtraKpi(input: DirectorsExtraKpiInput!): [DirectorsExtraKpiType!]!
   allGameTeams(idGame: Int!): [GameTeamType!]!
   allGames(input: GamesInput!): [GamesType!]!
   gameById(input: GamesByIdInput!): GamesType
@@ -660,11 +726,14 @@ type Query {
   ddLActiveGroups(input: DdLActiveGroupInput!): [DdLActiveGroupsType!]!
   allChapterTeam(input: GetAllChapterTeamInput!): [GetAllChapterTeamType]!
   chapterHeader(input: GetChapterHeaderInput!): [GetChapterHeaderType]!
+  last3MonthsGroupGoals(input: Last3MonthsGroupGoalsInput!): [Last3MonthsGroupGoalsType]!
+  firstYearRetentionMonthByMonthAnd12MonthAvg(input: FirstYearRetentionMonthByMonthAnd12MonthAvgInput!): [FirstYearRetentionMonthByMonthAnd12MonthAvgType]!
   me: AuthUserType!
   ndMrProfile(input: GetNdMrProfileInput!): GetNdMrProfileType!
   loginVariables(email: String!): LoginVariables!
-  allUsers: [UserType!]!
-  user(id: UUID!): UserType!
+  validateUserAccessToken(token: String!): AccessTokenResponseDto!
+  allUsers(search: String page: Int! = 1 pageSize: Int! = 20): [UserResponse!]!
+  userByEmail(email: String!): UserResponse!
   webComLst(input: WebComLstInput!): [WebComLstType!]!
   webDdl_Kpis_DataAnalysis(language: String!): [WebDdlKpisDataAnalysisType!]!
   webCurrentStatus(input: WebCurrentStatusInput!): WebCurrentStatusType!
@@ -705,6 +774,10 @@ type Query {
   membersWithAbsences(input: MembersFlowRequestInput!): [MembersWithAbsencesType]!
   membersWithoutRefGiven(input: MembersFlowRequestInput!): [MembersWithoutRefGivenType]!
   membersWithoutRefReceived(input: MembersFlowRequestInput!): [MembersWithoutRefReceivedType]!
+  firstYearRetentionMonthByMonthPoint(input: FirstYearRetentionMonthByMonthPointInput!): [FirstYearRetentionMonthByMonthPointType]!
+  membershipCsList(input: MembershipCsListInput!): [MembershipCsListType]!
+  memberLoginWithoutPassword(email: String!): MemberLoginWithoutPasswordType
+  users(regionId: String search: String): [UserMemberType]!
   userCountries(email: String!): CountryType!
   userMultiRegions(input: MultiRegionInput!): [MultiRegionsResponse!]!
   userRegions(input: RegionInput!): [RegionResponse!]!
@@ -728,7 +801,16 @@ type Query {
   threePlusOneEvolutionCountryGraphic(country: String!): [ThreePlusOneEvolutionCountryGraphicType!]!
   threePlusOneEvolutionRegionGraphic(regionId: String!): [ThreePlusOneEvolutionRegionGraphicType!]!
   threePlusOneEvolutionAreaDirectorGraphic(regionId: String! directorName: String!): [ThreePlusOneEvolutionAreaDirectorGraphicType!]!
+  checkUmbracoHealth: UmbracoHealthResponse!
   allDocumentUploadTypes: [DocumentTypeInfo!]!
+}
+
+type UserAccessTokenDto {
+  userId: String!
+  email: String
+  name: String
+  token: String
+  tokenType: TokenType!
 }
 
 type MembersWithoutOneAOneType {
@@ -949,7 +1031,7 @@ type GameResultType {
 
 type GetNdMrProfileType {
   profile: String!
-  currency: String!
+  currency: String
 }
 
 type MonthlyRegionGoalsType {
@@ -969,6 +1051,13 @@ type MonthlyRegionGoalsType {
   membersActive: Int!
   chaptersCore: Int!
   membersCore: Int!
+}
+
+input ReportInput {
+  email: String!
+  country: String
+  regionId: String
+  history: Boolean!
 }
 
 type KpiMemberByRegionType {
@@ -995,7 +1084,7 @@ type LoginVariables {
   perfil: String!
   currency: String!
   email: String!
-  mPerfil: String!
+  mPerfil: String
   isMember: Boolean!
   idC: Int!
   guidRegion: UUID
@@ -1006,8 +1095,13 @@ type LoginVariables {
   memberDashBoardMC: Boolean!
   isMemberVerified: Boolean!
   isMemberAutoGenerated: Boolean!
-  tlmId: Long!
+  tlmId: Int!
   defaultLanguage: String
+  memberRole: String
+  membersLogin: Boolean!
+  imageUrl: String
+  memberCountry: String
+  memberIdRegion: String
 }
 
 type MultiRGoalsType {
@@ -1176,6 +1270,21 @@ input GetNdMrProfileInput {
   currentProfile: String
 }
 
+type MembershipCsListType {
+  idRegiao: String
+  region: String
+  chapter: String
+  contactSphere: String
+  profession: String
+  industry: String
+  n: Int!
+  member: String
+  company: String
+  regionalCount: Int!
+  anomes: String
+  guidRegion: UUID
+}
+
 type GenericMutationType {
   success: Boolean!
   code: Int!
@@ -1227,6 +1336,13 @@ input GroupMemberInput {
   group: String!
 }
 
+type GenericMutationTypeOfChatRoomType {
+  success: Boolean!
+  code: Int!
+  message: String
+  data: ChatRoomType
+}
+
 type TrafficLightGroupEvolutionData {
   anomes: String!
   idRegiao: String!
@@ -1253,17 +1369,6 @@ input TotalMembersAgeInput {
   type: String!
   typeId: String!
   regionId: String!
-}
-
-type AppUserRole {
-  isActive: Boolean!
-  isDeleted: Boolean!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  user: Users
-  role: AppRoles
-  userId: UUID!
-  roleId: UUID!
 }
 
 type MembersWithSubstitutionsType {
@@ -1312,12 +1417,6 @@ input UniqueMemberNameUpdInput {
   status: String!
 }
 
-type RoleType {
-  name: String
-  description: String
-  rankLevel: Int!
-}
-
 input UpdateMRGoalsInput {
   id: Int!
   startDate: Date!
@@ -1337,6 +1436,19 @@ input UpdateMRGoalsInput {
   activeMembers: Int!
   coreChapters: Int!
   coreMembers: Int!
+}
+
+type MemberLoginWithoutPasswordType {
+  userToken: String!
+  verified: Boolean!
+  lingua: String!
+  autoGenerated: Boolean!
+  contexto: String!
+  idRegiao: String!
+  grupo: String!
+  dashBoard_LT: Boolean!
+  dashBoard_MC: Boolean!
+  idC: Int!
 }
 
 type GlobalKpiDataAnalysisType {
@@ -1405,9 +1517,28 @@ type DirectorRegionResponse {
   tipo: String!
 }
 
+type PollVote {
+  id: UUID!
+  userEmail: String!
+  votedAt: DateTime!
+  user: ChatUser
+}
+
+type MessageRead {
+  userEmail: String!
+  readAt: DateTime!
+  user: ChatUser
+}
+
 type CountryType {
   email: String
   countries: [CountryResponse!]
+}
+
+input MarkMessagesAsReadInput {
+  chatRoomId: UUID!
+  messageIds: [UUID!]!
+  userEmail: String!
 }
 
 input GoalRenewalForecastByPeriodInput {
@@ -1466,6 +1597,17 @@ input CreateGameTeamInput {
 }
 
 type Mutation {
+  createGroupRoom(input: CreateGroupRoomInput!): GenericMutationTypeOfChatRoomType!
+  createPrivateRoom(input: CreatePrivateRoomInput!): GenericMutationTypeOfChatRoomType!
+  deleteChatRoom(id: UUID!): GenericMutationType!
+  sendChatMessage(input: CreateMessageInput!): GenericMutationTypeOfMessage!
+  deleteChatMessage(input: DeleteMessageInput!): GenericMutationType!
+  voteOnChatPoll(input: VotePollInput!): GenericMutationTypeOfMessage!
+  addChatParticipantInChatGroup(input: AddParticipantInput!): GenericMutationTypeOfChatRoomType!
+  markChatMessagesAsRead(input: MarkMessagesAsReadInput!): GenericMutationType!
+  removeChatParticipantsFromChatGroup(input: RemoveParticipantsInput!): GenericMutationType!
+  updateChatMessage(input: UpdateMessageInput!): GenericMutationTypeOfMessage!
+  updateChatParticipantRole(input: UpdateParticipantRoleInput!): GenericMutationTypeOfChatRoomType!
   updateScheduleTime(input: ScheduleTimeUpdInput!): Boolean!
   restoreScheduleTime(input: ScheduleTimeUpdInput!): Boolean!
   updateUniqueMemberName(input: UniqueMemberNameUpdInput!): Boolean!
@@ -1492,6 +1634,8 @@ type Mutation {
   updateGroupName(input: UpdateGroupNameInput!): GenericMutationType!
   updateOperationRegionEmailSetup(input: UpdateOperationRegionEmailSetupInput!): GenericMutationType!
   updateContactSphereRegion(input: UpdateContactSphereRegionInput!): GenericMutationType!
+  createDirector(input: CreateDirectorInput!): GenericMutationType!
+  deleteDirector(input: DeleteDirectorInput!): GenericMutationType!
   createGame(input: CreateGamesInput!): GenericMutationTypeOfGamesType!
   duplicateGame(input: DuplicateGameInput!): GenericMutationType!
   updateGame(input: UpdateGamesInput!): GamesType
@@ -1511,6 +1655,7 @@ type Mutation {
   updateGamePoints(gameId: Int!): GenericMutationType!
   updateActiveGamePointsByRegion(regionId: String!): GenericMutationType!
   updateGameAdminByFuso(input: UpdateGameAdminByFusoInput!): GenericMutationType!
+  sendInvitation(to: String! name: String! language: String!): SendGenericEmailResponse!
   createDirectorGoals(input: CreateDirectorGoalsInput!): Boolean!
   updateDirectorGoals(input: UpdateDirectorGoalsInput!): Boolean!
   deleteDirectorGoals(id: Int!): Boolean!
@@ -1526,10 +1671,14 @@ type Mutation {
   createGroupGoals(input: CreateGroupGoalsInput!): Boolean!
   updateGroupGoals(input: UpdateGroupGoalsInput!): Boolean!
   deleteGroupGoals(id: Int!): Boolean!
+  uploadChapterImage(input: UploadChapterImageInput!): GenericMutationType!
+  deleteChapterImage(chapterName: String! regionId: String!): GenericMutationType!
   login(email: String! password: String!): LoginResponse!
   createUser(input: CreateUserInput!): CreatedUserPayload!
-  updateUserPreferences(input: UpdateUserPreferencesInput!): Boolean!
-  createUserTest(input: CreateUserInput!): Users!
+  updateUserPreferences(input: UpdateUserPreferencesInput!): GenericMutationType!
+  resetUserPassword(input: UpdatePasswordInput!): GenericMutationType!
+  requestNewUserAccessToken(token: String! language: String): GenericMutationType!
+  forgetUserPassword(email: String! language: String): GenericMutationType!
   updateWebComVal(input: WebComValInput!): Boolean!
   updateWebComUpd(input: WebComUpdInput!): Boolean!
   delWebKpiGroupDel(id: Int!): Boolean!
@@ -1539,6 +1688,10 @@ type Mutation {
   insertKpiMember(input: KpiMemberInsInput!): Boolean!
   updateKpiMember(input: KpiMemberUpdInput!): Boolean!
   updateMemberName(input: UpdateMemberNameInput!): GenericMutationType!
+  uploadUserImage(input: UploadUserImageInput!): GenericMutationType!
+  deleteUserImage(email: String!): GenericMutationType!
+  uploadMemberImage(input: UploadMemberImageInput!): GenericMutationType! @deprecated(reason: "This mutation is deprecated, please use UploadUserImage instead.")
+  deleteMemberImageById(id: Int!): GenericMutationType! @deprecated(reason: "This mutation is deprecated, please use DeleteUserImage instead.")
   createCrmTask(input: CreateCrmTaskInput!): Boolean!
   updateCrmTask(input: UpdateCrmTaskInput!): Boolean!
   uploadDocumentFile(input: UploadDocumentInput!): UploadTaskType!
@@ -1558,10 +1711,6 @@ input RaciosInputsOutputsRetentionInput {
   regionId: String!
   firstAnomes: String!
   lastAnomes: String!
-}
-
-type UserRoleType {
-  role: RoleType
 }
 
 type MembersArrivingGreenType {
@@ -1595,6 +1744,12 @@ input MemberTrafficLightsInput {
   group: String
 }
 
+type RoleResponse {
+  name: String
+  description: String
+  rankLevel: Int!
+}
+
 input CrmTaskTypeInput {
   language: String
 }
@@ -1618,18 +1773,24 @@ input ChaptersNoNewMembersInput {
   chapterType: String!
 }
 
-type AppRoles {
-  description: String
-  rankLevel: Int!
-  isActive: Boolean!
-  isDeleted: Boolean!
+enum ContextType {
+  COUNTRY
+  REGION
+  MULTI
+}
+
+type UserResponse {
+  toChatUser: ChatUser!
+  id: UUID!
+  username: String
+  email: String
+  name: String
+  phoneNumber: String
+  avatarUrl: String
+  isStaff: Boolean
+  userRoles: [UserRole!]
   createdAt: DateTime!
   updatedAt: DateTime!
-  userRoles: [AppUserRole!]!
-  id: UUID!
-  name: String
-  normalizedName: String
-  concurrencyStamp: String
 }
 
 input MembersNoOneToOnesInput {
@@ -1985,6 +2146,17 @@ type RxMemberByIdType {
   gdprComplianceText: String!
 }
 
+input UpdatePasswordInput {
+  userId: UUID!
+  token: String!
+  newPassword: String!
+}
+
+input DeleteDirectorInput {
+  regionId: String!
+  email: String!
+}
+
 input WebComLstInput {
   regionId: String!
   yearMonth: String!
@@ -2010,6 +2182,7 @@ input CrmTasksStatusCountInput {
   language: String!
   firstAnomes: String!
   lastAnomes: String!
+  email: String
 }
 
 type MembersNoOneToOnesType {
@@ -2050,6 +2223,7 @@ type GetAllChapterTeamType {
   idMTL: Int!
   pontosCor: String!
   abrev_Team: String!
+  imageUrl: String
 }
 
 type RegionOperationsType {
@@ -2170,18 +2344,6 @@ input UpdateUserPreferencesInput {
   defaultLanguage: String!
 }
 
-type UserType {
-  userRoles: UserRoleType
-  id: UUID!
-  username: String
-  email: String
-  name: String
-  phoneNumber: String
-  isStaff: Boolean
-  createdAt: DateTime!
-  updatedAt: DateTime!
-}
-
 input UpdateRegionsInput {
   regionId: String!
   recipientsInBcc: Boolean!
@@ -2236,12 +2398,27 @@ type GetRenewalsPeriodType {
   cor: String!
 }
 
+input FirstYearRetentionMonthByMonthAnd12MonthAvgInput {
+  type: String!
+  typeId: String!
+  regionId: String!
+  date: Date!
+  months: Int!
+  futureMonths: Int!
+}
+
 type CrmTaskTypeGqlType {
   idTaskType: Int!
   taskType: String!
   idTaskTargetType: String!
   taskTypeColor: String!
   attachDoc: Boolean!
+}
+
+type DirectorsExtraKpiType {
+  kpi: String
+  kpi_Extra: String
+  kpi_ExtraAbrev: String
 }
 
 type GoalRenewalForecastByPeriodType {
@@ -2256,6 +2433,18 @@ type MembersWithoutFormationType {
   name: String!
   tceu: Int!
   lingua: String!
+}
+
+input ParticipantInput {
+  email: String!
+  role: Role!
+}
+
+input FirstYearRetentionMonthByMonthPointInput {
+  type: String!
+  typeId: String!
+  regionId: String!
+  anoMes: String!
 }
 
 input UpdateRegionGoalsInput {
@@ -2350,6 +2539,13 @@ input ContactSphereRegionInput {
   hideFromReport: Boolean
 }
 
+enum MessageType {
+  TEXT
+  FILE
+  TEXT_WITH_FILE
+  POLL
+}
+
 scalar UUID
 
 input KpiGroupMechanismInput {
@@ -2357,6 +2553,15 @@ input KpiGroupMechanismInput {
   kpi: String
   regionId: String
   mecanismo: String
+}
+
+input CreateMessageInput {
+  chatRoomId: UUID!
+  senderEmail: String!
+  content: String
+  file: Upload
+  replyToMessageId: UUID
+  poll: CreatePollInput
 }
 
 "The `Decimal` scalar type represents a decimal floating-point number."
@@ -2390,6 +2595,12 @@ input DirectorRegionRequestInput {
   regionId: String!
 }
 
+input VotePollInput {
+  messageId: UUID!
+  optionId: UUID!
+  userEmail: String!
+}
+
 input GeneralGameResultForTeamInput {
   type: String!
   regionId: String!
@@ -2404,8 +2615,26 @@ type KpiMemberListType {
   mecanismo: String
 }
 
+type FirstYearRetentionMonthByMonthPointType {
+  idRegiao: String!
+  grupo: String
+  descri: String
+  membro: String
+  datasaida: String
+  estado: String
+  meses: Int!
+  cor: String
+  dataentrada: String
+}
+
 type CrmTaskTemplateByIdType {
   template: String!
+}
+
+input CreateGroupRoomInput {
+  name: String!
+  creatorEmail: String!
+  participants: [ParticipantInput!]!
 }
 
 type MembersGrowingUpType {
@@ -2447,6 +2676,12 @@ input RegionNameUpdInput {
   regionId: String!
   nameOld: String!
   nameNew: String!
+}
+
+input UploadChapterImageInput {
+  chapterName: String!
+  idRegiao: String!
+  image: Upload!
 }
 
 type ActiveGroupsType {
@@ -2492,6 +2727,17 @@ type RaciosInputsOutputsRetentionType {
   coreChaptersNewMembers: Int!
   nCoreMembers: Int!
   retention: Float!
+}
+
+input Last3MonthsGroupGoalsInput {
+  regionId: String!
+  group: String!
+}
+
+input DeleteMessageInput {
+  userEmail: String!
+  chatRoomId: UUID!
+  messageId: UUID!
 }
 
 type ChaptersNoNewMembersType {
@@ -2763,6 +3009,7 @@ type GetChapterHeaderType {
   pontos: Int
   pontosCor: String
   pontos_Ant: Int
+  imageUrl: String
 }
 
 input KpiGroupUpdInput {
@@ -2787,6 +3034,40 @@ type TotalMembersAgeType {
 input LastClosedYearMonthInput {
   type: String!
   typeId: String!
+}
+
+type Last3MonthsGroupGoalsType {
+  idRegiao: String!
+  grupo: String!
+  anomes: String!
+  rAssiduidade: Float!
+  rReferencias: Float!
+  rnRef: Int!
+  rUAU: Float!
+  rnUAU: Int!
+  rFormacoes: Float!
+  rnForm: Int!
+  rVisitas: Float!
+  rnVis: Int!
+  rONF: Float!
+  rNovosMembros: Int!
+  rnMembros: Int!
+  oAssiduidade: Float!
+  oReferencias: Float!
+  onRef: Int!
+  oUAU: Float!
+  onUAU: Int!
+  oFormacoes: Float!
+  onForm: Int!
+  oVisitas: Float!
+  onVis: Int!
+  oONF: Float!
+  oNovosMembros: Float!
+  onMembros: Int!
+  lingua: String!
+  moeda: String!
+  usar_K: Boolean!
+  ceu_Eventos: Boolean!
 }
 
 input WebComUpdInput {
@@ -2865,6 +3146,18 @@ type GrfKpiGroupType {
   zeroVisG: Float!
   zeroOTOR: Float!
   zeroOTOG: Float!
+}
+
+type ChatRoomParticipant {
+  userEmail: String!
+  user: ChatUser
+  role: Role!
+  joinedAt: DateTime!
+}
+
+type SendGenericEmailResponse {
+  message: String
+  success: Boolean!
 }
 
 type NdMrActiveGroupsType {
@@ -2963,6 +3256,31 @@ input Membros100PointsInput {
   anomes: String!
 }
 
+type DirectorHeaderType {
+  idRegiao: String
+  nome: String
+  morada: String
+  localidade: String
+  pais: String
+  nib: String
+  banco: String
+  nif: String
+  tx_Retencao: Float!
+  isento_IVA: Boolean!
+  telefone: String
+  email: String
+  dha: DateTime!
+  activo: Boolean!
+  nome_Limpo: String
+  tipoDir: String
+  context: String
+  idContext: String
+  directorName: String
+  imageUrl: String
+  send_Reports: Boolean!
+  mainRegionCountry: Boolean!
+}
+
 input CreateGamesInput {
   regionId: String!
   groupName: String!
@@ -2972,11 +3290,38 @@ input CreateGamesInput {
   endDate: Date!
 }
 
+input UpdateMessageInput {
+  chatRoomId: UUID!
+  messageId: UUID!
+  userEmail: String!
+  newContent: String!
+}
+
 input CoreGroupInput {
   type: String!
   typeId: String!
   regionId: String!
   anoMes: String!
+}
+
+type ReportType {
+  pais: String
+  regiao: String
+  idRegiao: String
+  reportToken: String
+  e_subject: String
+  sPath: String
+  downloadUrl: String
+  dh: DateTime
+  oper: String
+  downloads: Int!
+}
+
+input CreatePollInput {
+  question: String!
+  options: [String!]!
+  isMultipleChoice: Boolean!
+  expiresAt: DateTime
 }
 
 input BottomTopMemberInput {
@@ -2985,6 +3330,11 @@ input BottomTopMemberInput {
   regionId: String!
   anomes: String!
   topBottom: String!
+}
+
+enum Role {
+  ADMIN
+  MEMBER
 }
 
 input KpiMemberInsInput {
@@ -3042,6 +3392,18 @@ type AdminTrafficLightsMembersEvolutionType {
   totalVisByPals: Float!
   totalPals: Int!
   totalSponsors: Float!
+}
+
+input UploadUserImageInput {
+  email: String!
+  image: Upload!
+}
+
+type UmbracoHealthResponse {
+  ok: Boolean!
+  statusCode: Int!
+  message: String
+  content: String
 }
 
 type MembersWithAbsencesType {
@@ -3191,6 +3553,15 @@ type TrafficLightGroupEvolutionType {
   chapter: String!
   ptsAvg: Float!
   evolutions: [TrafficLightGroupEvolutionData!]!
+}
+
+input CreateDirectorInput {
+  regionId: String!
+  name: String!
+  email: String!
+  receiveReports: Boolean!
+  hasFinancialData: Boolean!
+  language: String
 }
 
 type TlmHowToImproveType {
@@ -3508,6 +3879,12 @@ type GamesType {
   percentageProgress: Int!
 }
 
+input AddParticipantInput {
+  chatRoomId: UUID!
+  adminEmail: String!
+  participants: [ParticipantInput!]!
+}
+
 input MembersTrafficLightsSplitInput {
   type: String!
   typeId: String!
@@ -3823,6 +4200,10 @@ type MemberTrafficLightsType {
   ptExtraCor: String!
   extra: Boolean!
   extra_KPI: String!
+  joinDate: DateTime!
+  renewalDate: DateTime!
+  industryOnly: String!
+  professionOnly: String!
 }
 
 input OptOutMemberInput {
@@ -3864,6 +4245,12 @@ type CorrelationDdlType {
   descri: String
 }
 
+type PollOption {
+  id: UUID!
+  text: String!
+  votes: [PollVote!]!
+}
+
 type Membros100PointsType {
   id: Long!
   idRegiao: String
@@ -3885,6 +4272,8 @@ input KpiMemberMechanismInput {
 }
 
 input CreateUserInput {
+  name: String!
+  username: String!
   email: String!
   password: String!
 }
@@ -4013,10 +4402,45 @@ input CreateKpiMemberMechanismsInput {
   mechanisms: String!
 }
 
+type UserMemberType {
+  regionId: String
+  country: String
+  name: String
+  userName: String
+  emailR2Y: String
+  email: String
+  cargo: String
+  grupo: String
+  imageUrl: String
+  status: String
+}
+
+type Message {
+  id: UUID!
+  type: MessageType!
+  chatRoomId: UUID!
+  senderEmail: String!
+  content: String
+  fileMetadata: FileMetadata
+  replyToMessageId: UUID
+  poll: Poll
+  readBy: [MessageRead]!
+  sentAt: DateTime!
+  replyToMessage: Message
+  sender: ChatUser
+  fileUrl: String
+}
+
 input NdMrActiveGroupsInput {
   profile: String!
   profileId: String!
   anoMes: String!
+}
+
+input RemoveParticipantsInput {
+  chatRoomId: UUID!
+  adminEmail: String!
+  userEmails: [String!]!
 }
 
 input CreateKpiGroupMechanismsInput {
@@ -4028,6 +4452,15 @@ input CreateKpiGroupMechanismsInput {
 input UploadDocumentInput {
   documentTypeId: Int!
   attachments: [Upload!]!
+}
+
+type Poll {
+  id: UUID!
+  question: String!
+  isMultipleChoice: Boolean!
+  options: [PollOption!]!
+  createdAt: DateTime!
+  expiresAt: DateTime
 }
 
 type ChaptersTrafficLightsSplitType {
@@ -4159,6 +4592,13 @@ input MembersGrowingUpInput {
   anoMes: String!
 }
 
+type GenericMutationTypeOfMessage {
+  success: Boolean!
+  code: Int!
+  message: String
+  data: Message
+}
+
 input GetEquipaInput {
   type: String!
   typeId: String!
@@ -4191,6 +4631,16 @@ type DirectorsGoalsType {
   membersCore: Int!
 }
 
+"Input filters for retrieving directors header information The 'type' field only supports 'Region' and 'Multi'."
+input DirectorHeaderInput {
+  "Defines the context type. Accepted values: 'Region' or 'Multi'."
+  type: ContextType!
+  "Identifier of the selected context (Region or MultiRegionId depending on Type)."
+  typeId: String!
+  "Name of the director to filter the results."
+  directorName: String!
+}
+
 type CorrelationType {
   member: String!
   chapter: String!
@@ -4201,9 +4651,33 @@ type CorrelationType {
   p2: Float!
 }
 
+input CreatePrivateRoomInput {
+  userEmail: String!
+  creatorEmail: String!
+}
+
+type AccessTokenResponseDto {
+  data: UserAccessTokenDto
+  isValid: Boolean!
+  isExpired: Boolean!
+  canRequestAgain: Boolean!
+}
+
+input UpdateParticipantRoleInput {
+  chatRoomId: UUID!
+  adminEmail: String!
+  userEmail: String!
+  newRole: Role!
+}
+
 input TlmHowToImproveInput {
   id: String!
   language: String
+}
+
+enum RoomType {
+  PRIVATE
+  GROUP
 }
 
 type WebStatusType {
@@ -4259,6 +4733,17 @@ type MultiRegionsResponse {
   email: String
 }
 
+input DirectorsExtraKpiInput {
+  regionId: String!
+  language: String!
+  extraKpi: String!
+}
+
+type UserRole {
+  userId: UUID!
+  role: RoleResponse
+}
+
 input GoalsResultOptionsInput {
   type: String!
   typeId: String!
@@ -4291,32 +4776,6 @@ type MembersNoReferralsReceivedType {
   email: String!
   telef: String!
   nWeeks: Int!
-}
-
-type Users {
-  name: String!
-  avatarUrl: String
-  isActive: Boolean!
-  isDeleted: Boolean!
-  isStaff: Boolean!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  userRoles: [AppUserRole!]!
-  id: UUID!
-  userName: String
-  normalizedUserName: String
-  email: String
-  normalizedEmail: String
-  emailConfirmed: Boolean!
-  passwordHash: String
-  securityStamp: String
-  concurrencyStamp: String
-  phoneNumber: String
-  phoneNumberConfirmed: Boolean!
-  twoFactorEnabled: Boolean!
-  lockoutEnd: DateTime
-  lockoutEnabled: Boolean!
-  accessFailedCount: Int!
 }
 
 "The `Upload` scalar type represents a file upload."

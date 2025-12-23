@@ -20,8 +20,5 @@ public class TokenService(IJSRuntime jsRuntime) : ITokenService
         await jsRuntime.InvokeVoidAsync(JsFunctions.RemoveToken, cancellationToken);
     }
 
-    public string GetToken()
-    {
-        return Task.Run(async () => await jsRuntime.InvokeAsync<string>(JsFunctions.GetToken)).Result;
-    }
+
 }

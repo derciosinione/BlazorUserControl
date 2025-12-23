@@ -2,21 +2,11 @@
 
 query GetAllUsers {
     allUsers {
-        ...UserFields
+        id
+        name
+        email
+        createdAt
+        updatedAt
+        avatarUrl
     }
-}
-
-query GetUserById($id: UUID!) {
-    user(id: $id) {
-        ...UserFields
-    }
-}
-
-fragment UserFields on UserType {
-    id
-    name
-    email
-    username
-    updatedAt
-    createdAt
 }
