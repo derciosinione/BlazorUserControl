@@ -65,4 +65,25 @@ public class ChatService(IR2YGqlClient client) : IChatService
         return Result.Ok(result.Data?.AllMessagesByChatRoomId ?? Enumerable.Empty<IGetChatMessages_AllMessagesByChatRoomId>());
     }
 
+    public async Task<Result<bool>> DeleteMessageAsync(Guid chatRoomId, Guid messageId, string userEmail)
+    {
+        var result = await client.DeleteChatMessage.ExecuteAsync(new DeleteMessageInput
+        {
+            ChatRoomId = chatRoomId,
+            MessageId = messageId,
+            UserEmail = userEmail
+        });
+
+        if (result.IsErrorResult())
+        {
+            return Result.Fail(result.Errors.Select(e => e.Message));
+        }
+
+        return Result.Ok(result.Data?.DeleteChatMessage?.Success ?? false);
+    }
+
+    public IObservable<IOperationResult<IOnMessageReceivedResult>> SubscribeToMessages(string currentUserEmail)
+    {
+        return client.OnMessageReceived.Watch(currentUserEmail);
+    }
 }

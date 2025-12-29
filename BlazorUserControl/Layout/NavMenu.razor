@@ -41,17 +41,17 @@
             </NavLink>
         </div>
 
-        @if (MenuContext != null)
-        {
-            foreach (var menu in MenuContext.Menus!)
-            {
-                <div class="nav-item px-3">
-                    <NavLink class="nav-link" href="@menu.Action">
-                        <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> @menu.Name
-                    </NavLink>
-                </div>
-            }
-        }
+        @* @if (MenuContext != null) *@
+        @* { *@
+        @*     foreach (var menu in MenuContext.Menus!) *@
+        @*     { *@
+        @*         <div class="nav-item px-3"> *@
+        @*             <NavLink class="nav-link" href="@menu.Action"> *@
+        @*                 <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> @menu.Name *@
+        @*             </NavLink> *@
+        @*         </div> *@
+        @*     } *@
+        @* } *@
     </nav>
 </div>
 
@@ -63,11 +63,11 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var userInfo = await AuthenticationStateProvider.GetUserInfo();
-
-        var result = await ContentManagementService.GetContextMenuByType(userInfo!.MemberRole!);
-
-        if (result.IsSuccess) MenuContext = result.Value;
+        // var userInfo = await AuthenticationStateProvider.GetUserInfo();
+        //
+        // var result = await ContentManagementService.GetContextMenuByType(userInfo!.Perfil!);
+        //
+        // if (result.IsSuccess) MenuContext = result.Value;
     }
 
     private void ToggleNavMenu()

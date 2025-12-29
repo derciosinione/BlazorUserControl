@@ -11,10 +11,8 @@ public static class GraphQlExtension
 
         var apiUrl = builder.Configuration["GraphQlApi:BaseUrl"]!;
 
-        builder.Services.AddHttpClient(R2YGqlClient.ClientName,
-                client => client.BaseAddress = new Uri(apiUrl))
-            .AddHttpMessageHandler<AuthHeaderHandler>();
-
-        builder.Services.AddR2YGqlClient();
+        builder.Services.AddR2YGqlClient()
+            .ConfigureHttpClient(client => client.BaseAddress = new Uri(apiUrl), builder => builder.AddHttpMessageHandler<AuthHeaderHandler>())
+            .ConfigureWebSocketClient(client => client.Uri = new Uri(apiUrl.Replace("http", "ws")));
     }
 }

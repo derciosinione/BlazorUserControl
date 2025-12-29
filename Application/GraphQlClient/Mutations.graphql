@@ -43,3 +43,11 @@ mutation CreatePrivateRoom($input: CreatePrivateRoomInput!) {
         }
     }
 }
+
+mutation DeleteChatMessage($input: DeleteMessageInput!) {
+    deleteChatMessage(input: $input) {
+        success
+        code
+        message
+    }
+}

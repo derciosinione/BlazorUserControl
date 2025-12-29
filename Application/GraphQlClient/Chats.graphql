@@ -1,25 +1,4 @@
-#query GetChats($userEmail: String!) {
-#  allChatRoomByUserEmail(userEmail: $userEmail) {
-#    id
-#    type
-#    name
-#    createdAt
-#    participants {
-#      userEmail
-#      user {
-#        name
-#        avatarUrl
-#      }
-#    }
-#    messages {
-#        id
-#        content
-#        sentAt
-#        senderEmail
-#    }
-#  }
-#}
-#
+
 query GetChatMessages($roomId: UUID!) {
   allMessagesByChatRoomId(roomId: $roomId) {
     id
@@ -34,14 +13,6 @@ query GetChatMessages($roomId: UUID!) {
     }
   }
 }
-#
-#query SearchChatUsers($search: String!) {
-#  allUsers(search: $search) {
-#    email
-#    name
-#    avatarUrl
-#  }
-#}
 
 
 query GetAllUserRoom($currentUserEmail: String!) {
@@ -64,5 +35,17 @@ query GetAllUserRoom($currentUserEmail: String!) {
       senderEmail
       sentAt
     }
+  }
+}
+
+subscription OnMessageReceived($currentUserEmail: String!) {
+  onMessageReceived(currentUserEmail: $currentUserEmail) {
+    id
+    chatRoomId
+    type
+    senderEmail
+    content
+    fileUrl
+    sentAt
   }
 }

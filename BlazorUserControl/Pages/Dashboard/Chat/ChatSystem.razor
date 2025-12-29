@@ -1,7 +1,5 @@
 ﻿@page "/op/chat"
 @using Application
-@using Application.Modules.R2Y.Repositories.Interface.Chat
-@using Application.Modules.R2Y.Repositories.Interface.Users
 @inherits ChatSystemHandler
 
 <PageTitle>Chat | Dashboard</PageTitle>
@@ -123,6 +121,11 @@
                             <div class="message-bubble">
                                 <div class="content">@msg.Content</div>
                                 <div class="time">@msg.SentAt.ToString("HH:mm")</div>
+                                @if (msg.SenderEmail == CurrentUserEmail)
+                                {
+                                    <button class="delete-btn" @onclick="() => DeleteMessage(SelectedChat!.Id, msg.Id)"
+                                        title="Delete">🗑</button>
+                                }
                             </div>
                         </div>
                     }
@@ -367,6 +370,33 @@
         color: var(--text-primary);
         border: 1px solid var(--border-color);
         border-bottom-left-radius: 2px;
+    }
+
+    .message-bubble:hover .delete-btn {
+        display: block;
+    }
+
+    .delete-btn {
+        display: none;
+        /* Hidden by default */
+        position: absolute;
+        top: -10px;
+        right: -10px;
+        background: #ef4444;
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 24px;
+        height: 24px;
+        font-size: 12px;
+        cursor: pointer;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        align-items: center;
+        justify-content: center;
+    }
+
+    .delete-btn:hover {
+        background: #dc2626;
     }
 
     .sender-name {
@@ -625,11 +655,47 @@
         }
     }
 
+    // Override to handle real-time updates
+    protected override async Task OnNewMessageReceived(IOnMessageReceived_OnMessageReceived msg)
+    {
+        // Console.WriteLine($"[ChatSystem] Checking room {msg.ChatRoomId} vs Selected {SelectedChat?.Id}");
+        if (SelectedChat != null && SelectedChat.Id == msg.ChatRoomId)
+        {
+            // Add message directly to list for instant update
+            var adapter = new ChatMessageAdapter(msg);
+            // Since Messages is a List in Handler we can add. But wait, Messages is exposed as List.
+            Messages?.Add(adapter);
+
+            StateHasChanged();
+
+            // Optionally fetch to ensure consistency, but adding directly feels faster.
+            // await LoadMessages(roomId);
+        }
+    }
+
     private string GetInitials(string? name)
     {
         if (string.IsNullOrEmpty(name)) return "?";
         var parts = name.Split(' ');
         if (parts.Length > 1) return $"{parts[0][0]}{parts[1][0]}".ToUpper();
         return name.Substring(0, Math.Min(2, name.Length)).ToUpper();
+    }
+
+    // Adapter class to bridge subscription type to message list type
+    public class ChatMessageAdapter : IGetChatMessages_AllMessagesByChatRoomId
+    {
+        private readonly IOnMessageReceived_OnMessageReceived _msg;
+
+        public ChatMessageAdapter(IOnMessageReceived_OnMessageReceived msg)
+        {
+            _msg = msg;
+        }
+
+        public Guid Id => _msg.Id;
+        public MessageType Type => _msg.Type;
+        public string? Content => _msg.Content;
+        public DateTimeOffset SentAt => _msg.SentAt;
+        public string? SenderEmail => _msg.SenderEmail;
+        public IGetChatMessages_AllMessagesByChatRoomId_Sender? Sender => null; // Use null or mock if needed
     }
 }
