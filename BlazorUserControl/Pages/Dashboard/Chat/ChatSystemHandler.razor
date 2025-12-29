@@ -1,0 +1,102 @@
+@using Application
+@using Application.Modules.R2Y.Repositories.Interface.Chat
+@using Application.Modules.R2Y.Repositories.Interface.Users
+@using Application.Provider
+@using FluentResults
+
+@code {
+    [Inject] public IUserService UserService { get; set; } = default!;
+    [Inject] public IChatService ChatService { get; set; } = default!;
+    [Inject] public AppAuthStateProvider AuthStateProvider { get; set; } = default!;
+
+    // Data Sources
+    public IReadOnlyList<IGetAllUsers_AllUsers>? AllUsers { get; set; } = new List<IGetAllUsers_AllUsers>();
+    public IReadOnlyList<IGetAllUserRoom_AllChatRoomByUserEmail>? AllChats { get; set; } = new
+    List<IGetAllUserRoom_AllChatRoomByUserEmail>();
+    public IEnumerable<IGetChatMessages_AllMessagesByChatRoomId> Messages { get; set; } = new
+    List<IGetChatMessages_AllMessagesByChatRoomId>();
+
+
+    // State
+    public bool IsLoadingUsers { get; set; } = false;
+    public bool IsLoadingChats { get; set; } = false;
+    public bool IsLoadingMessages { get; set; } = false;
+    public string CurrentUserEmail { get; set; } = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        var userInfo = await AuthStateProvider.GetUserInfo();
+        if (userInfo != null)
+        {
+            CurrentUserEmail = userInfo.Email;
+            await LoadChats();
+        }
+    }
+
+    protected async Task LoadAllUsers()
+    {
+        if (AllUsers!.Any()) return;
+
+        IsLoadingUsers = true;
+        StateHasChanged();
+
+        var result = await UserService.GetAllUsers();
+        if (result is { IsSuccess: true, Value: not null })
+        {
+            AllUsers = result.Value;
+        }
+
+        IsLoadingUsers = false;
+        StateHasChanged();
+    }
+
+    private async Task LoadChats()
+    {
+        IsLoadingChats = true;
+        StateHasChanged();
+
+        var result = await ChatService.GetAllUserRoom(CurrentUserEmail);
+        if (result is { IsSuccess: true, Value: not null })
+        {
+            AllChats = result.Value;
+        }
+
+        IsLoadingChats = false;
+        StateHasChanged();
+    }
+
+    protected async Task LoadMessages(Guid roomId)
+    {
+        IsLoadingMessages = true;
+        StateHasChanged();
+
+        var result = await ChatService.GetMessagesAsync(roomId);
+
+        Messages = result.IsSuccess ? result.Value.OrderBy(m => m.SentAt).ToList() : [];
+
+        IsLoadingMessages = false;
+        StateHasChanged();
+    }
+
+    protected async Task SendMessage(Guid roomId, string content)
+    {
+        if (string.IsNullOrWhiteSpace(content)) return;
+
+        var result = await ChatService.SendMessageAsync(roomId, CurrentUserEmail, content);
+
+        if (result.IsSuccess)
+        {
+            await LoadMessages(roomId);
+        }
+    }
+
+    protected async Task<Guid?> CreatePrivateChat(string targetUserEmail)
+    {
+        var result = await ChatService.CreatePrivateRoomAsync(targetUserEmail, CurrentUserEmail);
+
+        if (!result.IsSuccess) return null;
+        
+        await LoadChats();
+        return result.Value.Data!.Id;
+    }
+}

@@ -7,4 +7,5 @@ public static class Routes
     public const string Counter = "/op/counter";
     public const string Weather = "/op/weather";
     public const string Users = "/op/users";
+    public const string Chat = "/op/chat";
 }

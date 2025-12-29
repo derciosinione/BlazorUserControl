@@ -6,3 +6,40 @@ mutation UserLogin($email: String!, $password: String!) {
         token
     }
 }
+
+mutation SendChatMessage($input: CreateMessageInput!) {
+    sendChatMessage(input: $input) {
+        success
+        message
+        data {
+            id
+            content
+            sentAt
+            senderEmail
+             sender {
+                name
+                avatarUrl
+            }
+        }
+    }
+}
+
+mutation CreatePrivateRoom($input: CreatePrivateRoomInput!) {
+    createPrivateRoom(input: $input) {
+        success
+        message
+        data {
+            id
+            type
+            name
+            participants {
+                userEmail
+                 user {
+                    name
+                     email
+                    avatarUrl
+                }
+            }
+        }
+    }
+}

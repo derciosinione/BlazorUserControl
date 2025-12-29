@@ -4,6 +4,8 @@ using Application.Modules.R2Y.Repositories.Interface.Authentications;
 using Application.Modules.R2Y.Repositories.Interface.Users;
 using Application.Modules.R2Y.Repositories.Service.Authentications;
 using Application.Modules.R2Y.Repositories.Service.Users;
+using Application.Modules.R2Y.Repositories.Interface.Chat;
+using Application.Modules.R2Y.Repositories.Service.Chat;
 using Application.Provider;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
@@ -19,6 +21,7 @@ public static class AppInjections
         builder.Services.AddSingleton<ITokenService, TokenService>();
         builder.Services.AddSingleton<IUserService, UserService>();
         builder.Services.AddSingleton<IContentManagementService, ContentManagementService>();
+        builder.Services.AddScoped<IChatService, ChatService>();
 
         builder.Services.AddScoped<AppAuthStateProvider>();
         builder.Services.AddScoped<AuthenticationStateProvider, AppAuthStateProvider>();

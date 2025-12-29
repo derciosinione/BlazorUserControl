@@ -1,0 +1,635 @@
+﻿@page "/op/chat"
+@using Application
+@using Application.Modules.R2Y.Repositories.Interface.Chat
+@using Application.Modules.R2Y.Repositories.Interface.Users
+@inherits ChatSystemHandler
+
+<PageTitle>Chat | Dashboard</PageTitle>
+
+<div class="chat-layout">
+    <!-- Sidebar -->
+    <div class="chat-sidebar">
+        @* ===== Sidebar Header ===== *@
+        <div class="sidebar-header">
+            <h3>Chats</h3>
+            <div class="actions">
+                <button class="btn-icon" @onclick="() => StartNewChat(false)" title="New Private Chat">
+                    <i class="bi bi-person-plus"></i>
+                    ✚
+                </button>
+            </div>
+        </div>
+
+        @* ===== Sidebar Search ===== *@
+        <div class="search-bar">
+            <input type="text" placeholder="Search chats..." @bind="ChatSearchQuery" @bind:event="oninput" />
+        </div>
+
+        @* ===== Sidebar Search Result ===== *@
+        <div class="chat-list">
+            @if (IsLoadingChats)
+            {
+                <div class="loading-users">Loading chats...</div>
+            }
+            else
+            {
+                @foreach (var chat in FilteredChats)
+                {
+                    <div class="chat-list-item @(SelectedChat?.Id == chat.Id ? "active" : "")"
+                        @onclick="() => SelectChat(chat)">
+                        <div class="avatar">
+                            @GetInitials(chat.Name)
+                        </div>
+                        <div class="chat-details">
+                            <div class="name">@chat.Name</div>
+                            <div class="last-message">Sent a message</div>
+                        </div>
+                        <div class="meta">
+                            <span class="time">12:00</span>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+
+    <!-- Main Chat Area -->
+    <div class="chat-main">
+        @if (IsCreatingNewChat)
+        {
+            <div class="new-chat-view">
+                <div class="new-chat-header">
+                    <h4>New Private Chat</h4>
+                    <button class="btn-close" @onclick="CancelNewChat">X</button>
+                </div>
+
+                <div class="user-search-section">
+                    <input type="text" class="form-control" placeholder="Search users to add..." @bind="UserSearchQuery"
+                        @bind:event="oninput" @onkeyup="HandleUserSearchKeyUp" />
+
+                    @if (IsLoadingUsers)
+                    {
+                        <div class="loading-users">Loading users...</div>
+                    }
+
+                    <div class="user-results">
+                        @foreach (var user in FilteredUsers)
+                        {
+                            <div class="user-item" @onclick="() => ToggleUserSelection(user)">
+                                <div class="user-info">
+                                    <span class="user-name">@user.Name</span>
+                                    @* <span class="user-email">@user.Email</span> *@
+                                </div>
+                                <div class="selection-state">
+                                    @if (SelectedUsersForNewChat.Contains(user))
+                                    {
+                                        <span class="selected-mark">✓</span>
+                                    }
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <div class="new-chat-actions">
+                    <button class="btn btn-primary" disabled="@(!CanCreateChat)" @onclick="CreateChat">
+                        Start Chat
+                    </button>
+                </div>
+            </div>
+        }
+        else if (SelectedChat != null)
+        {
+            <div class="chat-header">
+                <div class="header-info">
+                    <h3>@SelectedChat.Name</h3>
+                    <span class="status">Online</span>
+                </div>
+                <div class="header-actions">
+                    <button class="btn-icon">⋮</button>
+                </div>
+            </div>
+
+            <div class="messages-container">
+                @if (IsLoadingMessages)
+                {
+                    <div class="loading-users">Loading messages...</div>
+                }
+                else
+                {
+                    @foreach (var msg in Messages)
+                    {
+                        <div class="message-wrapper @(msg.SenderEmail == CurrentUserEmail ? "sent" : "received")">
+                            <div class="message-bubble">
+                                <div class="content">@msg.Content</div>
+                                <div class="time">@msg.SentAt.ToString("HH:mm")</div>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+
+            <div class="input-area">
+                <button class="btn-icon attach-btn">🔗</button>
+                <input type="text" placeholder="Type a message..." @bind="NewMessageText" @onkeyup="HandleInputKeyUp" />
+                <button class="btn-send" @onclick="SendMessage">
+                    ➤
+                </button>
+            </div>
+        }
+        else
+        {
+            <div class="empty-state">
+                <div class="empty-content">
+                    <h3>Welcome to Chat System</h3>
+                    <p>Select a chat from the sidebar or start a new conversation.</p>
+                    <button class="btn btn-primary" @onclick="() => StartNewChat(false)">Start New Chat</button>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<style>
+    /* Styles preserved */
+    :root {
+        --primary-color: #4F46E5;
+        --primary-light: #EEF2FF;
+        --bg-color: #F9FAFB;
+        --sidebar-width: 320px;
+        --border-color: #E5E7EB;
+        --text-primary: #111827;
+        --text-secondary: #6B7280;
+    }
+
+    .chat-layout {
+        display: flex;
+        height: 85vh;
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        overflow: hidden;
+        border: 1px solid var(--border-color);
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    /* Sidebar Styles */
+    .chat-sidebar {
+        width: var(--sidebar-width);
+        background: #fff;
+        border-right: 1px solid var(--border-color);
+        display: flex;
+        flex-direction: column;
+    }
+
+    .sidebar-header {
+        padding: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .sidebar-header h3 {
+        margin: 0;
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: var(--text-primary);
+    }
+
+    .search-bar {
+        padding: 15px;
+    }
+
+    .search-bar input {
+        width: 100%;
+        padding: 10px 15px;
+        border-radius: 8px;
+        border: 1px solid var(--border-color);
+        background: var(--bg-color);
+        outline: none;
+        transition: all 0.2s;
+    }
+
+    .search-bar input:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px var(--primary-light);
+    }
+
+    .chat-list {
+        flex: 1;
+        overflow-y: auto;
+    }
+
+    .chat-list-item {
+        padding: 15px 20px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        cursor: pointer;
+        transition: background 0.2s;
+        border-bottom: 1px solid #f3f4f6;
+    }
+
+    .chat-list-item:hover {
+        background: var(--bg-color);
+    }
+
+    .chat-list-item.active {
+        background: var(--primary-light);
+        border-left: 3px solid var(--primary-color);
+    }
+
+    .avatar {
+        width: 40px;
+        height: 40px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 600;
+        font-size: 0.9rem;
+        flex-shrink: 0;
+    }
+
+    .chat-details {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .chat-details .name {
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 2px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .chat-details .last-message {
+        font-size: 0.875rem;
+        color: var(--text-secondary);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .meta {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 4px;
+    }
+
+    .time {
+        font-size: 0.75rem;
+        color: var(--text-secondary);
+    }
+
+    .badge {
+        background: var(--primary-color);
+        color: white;
+        padding: 2px 6px;
+        border-radius: 10px;
+        font-size: 0.7rem;
+        font-weight: 600;
+    }
+
+    /* Main Area Styles */
+    .chat-main {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        background: #fff;
+    }
+
+    .chat-header {
+        padding: 15px 25px;
+        border-bottom: 1px solid var(--border-color);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: #fff;
+    }
+
+    .header-info h3 {
+        margin: 0;
+        font-size: 1.1rem;
+        font-weight: 600;
+    }
+
+    .status {
+        font-size: 0.8rem;
+        color: #10B981;
+    }
+
+    .messages-container {
+        flex: 1;
+        padding: 25px;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        background: #f9fafb;
+    }
+
+    .message-wrapper {
+        display: flex;
+        width: 100%;
+    }
+
+    .message-wrapper.sent {
+        justify-content: flex-end;
+    }
+
+    .message-wrapper.received {
+        justify-content: flex-start;
+    }
+
+    .message-bubble {
+        max-width: 70%;
+        padding: 12px 16px;
+        border-radius: 12px;
+        position: relative;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    }
+
+    .sent .message-bubble {
+        background: var(--primary-color);
+        color: white;
+        border-bottom-right-radius: 2px;
+    }
+
+    .received .message-bubble {
+        background: white;
+        color: var(--text-primary);
+        border: 1px solid var(--border-color);
+        border-bottom-left-radius: 2px;
+    }
+
+    .sender-name {
+        font-size: 0.75rem;
+        font-weight: 600;
+        margin-bottom: 4px;
+        color: var(--primary-color);
+    }
+
+    .message-bubble .time {
+        font-size: 0.7rem;
+        margin-top: 4px;
+        opacity: 0.7;
+        text-align: right;
+    }
+
+    .input-area {
+        padding: 20px;
+        border-top: 1px solid var(--border-color);
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        background: white;
+    }
+
+    .input-area input {
+        flex: 1;
+        padding: 12px;
+        border: 1px solid var(--border-color);
+        border-radius: 24px;
+        outline: none;
+    }
+
+    .input-area input:focus {
+        border-color: var(--primary-color);
+    }
+
+    .btn-send {
+        background: var(--primary-color);
+        color: white;
+        border: none;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: transform 0.1s;
+    }
+
+    .btn-send:hover {
+        transform: scale(1.05);
+    }
+
+    .btn-icon {
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: var(--text-secondary);
+        font-size: 1.2rem;
+        padding: 5px;
+        border-radius: 50%;
+    }
+
+    .btn-icon:hover {
+        background: var(--bg-color);
+        color: var(--primary-color);
+    }
+
+    /* Empty State */
+    .empty-state {
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--text-secondary);
+        text-align: center;
+    }
+
+    .empty-content h3 {
+        margin-bottom: 10px;
+        color: var(--text-primary);
+    }
+
+    .empty-content p {
+        margin-bottom: 20px;
+    }
+
+    /* New Chat Styles */
+    .new-chat-view {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        padding: 20px;
+    }
+
+    .new-chat-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .user-search-section {
+        flex: 1;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .user-results {
+        flex: 1;
+        overflow-y: auto;
+        margin-top: 15px;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+    }
+
+    .user-item {
+        padding: 12px;
+        border-bottom: 1px solid var(--border-color);
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .user-item:hover {
+        background: var(--bg-color);
+    }
+
+    .selected-mark {
+        color: var(--primary-color);
+        font-weight: bold;
+    }
+
+    .new-chat-actions {
+        margin-top: 20px;
+        text-align: right;
+    }
+
+    .loading-users {
+        color: var(--primary-color);
+        text-align: center;
+        padding: 10px;
+    }
+</style>
+
+@code {
+    public string ChatSearchQuery { get; set; } = "";
+    public string UserSearchQuery { get; set; } = "";
+    public string NewMessageText { get; set; } = "";
+
+    public IGetAllUserRoom_AllChatRoomByUserEmail? SelectedChat { get; set; }
+    public bool IsCreatingNewChat { get; set; }
+
+    public List<IGetAllUsers_AllUsers> SelectedUsersForNewChat { get; set; } = new();
+
+    public IEnumerable<IGetAllUserRoom_AllChatRoomByUserEmail> FilteredChats =>
+    AllChats ?? new List<IGetAllUserRoom_AllChatRoomByUserEmail>();
+
+    public IEnumerable<IGetAllUsers_AllUsers> FilteredUsers =>
+    string.IsNullOrWhiteSpace(UserSearchQuery)
+    ? AllUsers
+    : AllUsers.Where(u => (!string.IsNullOrEmpty(u.Name) && u.Name.Contains(UserSearchQuery,
+    StringComparison.OrdinalIgnoreCase)) || (!string.IsNullOrEmpty(u.Email) && u.Email.Contains(UserSearchQuery,
+    StringComparison.OrdinalIgnoreCase)));
+
+    public bool CanCreateChat => SelectedUsersForNewChat.Any();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+    }
+
+    public async Task StartNewChat(bool isGroup)
+    {
+        IsCreatingNewChat = true;
+        SelectedUsersForNewChat.Clear();
+        SelectedChat = null;
+        UserSearchQuery = "";
+
+        // Load real users
+        await base.LoadAllUsers();
+    }
+
+    public void HandleUserSearchKeyUp()
+    {
+        // Trigger re-render for filter update
+        StateHasChanged();
+    }
+
+    public void CancelNewChat()
+    {
+        IsCreatingNewChat = false;
+    }
+
+    public void ToggleUserSelection(IGetAllUsers_AllUsers user)
+    {
+        if (SelectedUsersForNewChat.Contains(user))
+            SelectedUsersForNewChat.Remove(user);
+        else
+        {
+            SelectedUsersForNewChat.Clear(); // Single select enforcement for private chat
+            SelectedUsersForNewChat.Add(user);
+        }
+    }
+
+    public async Task CreateChat()
+    {
+        if (!SelectedUsersForNewChat.Any()) return;
+
+        var targetUser = SelectedUsersForNewChat.First();
+        var newChatId = await base.CreatePrivateChat(targetUser.Email);
+
+        CancelNewChat();
+
+        if (newChatId.HasValue && AllChats != null)
+        {
+            var newChat = AllChats.FirstOrDefault(c => c.Id == newChatId.Value);
+            if (newChat != null)
+            {
+                await SelectChat(newChat);
+            }
+        }
+    }
+
+    public async Task SelectChat(IGetAllUserRoom_AllChatRoomByUserEmail chat)
+    {
+        SelectedChat = chat;
+        IsCreatingNewChat = false;
+
+        // Load messages for this chat
+        if (SelectedChat != null)
+        {
+            await base.LoadMessages(SelectedChat.Id);
+        }
+    }
+
+    public async Task SendMessage()
+    {
+        if (string.IsNullOrWhiteSpace(NewMessageText) || SelectedChat == null) return;
+
+        var content = NewMessageText;
+        NewMessageText = ""; // Clear immediately for UX
+
+        await base.SendMessage(SelectedChat.Id, content);
+    }
+
+    public async Task HandleInputKeyUp(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+        {
+            await SendMessage();
+        }
+    }
+
+    private string GetInitials(string? name)
+    {
+        if (string.IsNullOrEmpty(name)) return "?";
+        var parts = name.Split(' ');
+        if (parts.Length > 1) return $"{parts[0][0]}{parts[1][0]}".ToUpper();
+        return name.Substring(0, Math.Min(2, name.Length)).ToUpper();
+    }
+}

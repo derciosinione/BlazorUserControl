@@ -20,4 +20,9 @@
         <ProjectReference Include="..\Application\Application.csproj"/>
     </ItemGroup>
 
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="Pages\Dashboard\Chat\Chat.razor" />
+      <_ContentIncludedByDefault Remove="Pages\Dashboard\Chat\ChatHandler.razor" />
+    </ItemGroup>
+
 </Project>

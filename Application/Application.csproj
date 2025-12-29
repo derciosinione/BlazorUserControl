@@ -23,6 +23,9 @@
         <GraphQL Update="GraphQlClient\Users.graphql">
             <Generator>MSBuild:GenerateGraphQLCode</Generator>
         </GraphQL>
+        <GraphQL Update="GraphQlClient\Chats.graphql">
+            <Generator>MSBuild:GenerateGraphQLCode</Generator>
+        </GraphQL>
     </ItemGroup>
 
     <ItemGroup>

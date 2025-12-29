@@ -734,6 +734,7 @@ type Query {
   validateUserAccessToken(token: String!): AccessTokenResponseDto!
   allUsers(search: String page: Int! = 1 pageSize: Int! = 20): [UserResponse!]!
   userByEmail(email: String!): UserResponse!
+  smsMembers(input: SmsMemberInput!): [SmsMemberType!]!
   webComLst(input: WebComLstInput!): [WebComLstType!]!
   webDdl_Kpis_DataAnalysis(language: String!): [WebDdlKpisDataAnalysisType!]!
   webCurrentStatus(input: WebCurrentStatusInput!): WebCurrentStatusType!
@@ -832,6 +833,19 @@ input DuplicateGameInput {
 type CdDlType {
   idRegiao: String!
   contactSphere: String!
+}
+
+type SmsMemberType {
+  pais: String!
+  idRegiao: String!
+  grupo: String!
+  nome: String!
+  email: String!
+  telefone: String!
+  cargo: String!
+  empresa: String!
+  estado: String!
+  avatarUrl: String
 }
 
 type ThreePlusOneCountryType {
@@ -4542,6 +4556,13 @@ input UpdateKpiMemberMechanismInput {
   regionId: String
   kpi: String
   mechanism: String
+}
+
+input SmsMemberInput {
+  type: String!
+  typeId: String!
+  regionId: String
+  cargo: String
 }
 
 input CrmTasksByDateRangeInput {

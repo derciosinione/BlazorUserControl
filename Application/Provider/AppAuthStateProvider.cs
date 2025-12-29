@@ -26,7 +26,8 @@ public class AppAuthStateProvider(ITokenService tokenService) : AuthenticationSt
     public async Task<AuthUserClaims?> GetUserInfo()
     {
         var authenticationState = await GetAuthenticationStateAsync();
-        return authenticationState.User.ToUserModel();
+        var result = authenticationState.User.ToUserModel();
+        return result;
     }
 
     public void MarkUserAsAuthenticated(string token)
