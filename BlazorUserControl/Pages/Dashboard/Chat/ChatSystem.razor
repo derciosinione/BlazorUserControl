@@ -658,18 +658,11 @@
     // Override to handle real-time updates
     protected override async Task OnNewMessageReceived(IOnMessageReceived_OnMessageReceived msg)
     {
-        // Console.WriteLine($"[ChatSystem] Checking room {msg.ChatRoomId} vs Selected {SelectedChat?.Id}");
         if (SelectedChat != null && SelectedChat.Id == msg.ChatRoomId)
         {
-            // Add message directly to list for instant update
             var adapter = new ChatMessageAdapter(msg);
-            // Since Messages is a List in Handler we can add. But wait, Messages is exposed as List.
             Messages?.Add(adapter);
-
             StateHasChanged();
-
-            // Optionally fetch to ensure consistency, but adding directly feels faster.
-            // await LoadMessages(roomId);
         }
     }
 

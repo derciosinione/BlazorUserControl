@@ -42,34 +42,8 @@
 
     private void HandleIncomingMessage(IOnMessageReceived_OnMessageReceived msg)
     {
-        // 1. If chat is selected and matches room, append message
-        // Unfortunately the subscription type is different from the query type, so we might need mapping or dynamic usage
-        // But for display purposed in the list, usually they share fields.
-
-        // Let's create an adapter object or check if we can cast/use common props.
-        // For simplicity, we just trigger reload if it's the current room, OR we manually add it if we can
-
-        // Actually, let's try to map it to IGetChatMessages_AllMessagesByChatRoomId if possible, or use a local View Model.
-        // Since we are using generated interfaces directly, we can't easily cast them.
-
-        // STRATEGY:
-        // If the message belongs to the current open chat, we reload the messages to be safe and consistent
-        // OR we just assume it's valid and add it. To avoid type incompatibility issues given the time constraints,
-        // and since the user just wants the interface updated:
-
-        // Check if the message belongs to the current open chat
-        // We'll rely on the UI binding. Since we used `IEnumerable` initially, we should change `Messages` to `List` (done
-        // above) to allow adding.
-
-        // Note: The types IOnMessageReceived_OnMessageReceived and IGetChatMessages_AllMessagesByChatRoomId are generated
-        // interfaces.
-        // We cannot add one to a list of the other.
-        // FIX: We will just reload the messages if the chat matches. This is safer.
-        // Also we should reload the chat list to update "Last Message" preview once we implement that properly.
-
         InvokeAsync(async () =>
         {
-            Console.WriteLine($"[Handler] Received msg for room {msg.ChatRoomId}");
             await LoadChats(); // Always safe to update sidebar
             await OnNewMessageReceived(msg);
             StateHasChanged();
@@ -81,6 +55,7 @@
     {
         return Task.CompletedTask;
     }
+
 
     protected async Task LoadAllUsers()
     {
@@ -140,16 +115,7 @@
         }
     }
 
-    protected async Task DeleteMessage(Guid messageId)
-    {
-        // For security, checking if SelectedChat is available in child or just passing ID.
-        // But here we might not know the roomId if not passed.
-        // We will optimistically remove from UI first or reload.
-        // Actually, we need RoomId for the API call.
 
-        // Wait, the API requires ChatRoomId.
-        // We'll overload or assume the child passes it.
-    }
 
     protected async Task DeleteMessage(Guid roomId, Guid messageId)
     {
