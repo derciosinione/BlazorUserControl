@@ -19,6 +19,7 @@ type ChatRoomType {
   createdAt: DateTime!
   participants: [ChatRoomParticipant!]!
   messages: [Message!]!
+  lastMessage: Message
 }
 
 type MembersByProfessionType {
@@ -647,7 +648,7 @@ type Query {
   chatRooms: [ChatRoomType!]!
   chatRoom(id: UUID!): ChatRoomType!
   allChatRoomByUserEmail(userEmail: String!): [ChatRoomType!]!
-  allMessagesByChatRoomId(roomId: UUID!): [Message]!
+  allMessagesByChatRoomId(roomId: UUID! page: Int! = 1 pageSize: Int! = 20): PaginatedResultOfMessage!
   csListByRegionId(regionId: String!): [CsListByRegionIdType!]!
   csDDl(regionId: String!): [CdDlType!]!
   groupsRegion(regionId: String!): [GroupsRegionType!]!
@@ -4427,6 +4428,16 @@ type UserMemberType {
   grupo: String
   imageUrl: String
   status: String
+}
+
+type PaginatedResultOfMessage {
+  data: [Message!]!
+  totalCount: Int!
+  page: Int!
+  pageSize: Int!
+  totalPages: Int!
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
 }
 
 type Message {

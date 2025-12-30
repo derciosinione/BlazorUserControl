@@ -4,7 +4,7 @@
   "extensions": {
     "strawberryShake": {
       "name": "R2YGqlClient",
-      "url": "https://localhost:8081/graphql/",
+      "url": "https://r2y-api.netsigma.pt/graphql/",
       "skipSSLValidation": true,
       "records": {
         "inputs": false,

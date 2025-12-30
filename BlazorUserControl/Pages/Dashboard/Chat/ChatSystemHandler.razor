@@ -16,7 +16,7 @@
     public IReadOnlyList<IGetAllUsers_AllUsers>? AllUsers { get; set; } = new List<IGetAllUsers_AllUsers>();
     public IReadOnlyList<IGetAllUserRoom_AllChatRoomByUserEmail>? AllChats { get; set; } = new
     List<IGetAllUserRoom_AllChatRoomByUserEmail>();
-    public List<IGetChatMessages_AllMessagesByChatRoomId> Messages { get; set; } = new();
+    public List<IGetChatMessages_AllMessagesByChatRoomId_Data> Messages { get; set; } = new();
 
     private IDisposable? _messageSubscription;
 
@@ -45,7 +45,7 @@
         InvokeAsync(async () =>
         {
             await LoadChats(); // Always safe to update sidebar
-            await OnNewMessageReceived(msg);
+            await OnNewMessageReceived(msg); 
             StateHasChanged();
         });
     }
@@ -94,10 +94,11 @@
         IsLoadingMessages = true;
         StateHasChanged();
 
-        var result = await ChatService.GetMessagesAsync(roomId);
+        var result = await ChatService.GetMessagesAsync(roomId, 1, 20);
 
-        Messages = result.IsSuccess ? result.Value.OrderBy(m => m.SentAt).ToList() : new
-        List<IGetChatMessages_AllMessagesByChatRoomId>();
+        Messages = result.IsSuccess 
+            ? result.Value.Data.OrderBy(m => m.SentAt).ToList() 
+            : new List<IGetChatMessages_AllMessagesByChatRoomId_Data>();
 
         IsLoadingMessages = false;
         StateHasChanged();

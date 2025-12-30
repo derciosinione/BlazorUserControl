@@ -53,16 +53,16 @@ public class ChatService(IR2YGqlClient client) : IChatService
         return result.IsErrorResult() ? Result.Fail(result.Errors.Select(e => e.Message)) : Result.Ok(result.Data?.SendChatMessage!);
     }
 
-    public async Task<Result<IEnumerable<IGetChatMessages_AllMessagesByChatRoomId>>> GetMessagesAsync(Guid roomId)
+    public async Task<Result<IGetChatMessages_AllMessagesByChatRoomId>> GetMessagesAsync(Guid roomId, int page, int pageSize)
     {
-        var result = await client.GetChatMessages.ExecuteAsync(roomId);
+        var result = await client.GetChatMessages.ExecuteAsync(roomId, page, pageSize);
 
         if (result.IsErrorResult())
         {
             return Result.Fail(result.Errors.Select(e => e.Message));
         }
 
-        return Result.Ok(result.Data?.AllMessagesByChatRoomId ?? Enumerable.Empty<IGetChatMessages_AllMessagesByChatRoomId>());
+        return Result.Ok(result.Data?.AllMessagesByChatRoomId!);
     }
 
     public async Task<Result<bool>> DeleteMessageAsync(Guid chatRoomId, Guid messageId, string userEmail)

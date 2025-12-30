@@ -5,7 +5,7 @@ namespace Application.Modules.R2Y.Repositories.Interface.Chat;
 
 public interface IChatService
 {
-    Task<Result<IEnumerable<IGetChatMessages_AllMessagesByChatRoomId>>> GetMessagesAsync(Guid roomId);
+    Task<Result<IGetChatMessages_AllMessagesByChatRoomId>> GetMessagesAsync(Guid roomId, int page, int pageSize);
     Task<Result<ISendChatMessage_SendChatMessage>> SendMessageAsync(Guid roomId, string senderEmail, string content);
     Task<Result<bool>> DeleteMessageAsync(Guid chatRoomId, Guid messageId, string userEmail);
     Task<Result<IReadOnlyList<IGetAllUserRoom_AllChatRoomByUserEmail>?>> GetAllUserRoom(string currentUserEmail,

@@ -40,10 +40,10 @@
                         </div>
                         <div class="chat-details">
                             <div class="name">@chat.Name</div>
-                            <div class="last-message">Sent a message</div>
+                            <div class="last-message">@(chat.LastMessage?.Content ?? "Start a conversation")</div>
                         </div>
                         <div class="meta">
-                            <span class="time">12:00</span>
+                            <span class="time">@(chat.LastMessage?.SentAt.ToString("HH:mm") ?? "")</span>
                         </div>
                     </div>
                 }
@@ -675,7 +675,7 @@
     }
 
     // Adapter class to bridge subscription type to message list type
-    public class ChatMessageAdapter : IGetChatMessages_AllMessagesByChatRoomId
+    public class ChatMessageAdapter : IGetChatMessages_AllMessagesByChatRoomId_Data
     {
         private readonly IOnMessageReceived_OnMessageReceived _msg;
 
@@ -689,6 +689,8 @@
         public string? Content => _msg.Content;
         public DateTimeOffset SentAt => _msg.SentAt;
         public string? SenderEmail => _msg.SenderEmail;
-        public IGetChatMessages_AllMessagesByChatRoomId_Sender? Sender => null; // Use null or mock if needed
+        public Guid ChatRoomId => _msg.ChatRoomId;
+        public IReadOnlyList<IGetChatMessages_AllMessagesByChatRoomId_Data_ReadBy> ReadBy => Array.Empty<IGetChatMessages_AllMessagesByChatRoomId_Data_ReadBy>();
+        public IGetChatMessages_AllMessagesByChatRoomId_Data_Sender? Sender => null; // Use null or mock if needed
     }
 }

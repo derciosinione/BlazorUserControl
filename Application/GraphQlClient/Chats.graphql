@@ -1,38 +1,48 @@
-
-query GetChatMessages($roomId: UUID!) {
-  allMessagesByChatRoomId(roomId: $roomId) {
-    id
-    type
-    content
-    sentAt
-    senderEmail
-    sender {
-      name
-      email
-      avatarUrl
+query GetChatMessages($roomId: UUID!, $page: Int!, $pageSize: Int!) {
+  allMessagesByChatRoomId(
+    roomId: $roomId
+    page: $page
+    pageSize: $pageSize
+  ) {
+    hasNextPage
+    hasPreviousPage
+    page
+    pageSize
+    totalCount
+    totalPages
+    data {
+      id
+      type
+      chatRoomId
+      content
+      sentAt
+      senderEmail
+      readBy {
+        readAt
+        user {
+          email
+          name
+          avatarUrl
+        }
+      }
+      sender {
+        email
+        name
+        avatarUrl
+      }
     }
   }
 }
-
 
 query GetAllUserRoom($currentUserEmail: String!) {
   allChatRoomByUserEmail(userEmail: $currentUserEmail) {
     id
     name
     type
-    participants {
-      user {
-        avatarUrl
-        email
-        name
-      }
-      joinedAt
-    }
-    messages {
+    lastMessage {
       id
-      content
       type
-      senderEmail
+      content
       sentAt
     }
   }
