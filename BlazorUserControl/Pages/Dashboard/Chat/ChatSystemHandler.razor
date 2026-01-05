@@ -5,7 +5,7 @@
 @using FluentResults
 @using StrawberryShake
 @implements IDisposable
-@implements IObserver<IOperationResult<IOnMessageReceivedResult>>
+@implements IObserver<IOperationResult<IOnChatEventResult>>
 
 @code {
     [Inject] public IUserService UserService { get; set; } = default!;
@@ -40,18 +40,18 @@
         }
     }
 
-    private void HandleIncomingMessage(IOnMessageReceived_OnMessageReceived msg)
+    private void HandleIncomingMessage(global::Application.IOnChatEvent_OnChatEvent msg)
     {
         InvokeAsync(async () =>
         {
             await LoadChats(); // Always safe to update sidebar
-            await OnNewMessageReceived(msg); 
+            await OnNewMessageReceived(msg);
             StateHasChanged();
         });
     }
 
     // Allow child to hook into this
-    protected virtual Task OnNewMessageReceived(IOnMessageReceived_OnMessageReceived msg)
+    protected virtual Task OnNewMessageReceived(global::Application.IOnChatEvent_OnChatEvent msg)
     {
         return Task.CompletedTask;
     }
@@ -79,7 +79,7 @@
         IsLoadingChats = true;
         StateHasChanged();
 
-        var result = await ChatService.GetAllUserRoom(CurrentUserEmail);
+        var result = await ChatService.GetAllUserRoom();
         if (result is { IsSuccess: true, Value: not null })
         {
             AllChats = result.Value;
@@ -96,9 +96,9 @@
 
         var result = await ChatService.GetMessagesAsync(roomId, 1, 20);
 
-        Messages = result.IsSuccess 
-            ? result.Value.Data.OrderBy(m => m.SentAt).ToList() 
-            : new List<IGetChatMessages_AllMessagesByChatRoomId_Data>();
+        Messages = result.IsSuccess
+        ? result.Value.Data.OrderBy(m => m.SentAt).ToList()
+        : new List<IGetChatMessages_AllMessagesByChatRoomId_Data>();
 
         IsLoadingMessages = false;
         StateHasChanged();
@@ -157,11 +157,11 @@
     {
     }
 
-    public void OnNext(IOperationResult<IOnMessageReceivedResult> result)
+    public void OnNext(IOperationResult<IOnChatEventResult> result)
     {
         if (result.Data != null)
         {
-            var msg = result.Data.OnMessageReceived;
+            var msg = result.Data.OnChatEvent;
             HandleIncomingMessage(msg);
         }
     }

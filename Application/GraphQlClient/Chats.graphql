@@ -34,8 +34,8 @@ query GetChatMessages($roomId: UUID!, $page: Int!, $pageSize: Int!) {
   }
 }
 
-query GetAllUserRoom($currentUserEmail: String!) {
-  allChatRoomByUserEmail(userEmail: $currentUserEmail) {
+query GetAllUserRoom {
+  allChatRoomByUserEmail {
     id
     name
     type
@@ -48,14 +48,88 @@ query GetAllUserRoom($currentUserEmail: String!) {
   }
 }
 
-subscription OnMessageReceived($currentUserEmail: String!) {
-  onMessageReceived(currentUserEmail: $currentUserEmail) {
-    id
+
+subscription OnChatEvent {
+  onChatEvent {
     chatRoomId
-    type
-    senderEmail
-    content
-    fileUrl
-    sentAt
+    __typename
+    occurredAt
+    ... on ChatRoomCreatedEvent {
+      chatRoomId
+      occurredAt
+      room {
+        id
+        type
+        name
+        createdAt
+        participants {
+          userEmail
+          role
+        }
+      }
+    }
+    ... on MessageReceivedEvent {
+      chatRoomId
+      occurredAt
+      message {
+        id
+        type
+        content
+        senderEmail
+        sentAt
+      }
+    }
+    ... on MessageDeletedEvent {
+      chatRoomId
+      messageId
+      occurredAt
+    }
+    ... on MessageReadEvent {
+      chatRoomId
+      messageIds
+      occurredAt
+      readBy {
+        userEmail
+        readAt
+      }
+    }
+    ... on ParticipantAddedEvent {
+      chatRoomId
+      occurredAt
+      addedParticipants {
+        userEmail
+        role
+      }
+    }
+    ... on ParticipantRemovedEvent {
+      chatRoomId
+      occurredAt
+      removedUserEmails
+    }
+    ... on ParticipantRoleUpdatedEvent {
+      chatRoomId
+      newRole
+      occurredAt
+      userEmail
+    }
+    ... on PollVoteEvent {
+      chatRoomId
+      messageId
+      occurredAt
+      poll {
+        id
+        question
+        isMultipleChoice
+        options {
+          id
+          text
+          votes {
+            id
+            userEmail
+            votedAt
+          }
+        }
+      }
+    }
   }
 }

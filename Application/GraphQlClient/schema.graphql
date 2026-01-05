@@ -301,7 +301,7 @@ enum TokenType {
 }
 
 type Subscription {
-  onMessageReceived(currentUserEmail: String!): Message
+  onChatEvent: ChatEvent!
 }
 
 type ReferenceValuesType {
@@ -567,7 +567,7 @@ type GoalsResultOptionsType {
 type FileMetadata {
   name: String!
   size: Long!
-  type: String!
+  type: String
 }
 
 input MembersDroppingInput {
@@ -647,7 +647,7 @@ type MembersWithoutViewsType {
 type Query {
   chatRooms: [ChatRoomType!]!
   chatRoom(id: UUID!): ChatRoomType!
-  allChatRoomByUserEmail(userEmail: String!): [ChatRoomType!]!
+  allChatRoomByUserEmail: [ChatRoomType!]!
   allMessagesByChatRoomId(roomId: UUID! page: Int! = 1 pageSize: Int! = 20): PaginatedResultOfMessage!
   csListByRegionId(regionId: String!): [CsListByRegionIdType!]!
   csDDl(regionId: String!): [CdDlType!]!
@@ -1215,6 +1215,11 @@ input WebComValInput {
   isSent: Boolean!
 }
 
+interface ChatEvent {
+  chatRoomId: UUID!
+  occurredAt: DateTime!
+}
+
 input GrfGlobalKpiInput {
   profile: String!
   profileId: String!
@@ -1524,6 +1529,12 @@ type SimulatesRenovationType {
   anomesZTO: String!
 }
 
+type MessageReceivedEvent implements ChatEvent {
+  message: Message!
+  chatRoomId: UUID!
+  occurredAt: DateTime!
+}
+
 type DirectorRegionResponse {
   nome: String!
   email: String!
@@ -1553,7 +1564,6 @@ type CountryType {
 input MarkMessagesAsReadInput {
   chatRoomId: UUID!
   messageIds: [UUID!]!
-  userEmail: String!
 }
 
 input GoalRenewalForecastByPeriodInput {
@@ -1603,6 +1613,12 @@ type GroupsRegionType {
   area: String
   diaSemana: Int!
   lancamento: DateTime!
+}
+
+type ParticipantAddedEvent implements ChatEvent {
+  addedParticipants: [ChatRoomParticipant!]!
+  chatRoomId: UUID!
+  occurredAt: DateTime!
 }
 
 input CreateGameTeamInput {
@@ -2462,6 +2478,13 @@ input FirstYearRetentionMonthByMonthPointInput {
   anoMes: String!
 }
 
+type PollVoteEvent implements ChatEvent {
+  messageId: UUID!
+  poll: Poll!
+  chatRoomId: UUID!
+  occurredAt: DateTime!
+}
+
 input UpdateRegionGoalsInput {
   id: Int!
   regionId: String!
@@ -2572,7 +2595,6 @@ input KpiGroupMechanismInput {
 
 input CreateMessageInput {
   chatRoomId: UUID!
-  senderEmail: String!
   content: String
   file: Upload
   replyToMessageId: UUID
@@ -2610,10 +2632,15 @@ input DirectorRegionRequestInput {
   regionId: String!
 }
 
+type ParticipantRemovedEvent implements ChatEvent {
+  removedUserEmails: [String!]!
+  chatRoomId: UUID!
+  occurredAt: DateTime!
+}
+
 input VotePollInput {
   messageId: UUID!
   optionId: UUID!
-  userEmail: String!
 }
 
 input GeneralGameResultForTeamInput {
@@ -2648,7 +2675,6 @@ type CrmTaskTemplateByIdType {
 
 input CreateGroupRoomInput {
   name: String!
-  creatorEmail: String!
   participants: [ParticipantInput!]!
 }
 
@@ -2750,7 +2776,6 @@ input Last3MonthsGroupGoalsInput {
 }
 
 input DeleteMessageInput {
-  userEmail: String!
   chatRoomId: UUID!
   messageId: UUID!
 }
@@ -2772,6 +2797,13 @@ type ChaptersNoNewMembersType {
   idTLC: Int!
   grw_ActiveChapters_NoNewMembers: Int!
   grw_CoreChapters_NoNewMembers: Int!
+}
+
+type ParticipantRoleUpdatedEvent implements ChatEvent {
+  userEmail: String!
+  newRole: Role!
+  chatRoomId: UUID!
+  occurredAt: DateTime!
 }
 
 input ThreePlusOneRegionsInput {
@@ -3233,6 +3265,12 @@ type __DirectiveArgument {
   value: String!
 }
 
+type MessageUpdatedEvent implements ChatEvent {
+  message: Message!
+  chatRoomId: UUID!
+  occurredAt: DateTime!
+}
+
 input DirectorsGoalsInput {
   type: String!
   typeId: String!
@@ -3308,7 +3346,6 @@ input CreateGamesInput {
 input UpdateMessageInput {
   chatRoomId: UUID!
   messageId: UUID!
-  userEmail: String!
   newContent: String!
 }
 
@@ -3330,6 +3367,13 @@ type ReportType {
   dh: DateTime
   oper: String
   downloads: Int!
+}
+
+type MessageReadEvent implements ChatEvent {
+  messageIds: [UUID!]!
+  readBy: MessageRead!
+  chatRoomId: UUID!
+  occurredAt: DateTime!
 }
 
 input CreatePollInput {
@@ -3611,6 +3655,12 @@ type TlmHowToImproveType {
   lastPalms: String!
   displayOrder: Int!
   lastPalmsText: String!
+}
+
+type MessageDeletedEvent implements ChatEvent {
+  messageId: UUID!
+  chatRoomId: UUID!
+  occurredAt: DateTime!
 }
 
 type GameKpisType {
@@ -3896,7 +3946,6 @@ type GamesType {
 
 input AddParticipantInput {
   chatRoomId: UUID!
-  adminEmail: String!
   participants: [ParticipantInput!]!
 }
 
@@ -3955,6 +4004,12 @@ type ThreePlusOneEvolutionType {
   gray: Int!
   ptsAvg: Float!
   ptsAvgColor: String
+}
+
+type ChatRoomCreatedEvent implements ChatEvent {
+  room: ChatRoomType!
+  chatRoomId: UUID!
+  occurredAt: DateTime!
 }
 
 input SuspendedGroupInput {
@@ -4451,6 +4506,8 @@ type Message {
   poll: Poll
   readBy: [MessageRead]!
   sentAt: DateTime!
+  updatedAt: DateTime
+  isEdited: Boolean
   replyToMessage: Message
   sender: ChatUser
   fileUrl: String
@@ -4464,7 +4521,6 @@ input NdMrActiveGroupsInput {
 
 input RemoveParticipantsInput {
   chatRoomId: UUID!
-  adminEmail: String!
   userEmails: [String!]!
 }
 
@@ -4685,7 +4741,6 @@ type CorrelationType {
 
 input CreatePrivateRoomInput {
   userEmail: String!
-  creatorEmail: String!
 }
 
 type AccessTokenResponseDto {
@@ -4697,7 +4752,6 @@ type AccessTokenResponseDto {
 
 input UpdateParticipantRoleInput {
   chatRoomId: UUID!
-  adminEmail: String!
   userEmail: String!
   newRole: Role!
 }

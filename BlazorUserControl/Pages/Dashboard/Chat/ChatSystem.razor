@@ -656,13 +656,22 @@
     }
 
     // Override to handle real-time updates
-    protected override async Task OnNewMessageReceived(IOnMessageReceived_OnMessageReceived msg)
+    // Override to handle real-time updates
+    protected override async Task OnNewMessageReceived(global::Application.IOnChatEvent_OnChatEvent msg)
     {
-        if (SelectedChat != null && SelectedChat.Id == msg.ChatRoomId)
+        if (msg is global::Application.IOnChatEvent_OnChatEvent_MessageReceivedEvent messageEvent)
         {
-            var adapter = new ChatMessageAdapter(msg);
-            Messages?.Add(adapter);
-            StateHasChanged();
+            Console.WriteLine($"[ChatSystem] Received MessageReceivedEvent for ChatRoomId: {messageEvent.ChatRoomId}");
+            if (SelectedChat != null && SelectedChat.Id == messageEvent.ChatRoomId)
+            {
+                var adapter = new ChatMessageAdapter(messageEvent);
+                Messages?.Add(adapter);
+                StateHasChanged();
+            }
+        }
+        else
+        {
+            Console.WriteLine($"[ChatSystem] Received unknown event type: {msg.GetType().FullName}");
         }
     }
 
@@ -677,11 +686,13 @@
     // Adapter class to bridge subscription type to message list type
     public class ChatMessageAdapter : IGetChatMessages_AllMessagesByChatRoomId_Data
     {
-        private readonly IOnMessageReceived_OnMessageReceived _msg;
+        private readonly global::Application.IOnChatEvent_OnChatEvent_MessageReceivedEvent _event;
+        private readonly global::Application.IOnChatEvent_OnChatEvent_Message _msg;
 
-        public ChatMessageAdapter(IOnMessageReceived_OnMessageReceived msg)
+        public ChatMessageAdapter(global::Application.IOnChatEvent_OnChatEvent_MessageReceivedEvent chatEvent)
         {
-            _msg = msg;
+            _event = chatEvent;
+            _msg = chatEvent.Message;
         }
 
         public Guid Id => _msg.Id;
@@ -689,8 +700,9 @@
         public string? Content => _msg.Content;
         public DateTimeOffset SentAt => _msg.SentAt;
         public string? SenderEmail => _msg.SenderEmail;
-        public Guid ChatRoomId => _msg.ChatRoomId;
-        public IReadOnlyList<IGetChatMessages_AllMessagesByChatRoomId_Data_ReadBy> ReadBy => Array.Empty<IGetChatMessages_AllMessagesByChatRoomId_Data_ReadBy>();
-        public IGetChatMessages_AllMessagesByChatRoomId_Data_Sender? Sender => null; // Use null or mock if needed
+        public Guid ChatRoomId => _event.ChatRoomId;
+        public IReadOnlyList<IGetChatMessages_AllMessagesByChatRoomId_Data_ReadBy> ReadBy =>
+        Array.Empty<IGetChatMessages_AllMessagesByChatRoomId_Data_ReadBy>();
+        public IGetChatMessages_AllMessagesByChatRoomId_Data_Sender? Sender => null;
     }
 }

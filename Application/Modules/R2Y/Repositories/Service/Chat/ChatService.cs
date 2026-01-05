@@ -9,7 +9,12 @@ public class ChatService(IR2YGqlClient client) : IChatService
     public async Task<Result<IReadOnlyList<IGetAllUserRoom_AllChatRoomByUserEmail>?>> GetAllUserRoom(string currentUserEmail,
         CancellationToken cancellationToken = default)
     {
-        var response = await client.GetAllUserRoom.ExecuteAsync(currentUserEmail, cancellationToken);
+        return await GetAllUserRoom(cancellationToken);
+    }
+
+    public async Task<Result<IReadOnlyList<IGetAllUserRoom_AllChatRoomByUserEmail>?>> GetAllUserRoom(CancellationToken cancellationToken = default)
+    {
+        var response = await client.GetAllUserRoom.ExecuteAsync(cancellationToken);
 
         if (response.IsSuccessResult())
         {
@@ -26,7 +31,6 @@ public class ChatService(IR2YGqlClient client) : IChatService
     {
         var input = new CreatePrivateRoomInput
         {
-            CreatorEmail = creatorEmail,
             UserEmail = userEmail,
         };
 
@@ -46,7 +50,6 @@ public class ChatService(IR2YGqlClient client) : IChatService
         var result = await client.SendChatMessage.ExecuteAsync(new CreateMessageInput
         {
             ChatRoomId = roomId,
-            SenderEmail = senderEmail,
             Content = content
         });
 
@@ -71,7 +74,6 @@ public class ChatService(IR2YGqlClient client) : IChatService
         {
             ChatRoomId = chatRoomId,
             MessageId = messageId,
-            UserEmail = userEmail
         });
 
         if (result.IsErrorResult())
@@ -82,8 +84,9 @@ public class ChatService(IR2YGqlClient client) : IChatService
         return Result.Ok(result.Data?.DeleteChatMessage?.Success ?? false);
     }
 
-    public IObservable<IOperationResult<IOnMessageReceivedResult>> SubscribeToMessages(string currentUserEmail)
+    public IObservable<IOperationResult<IOnChatEventResult>> SubscribeToMessages(string currentUserEmail)
     {
-        return client.OnMessageReceived.Watch(currentUserEmail);
+        var result = client.OnChatEvent.Watch();
+        return result;
     }
 }
