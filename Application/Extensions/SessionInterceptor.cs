@@ -1,9 +1,5 @@
 using StrawberryShake.Transport.WebSockets;
 using Application.Modules.R2Y.Repositories.Interface.Authentications;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Collections.Generic;
-using System;
 
 namespace Application.Extensions;
 
@@ -35,5 +31,13 @@ public class SessionInterceptor(ITokenService tokenService) : ISocketConnectionI
     public ValueTask OnConnectionClosedAsync(ISocketProtocol protocol, CancellationToken cancellationToken)
     {
         return ValueTask.CompletedTask;
+    }
+
+    public void OnConnectionOpened(ISocketClient client)
+    {
+    }
+
+    public void OnConnectionClosed(ISocketClient client)
+    {
     }
 }

@@ -661,17 +661,12 @@
     {
         if (msg is global::Application.IOnChatEvent_OnChatEvent_MessageReceivedEvent messageEvent)
         {
-            Console.WriteLine($"[ChatSystem] Received MessageReceivedEvent for ChatRoomId: {messageEvent.ChatRoomId}");
             if (SelectedChat != null && SelectedChat.Id == messageEvent.ChatRoomId)
             {
                 var adapter = new ChatMessageAdapter(messageEvent);
                 Messages?.Add(adapter);
                 StateHasChanged();
             }
-        }
-        else
-        {
-            Console.WriteLine($"[ChatSystem] Received unknown event type: {msg.GetType().FullName}");
         }
     }
 
